@@ -86,9 +86,6 @@ const headerHTML = `
                     Cuentas
                 </a>
 
-                <a href="regalos.html">
-                    Tarjetas de regalo
-                </a>
 
             </div>
 
