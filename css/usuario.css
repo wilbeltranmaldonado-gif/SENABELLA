@@ -166,6 +166,13 @@
   cursor: pointer;
 }
 
+/* Mensaje cuando una sección no tiene datos que mostrar */
+.estado-vacio {
+  color: var(--text-muted);
+  font-size: 14px;
+  padding: 12px 0;
+}
+
 /* PIE DE PÁGINA */
 .footer {
   margin-top: 32px;

@@ -41,7 +41,7 @@
       <div class="diseno-perfil">
         <!-- BARRA LATERAL/Menú de la cuenta-->
         <nav class="barra-lateral">
-          <a href="#" class="elemento-menu activo">
+          <a href="#" class="elemento-menu activo" data-section="datos-personales">
             <div class="elemento-menu-izquierda">
               <i class="fa-regular fa-user"></i>
               <span>Datos personales</span>
@@ -49,7 +49,7 @@
             <i class="fa-solid fa-chevron-right"></i>
           </a>
 
-          <a href="#" class="elemento-menu">
+          <a href="#" class="elemento-menu" data-section="direcciones">
             <div class="elemento-menu-izquierda">
               <i class="fa-solid fa-house"></i>
               <span>Direcciones</span>
@@ -57,7 +57,7 @@
             <i class="fa-solid fa-chevron-right"></i>
           </a>
 
-          <a href="#" class="elemento-menu">
+          <a href="#" class="elemento-menu" data-section="medios-pago">
             <div class="elemento-menu-izquierda">
               <i class="fa-regular fa-credit-card"></i>
               <span>Medios de pago</span>
@@ -65,7 +65,7 @@
             <i class="fa-solid fa-chevron-right"></i>
           </a>
 
-          <a href="#" class="elemento-menu">
+          <a href="#" class="elemento-menu" data-section="reembolso">
             <div class="elemento-menu-izquierda">
               <i class="fa-solid fa-money-bill-transfer"></i>
               <span>Datos para reembolso</span>
@@ -73,7 +73,7 @@
             <i class="fa-solid fa-chevron-right"></i>
           </a>
 
-          <a href="#" class="elemento-menu">
+          <a href="#" class="elemento-menu" data-section="mis-listas">
             <div class="elemento-menu-izquierda">
               <i class="fa-regular fa-heart"></i>
               <span>Mis listas</span>
@@ -81,7 +81,7 @@
             <i class="fa-solid fa-chevron-right"></i>
           </a>
 
-          <a href="#" class="elemento-menu">
+          <a href="#" class="elemento-menu" data-section="configurar-cuenta">
             <div class="elemento-menu-izquierda">
               <i class="fa-solid fa-lock"></i>
               <span>Configurar mi cuenta</span>
@@ -89,7 +89,7 @@
             <i class="fa-solid fa-chevron-right"></i>
           </a>
 
-          <a href="#" class="elemento-menu">
+          <a href="#" class="elemento-menu" data-section="dispositivos">
             <div class="elemento-menu-izquierda">
               <i class="fa-desktop fa-solid"></i>
               <span>Dispositivos vinculados</span>
@@ -97,7 +97,7 @@
             <i class="fa-solid fa-chevron-right"></i>
           </a>
 
-          <a href="#" class="elemento-menu">
+          <a href="#" class="elemento-menu" data-section="pagar-cmr">
             <div class="elemento-menu-izquierda">
               <i class="fa-solid fa-credit-card"></i>
               <span>Pagar mi CMR</span>
@@ -105,7 +105,7 @@
             <i class="fa-solid fa-chevron-right"></i>
           </a>
 
-          <a href="#" class="elemento-menu">
+          <a href="#" class="elemento-menu" data-logout="true">
             <div class="elemento-menu-izquierda">
               <i class="fa-solid fa-power-off"></i>
               <span>Cerrar sesión</span>
@@ -114,53 +114,10 @@
           </a>
         </nav>
 
-        <!-- Detalles de la pestaña activa -->
+        <!-- Detalles de la pestaña activa: el contenido lo genera usuario.js -->
         <main class="tarjeta-contenido">
-          <h2 class="titulo-seccion">Datos personales</h2>
-
-          <!--Nombre y apellidos -->
-          <div class="grupo-info">
-            <div>
-              <div class="etiqueta-info">Nombre y apellidos</div>
-              <div class="valor-info">Pedro Quijano</div>
-            </div>
-            <button class="boton-editar">Editar</button>
-          </div>
-
-          <!-- Documento de identidad -->
-          <div class="grupo-info">
-            <div>
-              <div class="etiqueta-info">Tipo de documento</div>
-              <div class="valor-info">Cédula de extranjería</div>
-            </div>
-          </div>
-
-          <!-- Teléfono celular -->
-          <div class="grupo-info">
-            <div>
-              <div class="etiqueta-info">Celular</div>
-              <div class="valor-info">+57 3 134300009</div>
-            </div>
-            <button class="boton-editar">Editar</button>
-          </div>
-
-          <!--Correo electrónico -->
-          <div class="grupo-info">
-            <div>
-              <div class="etiqueta-info">Correo</div>
-              <div class="valor-info">
-                pequijano30@gmail.com
-                <i
-                  class="fa-regular fa-circle-question info-icon-tooltip"
-                  title="Correo verificado"
-                ></i>
-              </div>
-            </div>
-          </div>
-          
-
-
-
+          <h2 class="titulo-seccion"></h2>
+          <div class="lista-campos"></div>
         </main>
       </div>
     </div>
