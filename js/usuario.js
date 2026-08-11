@@ -219,7 +219,25 @@
     });
   }
 
+  /* --- Carga datos dinámicos guardados al registrarse --- */
+  function cargarDatosUsuarioRegistrado() {
+    try {
+      const usuarioGuardado = JSON.parse(localStorage.getItem('senabella_usuario') || 'null');
+      if (usuarioGuardado) {
+        if (usuarioGuardado.nombre) {
+          SECCIONES["datos-personales"].campos[0].valor = usuarioGuardado.nombre;
+        }
+        if (usuarioGuardado.correo) {
+          SECCIONES["datos-personales"].campos[3].valor = usuarioGuardado.correo;
+        }
+      }
+    } catch (e) {
+      console.error('Error al cargar los datos del usuario:', e);
+    }
+  }
+
   function init() {
+    cargarDatosUsuarioRegistrado();
     setupMenuLateral();
     setupEdicionInline();
     renderSeccion("datos-personales"); // sección visible al cargar la página
