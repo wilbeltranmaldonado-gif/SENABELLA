@@ -31,7 +31,7 @@
         {
           etiqueta: "Correo",
           valor: "pequijano30@gmail.com",
-          editable: false,
+          editable: true,
           icono: "fa-regular fa-circle-question",
           tooltip: "Correo verificado",
         },
@@ -80,14 +80,6 @@
       campos: [
         { etiqueta: "Chrome · Windows", valor: "Última conexión: hoy, 9:41 a. m.", editable: false },
         { etiqueta: "App móvil · Android", valor: "Última conexión: ayer, 6:12 p. m.", editable: false },
-      ],
-    },
-
-    "pagar-cmr": {
-      titulo: "Pagar mi CMR",
-      campos: [
-        { etiqueta: "Saldo actual", valor: "$0", editable: false },
-        { etiqueta: "Fecha límite de pago", valor: "No aplica", editable: false },
       ],
     },
   };
