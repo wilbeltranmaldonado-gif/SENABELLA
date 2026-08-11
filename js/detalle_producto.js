@@ -28,6 +28,64 @@ function actualizarDetalleProducto() {
 
     if (precioActualEl && producto.precioActual) precioActualEl.textContent = producto.precioActual;
     if (precioAntiguoEl && producto.precioAntiguo) precioAntiguoEl.textContent = producto.precioAntiguo;
+
+    // Actualizar características dinámicas según la información del producto
+    let listaEspec = document.querySelector(".lista-especificaciones");
+    if (listaEspec && producto.descripcion) {
+        let desc = producto.descripcion.toLowerCase();
+        let especs = [];
+
+        if (desc.includes("kindle")) {
+            especs = [
+                "Pantalla de 7 pulgadas con tecnología e-paper antirreflejos",
+                "Almacenamiento de 32 GB Signature Edition",
+                "Batería de alta duración para semanas de lectura continuada"
+            ];
+        } else if (desc.includes("impresora") || desc.includes("smart tank")) {
+            especs = [
+                "Impresión multifuncional (Imprime, escanea y copia)",
+                "Conexión inalámbrica Wi-Fi de alta velocidad",
+                "Incluye sistema de tintas continuas con gran rendimiento"
+            ];
+        } else if (desc.includes("portátil") || desc.includes("ryzen") || desc.includes("hp") || desc.includes("lenovo")) {
+            especs = [
+                "Procesador potente para multitarea y rendimiento fluido",
+                "Pantalla Full HD de alta definición y bordes delgados",
+                "Almacenamiento SSD ultra rápido y memoria RAM de alto rendimiento"
+            ];
+        } else if (desc.includes("starlink")) {
+            especs = [
+                "Internet satelital de alta velocidad y baja latencia",
+                "Kit estándar V4 con fácil instalación plug and play",
+                "Diseñado para soportar condiciones climáticas extremas"
+            ];
+        } else if (desc.includes("tablet")) {
+            especs = [
+                "Pantalla táctil con excelente resolución y colores vivos",
+                "Sistema de altavoces envolventes para multimedia",
+                "Incluye funda de protección y auriculares Moto Buds"
+            ];
+        } else if (desc.includes("disco") || desc.includes("toshiba")) {
+            especs = [
+                "Capacidad de almacenamiento masivo de 2 TB",
+                "Conexión de alta velocidad USB 3.0 compatible con PC y Mac",
+                "Incluye estuche de protección resistente a impactos"
+            ];
+        } else {
+            especs = [
+                "Diseño de alta calidad con garantía oficial",
+                "Excelente relación calidad-precio y durabilidad",
+                "Envío asegurado y soporte técnico prioritario"
+            ];
+        }
+
+        listaEspec.innerHTML = "";
+        especs.forEach(function (item) {
+            let li = document.createElement("li");
+            li.textContent = item;
+            listaEspec.appendChild(li);
+        });
+    }
 }
 
 // Intentar actualizar inmediatamente por si los elementos DOM ya existen

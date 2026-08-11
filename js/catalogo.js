@@ -278,4 +278,31 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
+  // 10. Guardar datos del producto seleccionado para la vista detalle
+  productos.forEach(function (producto) {
+    producto.addEventListener("click", function (e) {
+      if (e.target.classList.contains("favorite-btn")) return;
+
+      let marca = producto.querySelector(".nom-producto") ? producto.querySelector(".nom-producto").textContent.trim() : "";
+      let descripcion = producto.querySelector(".descripcion") ? producto.querySelector(".descripcion").textContent.trim() : "";
+      let imagen = producto.querySelector("img") ? producto.querySelector("img").src : "";
+      let precioEl = producto.querySelector(".precio");
+      let precioActual = precioEl ? (precioEl.childNodes[0] ? precioEl.childNodes[0].textContent.trim() : precioEl.textContent.trim()) : "";
+      let precioAntiguo = producto.querySelector(".precio-secundario1") ? producto.querySelector(".precio-secundario1").textContent.trim() : "";
+      let referencia = producto.querySelector(".referencia") ? producto.querySelector(".referencia").textContent.trim() : "";
+
+      let datosProducto = {
+        marca: marca,
+        titulo: marca + " - " + descripcion,
+        descripcion: descripcion,
+        imagen: imagen,
+        precioActual: precioActual,
+        precioAntiguo: precioAntiguo,
+        referencia: referencia
+      };
+
+      localStorage.setItem("productoSeleccionado", JSON.stringify(datosProducto));
+    });
+  });
+
 });
