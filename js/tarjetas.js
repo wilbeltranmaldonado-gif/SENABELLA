@@ -1,0 +1,174 @@
+// ==========================================
+// TARJETAS - JAVASCRIPT
+// ==========================================
+
+
+// ==========================================
+// PARTÍCULAS DEL HERO
+// ==========================================
+
+function crearParticulas() {
+    const contenedor = document.getElementById("hero-particulas");
+    if (!contenedor) return;
+
+    for (let i = 0; i < 20; i++) {
+        const particula = document.createElement("div");
+        particula.classList.add("hero-particula");
+        particula.style.left = Math.random() * 100 + "%";
+        particula.style.top = Math.random() * 100 + "%";
+        particula.style.animationDelay = Math.random() * 6 + "s";
+        particula.style.animationDuration = (4 + Math.random() * 4) + "s";
+        contenedor.appendChild(particula);
+    }
+}
+
+crearParticulas();
+
+
+// ==========================================
+// ANIMACIÓN AL HACER SCROLL
+// ==========================================
+
+function animarAlScroll() {
+    const elementos = document.querySelectorAll(
+        ".beneficio-tarjeta, .stat-item, .paso-item"
+    );
+
+    const observador = new IntersectionObserver(
+        function (entradas) {
+            entradas.forEach(function (entrada) {
+                if (entrada.isIntersecting) {
+                    entrada.target.style.opacity = "1";
+                    entrada.target.style.transform = "translateY(0)";
+                    observador.unobserve(entrada.target);
+                }
+            });
+        },
+        { threshold: 0.15 }
+    );
+
+    elementos.forEach(function (el, index) {
+        el.style.opacity = "0";
+        el.style.transform = "translateY(30px)";
+        el.style.transition =
+            "opacity 0.6s ease " + (index * 0.1) + "s, " +
+            "transform 0.6s ease " + (index * 0.1) + "s";
+        observador.observe(el);
+    });
+}
+
+animarAlScroll();
+
+
+// ==========================================
+// ACTUALIZAR PREVIEW DE LA TARJETA
+// ==========================================
+
+const campoNombre = document.getElementById("nombre-completo");
+const previewNombre = document.getElementById("preview-nombre");
+
+if (campoNombre && previewNombre) {
+    campoNombre.addEventListener("input", function () {
+        const valor = campoNombre.value.trim();
+        if (valor.length > 0) {
+            previewNombre.textContent = valor.toUpperCase();
+        } else {
+            previewNombre.textContent = "JUAN PÉREZ";
+        }
+    });
+}
+
+
+// ==========================================
+// FORMULARIO - ENVÍO
+// ==========================================
+
+const formulario = document.getElementById("formulario-tarjeta");
+const mensajeExito = document.getElementById("mensaje-exito");
+const botonSolicitar = document.getElementById("boton-solicitar");
+
+if (formulario) {
+    formulario.addEventListener("submit", function (evento) {
+        evento.preventDefault();
+
+        // Deshabilitar botón
+        botonSolicitar.disabled = true;
+        botonSolicitar.innerHTML =
+            '<i class="fa-solid fa-spinner fa-spin"></i> Procesando...';
+
+        // Simular envío
+        setTimeout(function () {
+            formulario.style.display = "none";
+            mensajeExito.classList.add("mostrar");
+        }, 1500);
+    });
+}
+
+
+// ==========================================
+// ANIMACIÓN CONTADORES (STATS)
+// ==========================================
+
+function animarContador(elemento, valorFinal, duracion) {
+    const esNumero = /^\d/.test(valorFinal);
+    if (!esNumero) return;
+
+    const numero = parseInt(valorFinal.replace(/[^0-9]/g, ""));
+    const sufijo = valorFinal.replace(/[0-9,]/g, "");
+    const tieneFormato = valorFinal.includes(",");
+
+    let inicio = 0;
+    const incremento = numero / (duracion / 16);
+    const intervalo = setInterval(function () {
+        inicio += incremento;
+        if (inicio >= numero) {
+            inicio = numero;
+            clearInterval(intervalo);
+        }
+
+        let textoNumero = Math.floor(inicio).toString();
+        if (tieneFormato) {
+            textoNumero = Math.floor(inicio).toLocaleString("es-CO");
+        }
+
+        elemento.textContent = textoNumero + sufijo;
+    }, 16);
+}
+
+const contadorObservador = new IntersectionObserver(
+    function (entradas) {
+        entradas.forEach(function (entrada) {
+            if (entrada.isIntersecting) {
+                const stats = entrada.target.querySelectorAll(".stat-numero");
+                stats.forEach(function (stat) {
+                    animarContador(stat, stat.textContent, 2000);
+                });
+                contadorObservador.unobserve(entrada.target);
+            }
+        });
+    },
+    { threshold: 0.3 }
+);
+
+const statsGrid = document.querySelector(".stats-grid");
+if (statsGrid) {
+    contadorObservador.observe(statsGrid);
+}
+
+
+// ==========================================
+// SCROLL SUAVE PARA LINKS INTERNOS
+// ==========================================
+
+document.querySelectorAll('a[href^="#"]').forEach(function (enlace) {
+    enlace.addEventListener("click", function (evento) {
+        const destino = document.querySelector(this.getAttribute("href"));
+        if (destino) {
+            evento.preventDefault();
+            destino.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
+        }
+    });
+});
