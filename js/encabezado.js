@@ -82,11 +82,6 @@ const headerHTML = `
                     Tarjetas
                 </a>
 
-                <a href="cuentas.html">
-                    Cuentas
-                </a>
-
-
             </div>
 
         </div>
