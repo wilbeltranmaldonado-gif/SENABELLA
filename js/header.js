@@ -78,7 +78,7 @@ const headerHTML = `
 
             <div class="contenido-desplegable" id="menu-tarjetas">
 
-                <a href="catalogo.html">
+                <a href="tarjetas.html">
                     Tarjetas
                 </a>
 
@@ -86,9 +86,6 @@ const headerHTML = `
                     Cuentas
                 </a>
 
-                <a href="regalos.html">
-                    Tarjetas de regalo
-                </a>
 
             </div>
 
@@ -109,10 +106,6 @@ const headerHTML = `
             </button>
 
             <div class="contenido-desplegable" id="menu-ayuda">
-
-                <a href="preguntas.html">
-                    Preguntas frecuentes
-                </a>
 
                 <a href="contacto.html">
                     Contáctanos

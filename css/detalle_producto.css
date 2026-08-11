@@ -151,8 +151,8 @@
 }
 
 .btn-primario {
-  background: var(--verde-falabella);
-  color: white;
+  background: #eef2f7;
+  color: rgb(0, 0, 0);
 }
 
 .btn-secundario {
