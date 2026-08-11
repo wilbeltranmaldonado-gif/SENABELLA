@@ -23,6 +23,14 @@
 
 <body>
 
+  <!-- BARRA DE ESTADO DEL SISTEMA -->
+  <div class="estado-sistema">
+    <div class="estado-contenedor">
+      <span class="punto-verde"></span>
+      <p><strong>Sistemas operativos:</strong> No hay retrasos reportados en envíos nacionales.</p>
+    </div>
+  </div>
+
   <!-- HERO SOPORTE CON BUSCADOR -->
   <section class="soporte-hero">
     <h1>Centro de <span>Soporte</span></h1>
@@ -49,37 +57,49 @@
         <a href="#" class="categoria-tarjeta">
           <div class="cat-icono"><i class="fa-solid fa-box-open"></i></div>
           <h3>Mis Pedidos</h3>
-          <p>Rastreo, modificaciones y estado actual</p>
+          <p>Rastreo, modificaciones y estado de compras</p>
         </a>
 
         <a href="#" class="categoria-tarjeta">
           <div class="cat-icono"><i class="fa-solid fa-truck-fast"></i></div>
           <h3>Envíos y Entregas</h3>
-          <p>Tiempos, costos y coberturas de envío</p>
+          <p>Tiempos, fletes express y cobertura nacional</p>
         </a>
 
         <a href="#" class="categoria-tarjeta">
           <div class="cat-icono"><i class="fa-solid fa-rotate-left"></i></div>
           <h3>Cambios y Devoluciones</h3>
-          <p>Políticas, garantías y cómo solicitar un cambio</p>
+          <p>Políticas de retracto, tallas y devoluciones</p>
         </a>
 
         <a href="#" class="categoria-tarjeta">
           <div class="cat-icono"><i class="fa-solid fa-credit-card"></i></div>
           <h3>Pagos y Facturación</h3>
-          <p>Medios de pago aceptados y problemas de cobro</p>
+          <p>PSE, tarjetas, Addi, Efecty y facturación</p>
         </a>
 
         <a href="#" class="categoria-tarjeta">
           <div class="cat-icono"><i class="fa-solid fa-user"></i></div>
           <h3>Mi Cuenta</h3>
-          <p>Contraseñas, datos personales y preferencias</p>
+          <p>Guía de tallas, contraseñas y datos personales</p>
         </a>
 
         <a href="#" class="categoria-tarjeta">
           <div class="cat-icono"><i class="fa-solid fa-tags"></i></div>
-          <h3>Promociones</h3>
-          <p>Uso de cupones, descuentos y gift cards</p>
+          <h3>Promociones y Cupones</h3>
+          <p>Redención de códigos, ofertas y gift cards</p>
+        </a>
+
+        <a href="#" class="categoria-tarjeta">
+          <div class="cat-icono"><i class="fa-solid fa-shield-halved"></i></div>
+          <h3>Garantías y Calidad</h3>
+          <p>Defectos de fábrica y cuidado de prendas</p>
+        </a>
+
+        <a href="#" class="categoria-tarjeta">
+          <div class="cat-icono"><i class="fa-solid fa-store"></i></div>
+          <h3>Tiendas Físicas</h3>
+          <p>Ubicaciones, horarios y compras en boutique</p>
         </a>
       </div>
     </section>
@@ -89,35 +109,99 @@
       <h2>Artículos populares</h2>
 
       <div class="articulos-lista">
-        <div class="articulo-item">
-          <i class="fa-regular fa-file-lines"></i>
-          <div class="articulo-info">
-            <a href="#">¿Cómo realizar seguimiento a mi pedido en tiempo real?</a>
-            <span>Lectura de 2 min</span>
+        <!-- Renderizado dinámico desde soporte.js -->
+      </div>
+    </section>
+
+    <!-- SECCIÓN DE PREGUNTAS FRECUENTES (FAQ) -->
+    <section class="faq-soporte">
+      <h2>Preguntas Rápidas</h2>
+      <div class="faq-grid">
+        <div class="faq-item">
+          <div class="faq-pregunta">
+            <span>¿Dónde encuentro mi número de guía?</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+          <div class="faq-respuesta">
+            Tu número de guía se enviará automáticamente a tu correo electrónico una vez el pedido haya sido despachado.
+            También puedes encontrarlo en "Mi Cuenta" > "Mis Pedidos".
           </div>
         </div>
 
-        <div class="articulo-item">
-          <i class="fa-regular fa-file-lines"></i>
-          <div class="articulo-info">
-            <a href="#">Pasos para gestionar una devolución o garantía</a>
-            <span>Lectura de 3 min</span>
+        <div class="faq-item">
+          <div class="faq-pregunta">
+            <span>¿Puedo cancelar o editar un pedido?</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+          <div class="faq-respuesta">
+            Sí, puedes solicitar cambios o cancelar tu pedido dentro de los primeros 30 minutos de haber realizado la
+            compra antes de que entre a preparación.
           </div>
         </div>
 
-        <div class="articulo-item">
-          <i class="fa-regular fa-file-lines"></i>
-          <div class="articulo-info">
-            <a href="#">¿Qué hago si mi pago con tarjeta fue rechazado?</a>
-            <span>Lectura de 1 min</span>
+        <div class="faq-item">
+          <div class="faq-pregunta">
+            <span>¿Los productos tienen garantía?</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+          <div class="faq-respuesta">
+            Todos nuestros productos cuentan con garantía de 30 días calendario por defectos de fábrica. Conserva tu
+            factura para hacerla efectiva.
           </div>
         </div>
 
-        <div class="articulo-item">
-          <i class="fa-regular fa-file-lines"></i>
-          <div class="articulo-info">
-            <a href="#">Guía de tallas: ¿Cómo saber cuál es la mía?</a>
-            <span>Lectura de 4 min</span>
+        <div class="faq-item">
+          <div class="faq-pregunta">
+            <span>¿Qué medios de pago puedo utilizar?</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+          <div class="faq-respuesta">
+            Aceptamos tarjetas de crédito/débito, PSE (Nequi/Daviplata), Addi (cuotas sin tarjeta) y pago en efectivo en
+            puntos Efecty.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-pregunta">
+            <span>¿Cuánto demora un envío nacional?</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+          <div class="faq-respuesta">
+            En ciudades principales como Bogotá, Medellín y Cali el tiempo es de 1 a 3 días hábiles. En el resto del
+            país de 3 a 5 días hábiles.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-pregunta">
+            <span>¿Cómo solicito un cambio de talla?</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+          <div class="faq-respuesta">
+            Tienes hasta 30 días calendario tras recibir tu pedido. Ingresa a la sección de soporte o contáctanos para
+            generar tu autorización de cambio.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-pregunta">
+            <span>¿Dónde están ubicadas las tiendas físicas?</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+          <div class="faq-respuesta">
+            Contamos con boutiques físicas en Bogotá (C.C. Unicentro), Medellín (C.C. El Tesoro) y Cali (C.C.
+            Chipichape).
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-pregunta">
+            <span>¿Cómo aplico un cupón de descuento?</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+          <div class="faq-respuesta">
+            En la pantalla de pago (Checkout), introduce tu código en la casilla "¿Tienes un cupón?" y presiona
+            "Aplicar".
           </div>
         </div>
       </div>
@@ -137,6 +221,33 @@
       </div>
     </section>
 
+  </div>
+
+  <!-- MODAL DE LECTURA DE ARTÍCULO -->
+  <div class="modal-overlay" id="modal-articulo">
+    <div class="modal-contenido">
+      <button class="cerrar-modal" id="cerrar-articulo"><i class="fa-solid fa-xmark"></i></button>
+      <div class="modal-header">
+        <span class="modal-categoria" id="modal-cat">Categoría</span>
+        <h2 id="modal-titulo">Título del artículo</h2>
+        <div class="modal-meta">
+          <i class="fa-regular fa-clock"></i> <span id="modal-tiempo">X min</span>
+          &nbsp;&bull;&nbsp; Actualizado hoy
+        </div>
+      </div>
+      <div class="modal-cuerpo" id="modal-texto">
+        Cargando contenido...
+      </div>
+      <div class="modal-footer">
+        <p>¿Te resultó útil este artículo?</p>
+        <div class="votos-utilidad">
+          <button class="btn-util" onclick="alert('¡Gracias por tu retroalimentación!')"><i
+              class="fa-regular fa-thumbs-up"></i> Sí</button>
+          <button class="btn-util" onclick="alert('Gracias. Trabajaremos para mejorarlo.')"><i
+              class="fa-regular fa-thumbs-down"></i> No</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- PIE DE PAGINA -->
