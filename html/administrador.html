@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panel de administración · Senabella</title>
+
+    <!-- Iconos de font awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <!-- Variables globales del sitio (colores, modo oscuro) -->
+    <link rel="stylesheet" href="../css/header.css" />
+    <link rel="stylesheet" href="../css/administrador.css" />
+  </head>
+
+  <body class="cuerpo-admin">
+    <!-- ============================================
+         SIDEBAR
+         ============================================ -->
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="admin-sidebar-logo">
+        <img src="../recursos/logo.png" alt="Senabella" />
+        <span>Admin</span>
+      </div>
+
+      <nav class="admin-nav">
+        <p class="admin-nav-titulo">General</p>
+        <a href="#" class="admin-nav-item activo" data-vista="resumen">
+          <i class="fa-solid fa-gauge-high"></i>
+          <span>Resumen</span>
+        </a>
+        <a href="#" class="admin-nav-item" data-vista="pedidos">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span>Pedidos</span>
+          <span class="admin-nav-badge">6</span>
+        </a>
+        <a href="#" class="admin-nav-item" data-vista="productos">
+          <i class="fa-solid fa-box"></i>
+          <span>Productos</span>
+        </a>
+        <a href="#" class="admin-nav-item" data-vista="clientes">
+          <i class="fa-solid fa-users"></i>
+          <span>Clientes</span>
+        </a>
+
+        <p class="admin-nav-titulo">Catálogo</p>
+        <a href="#" class="admin-nav-item" data-vista="categorias">
+          <i class="fa-solid fa-tags"></i>
+          <span>Categorías</span>
+        </a>
+        <a href="#" class="admin-nav-item" data-vista="cupones">
+          <i class="fa-solid fa-ticket"></i>
+          <span>Cupones</span>
+        </a>
+
+        <p class="admin-nav-titulo">Cuenta</p>
+        <a href="#" class="admin-nav-item" data-vista="reportes">
+          <i class="fa-solid fa-chart-line"></i>
+          <span>Reportes</span>
+        </a>
+        <a href="#" class="admin-nav-item" data-vista="configuracion">
+          <i class="fa-solid fa-gear"></i>
+          <span>Configuración</span>
+        </a>
+      </nav>
+
+      <div class="admin-sidebar-footer">
+        <a href="inicio.html"><i class="fa-solid fa-store"></i> Volver a la tienda</a>
+        <a href="#" id="adminCerrarSesion"><i class="fa-solid fa-power-off"></i> Cerrar sesión</a>
+      </div>
+    </aside>
+
+    <!-- Fondo oscuro al abrir el sidebar en móvil -->
+    <div class="admin-overlay" id="adminOverlay"></div>
+
+    <!-- ============================================
+         CONTENIDO PRINCIPAL
+         ============================================ -->
+    <div class="admin-main">
+      <!-- TOPBAR -->
+      <header class="admin-topbar">
+        <button class="admin-boton-menu" id="adminBotonMenu" aria-label="Abrir menú">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <h1 class="admin-titulo-vista" id="adminTituloVista">Resumen general</h1>
+
+        <div class="admin-buscador">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" placeholder="Buscar pedidos, productos o clientes..." />
+        </div>
+
+        <div class="admin-topbar-acciones">
+          <button class="admin-icono-boton" id="adminThemeToggle" title="Cambiar modo">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+
+          <div class="admin-menu-desplegable">
+            <button class="admin-icono-boton" id="adminBotonNotificaciones" title="Notificaciones">
+              <i class="fa-solid fa-bell"></i>
+              <span class="admin-punto-badge">3</span>
+            </button>
+            <div class="admin-dropdown" id="adminDropdownNotificaciones">
+              <div class="admin-dropdown-titulo">Notificaciones</div>
+              <a href="#" class="admin-dropdown-item">
+                <i class="fa-solid fa-triangle-exclamation texto-warning"></i>
+                <div>
+                  <strong>Stock bajo</strong>
+                  <p>4 productos están por agotarse</p>
+                </div>
+              </a>
+              <a href="#" class="admin-dropdown-item">
+                <i class="fa-solid fa-cart-shopping texto-info"></i>
+                <div>
+                  <strong>Pedido nuevo</strong>
+                  <p>#SN-10482 recién se registró</p>
+                </div>
+              </a>
+              <a href="#" class="admin-dropdown-item">
+                <i class="fa-solid fa-star texto-success"></i>
+                <div>
+                  <strong>Reseña nueva</strong>
+                  <p>Zapatillas Runner recibió 5 estrellas</p>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <div class="admin-menu-desplegable">
+            <button class="admin-perfil-boton" id="adminBotonPerfil">
+              <span class="admin-avatar">AD</span>
+              <span class="admin-perfil-nombre">Admin Senabella</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="admin-dropdown admin-dropdown-derecha" id="adminDropdownPerfil">
+              <a href="usuario.html" class="admin-dropdown-item-simple">
+                <i class="fa-regular fa-user"></i> Mi perfil
+              </a>
+              <a href="#" class="admin-dropdown-item-simple">
+                <i class="fa-solid fa-gear"></i> Configuración
+              </a>
+              <a href="#" class="admin-dropdown-item-simple" id="adminCerrarSesion2">
+                <i class="fa-solid fa-power-off"></i> Cerrar sesión
+              </a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENIDO -->
+      <main class="admin-contenido">
+        <!-- Bienvenida + acciones rápidas -->
+        <div class="admin-bienvenida">
+          <div>
+            <h2>Hola, Admin 👋</h2>
+            <p id="adminFecha">Este es el resumen de la tienda hoy</p>
+          </div>
+          <div class="admin-acciones-rapidas">
+            <button class="admin-boton admin-boton-primario">
+              <i class="fa-solid fa-plus"></i> Nuevo producto
+            </button>
+            <button class="admin-boton admin-boton-secundario">
+              <i class="fa-solid fa-file-arrow-down"></i> Exportar reporte
+            </button>
+          </div>
+        </div>
+
+        <!-- Tarjetas KPI -->
+        <section class="admin-grid-kpi" id="adminGridKpi">
+          <!-- Las tarjetas se generan dinámicamente desde admin.js -->
+        </section>
+
+        <!-- Gráficos -->
+        <section class="admin-grid-charts">
+          <div class="admin-tarjeta admin-tarjeta-chart">
+            <div class="admin-tarjeta-header">
+              <h3>Ventas de la semana</h3>
+              <select class="admin-select" id="adminSelectRangoVentas">
+                <option>Últimos 7 días</option>
+                <option>Últimos 30 días</option>
+              </select>
+            </div>
+            <canvas id="chartVentas" height="230"></canvas>
+          </div>
+
+          <div class="admin-tarjeta admin-tarjeta-chart">
+            <div class="admin-tarjeta-header">
+              <h3>Pedidos por estado</h3>
+            </div>
+            <canvas id="chartEstados" height="230"></canvas>
+            <ul class="admin-leyenda" id="adminLeyendaEstados"></ul>
+          </div>
+        </section>
+
+        <!-- Tablas -->
+        <section class="admin-grid-tablas">
+          <div class="admin-tarjeta admin-tarjeta-tabla">
+            <div class="admin-tarjeta-header">
+              <h3>Últimos pedidos</h3>
+              <a href="#" class="admin-ver-todo">Ver todos <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            <div class="admin-tabla-scroll">
+              <table class="admin-tabla">
+                <thead>
+                  <tr>
+                    <th>Pedido</th>
+                    <th>Cliente</th>
+                    <th>Producto</th>
+                    <th>Estado</th>
+                    <th>Total</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="adminTablaPedidos">
+                  <!-- Filas generadas dinámicamente -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="admin-tarjeta admin-tarjeta-stock">
+            <div class="admin-tarjeta-header">
+              <h3>Stock bajo</h3>
+              <span class="admin-badge admin-badge-warning">Atención</span>
+            </div>
+            <ul class="admin-lista-stock" id="adminListaStock">
+              <!-- Items generados dinámicamente -->
+            </ul>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Chart.js para las gráficas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+    <script src="../js/administrador.js"></script>
+  </body>
+</html>
