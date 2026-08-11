@@ -78,7 +78,7 @@ const headerHTML = `
 
             <div class="contenido-desplegable" id="menu-tarjetas">
 
-                <a href="catalogo.html">
+                <a href="tarjetas.html">
                     Tarjetas
                 </a>
 
