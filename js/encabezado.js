@@ -224,14 +224,85 @@ botonTarjetas.addEventListener("click", function () {
 
 
 // ==========================================
-// MENÚ AYUDA
+// BASE DE DATOS SIMULADA DEL CARRITO (LOCALSTORAGE)
 // ==========================================
 
-const botonAyuda = document.querySelector("#boton-ayuda");
-const menuAyuda = document.querySelector("#menu-ayuda");
+window.SenabellaCart = {
+    KEY: "senabella_cart_db",
 
-botonAyuda.addEventListener("click", function () {
+    obtenerItems: function () {
+        try {
+            const datos = localStorage.getItem(this.KEY);
+            return datos ? JSON.parse(datos) : [];
+        } catch (e) {
+            return [];
+        }
+    },
 
-    menuAyuda.classList.toggle("mostrar");
+    guardarItems: function (items) {
+        try {
+            localStorage.setItem(this.KEY, JSON.stringify(items));
+            this.actualizarBadge();
+        } catch (e) {
+            console.error("Error al guardar carrito:", e);
+        }
+    },
 
+    agregarProducto: function (producto) {
+        let items = this.obtenerItems();
+        let existente = items.find(function (item) {
+            return item.nombre.trim().toLowerCase() === producto.nombre.trim().toLowerCase();
+        });
+
+        if (existente) {
+            existente.cantidad = (parseInt(existente.cantidad) || 1) + (parseInt(producto.cantidad) || 1);
+            existente.checked = true;
+        } else {
+            items.push({
+                nombre: producto.nombre.trim(),
+                marca: producto.marca || "SENABELLA",
+                color: producto.color || "Estándar",
+                precioText: producto.precioText || "$ 0",
+                img: producto.img || "",
+                cantidad: parseInt(producto.cantidad) || 1,
+                checked: true
+            });
+        }
+
+        this.guardarItems(items);
+    },
+
+    eliminarProducto: function (nombre) {
+        let items = this.obtenerItems().filter(function (item) {
+            return item.nombre.trim().toLowerCase() !== nombre.trim().toLowerCase();
+        });
+        this.guardarItems(items);
+    },
+
+    limpiarComprados: function () {
+        let items = this.obtenerItems().filter(function (item) {
+            return !item.checked;
+        });
+        this.guardarItems(items);
+    },
+
+    obtenerTotalCantidad: function () {
+        let items = this.obtenerItems();
+        return items.reduce(function (sum, item) {
+            return sum + (parseInt(item.cantidad) || 1);
+        }, 0);
+    },
+
+    actualizarBadge: function () {
+        let contador = document.querySelector(".contador-carrito");
+        if (contador) {
+            let total = this.obtenerTotalCantidad();
+            contador.textContent = " " + total + " ";
+        }
+    }
+};
+
+// Sincronizar badge al cargar cualquier página
+document.addEventListener("DOMContentLoaded", function () {
+    window.SenabellaCart.actualizarBadge();
 });

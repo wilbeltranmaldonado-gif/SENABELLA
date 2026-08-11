@@ -114,6 +114,18 @@ document.addEventListener("DOMContentLoaded", function () {
       e.stopPropagation();
       let nombre = card.querySelector(".card-title").textContent.trim();
       let precio = card.querySelector(".card-text").textContent.trim();
+      let img = card.querySelector("img") ? card.querySelector("img").src : "";
+
+      if (window.SenabellaCart) {
+        window.SenabellaCart.agregarProducto({
+          nombre: nombre,
+          marca: "TECNOLOGÍA",
+          color: "Estándar",
+          precioText: precio,
+          img: img,
+          cantidad: 1
+        });
+      }
 
       btnCarrito.innerHTML = '<i class="fa-solid fa-check"></i> Agregado';
       btnCarrito.classList.add("btn-agregado");
@@ -122,15 +134,6 @@ document.addEventListener("DOMContentLoaded", function () {
         btnCarrito.classList.remove("btn-agregado");
       }, 1500);
 
-      let contador = document.querySelector(".contador-carrito");
-      if (contador) {
-        let num = (parseInt(contador.textContent.trim()) || 0) + 1;
-        contador.textContent = " " + num + " ";
-        contador.classList.add("contador-animado");
-        setTimeout(function () {
-          contador.classList.remove("contador-animado");
-        }, 400);
-      }
       mostrarToast(nombre + " agregado al carrito - " + precio, "fa-cart-shopping", "exito");
     });
 
@@ -217,14 +220,23 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   modal.querySelector(".modal-btn-carrito").addEventListener("click", function () {
-    let nombre = modal.querySelector(".modal-nombre").textContent;
+    let nombre = modal.querySelector(".modal-nombre").textContent.trim();
+    let precio = modal.querySelector(".modal-precio").textContent.trim();
+    let img = modal.querySelector(".modal-imagen img") ? modal.querySelector(".modal-imagen img").src : "";
     let cant = parseInt(numCant.textContent) || 1;
-    let contador = document.querySelector(".contador-carrito");
-    if (contador) {
-      let num = (parseInt(contador.textContent.trim()) || 0) + cant;
-      contador.textContent = " " + num + " ";
+
+    if (window.SenabellaCart) {
+      window.SenabellaCart.agregarProducto({
+        nombre: nombre,
+        marca: "TECNOLOGÍA",
+        color: "Estándar",
+        precioText: precio,
+        img: img,
+        cantidad: cant
+      });
     }
-    mostrarToast(cant + "x " + nombre + " agregado(s)", "fa-cart-shopping", "exito");
+
+    mostrarToast(cant + "x " + nombre + " agregado(s) al carrito", "fa-cart-shopping", "exito");
     cerrarModal();
   });
 

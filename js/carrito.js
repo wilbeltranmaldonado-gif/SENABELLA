@@ -47,18 +47,37 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // 3. ACTUALIZAR CONTADOR EN EL HEADER
-  function actualizarContadorHeader(cantidadTotal) {
-    let contador = document.querySelector(".contador-carrito");
-    if (contador) {
-      contador.textContent = " " + cantidadTotal + " ";
-      contador.classList.add("contador-animado");
-      setTimeout(function () {
-        contador.classList.remove("contador-animado");
-      }, 400);
+  function actualizarContadorHeader() {
+    if (window.SenabellaCart) {
+      window.SenabellaCart.actualizarBadge();
     }
   }
 
-  // 4. RECALCULAR RESUMEN DE LA ORDEN Y PRODUCTOS SELECCIONADOS
+  // 4. SINCRONIZAR ESTADO LOCAL DE FILAS CON LA BASE DE DATOS
+  function sincronizarConDB() {
+    let filas = document.querySelectorAll(".fila-producto");
+    let items = [];
+
+    filas.forEach(function (fila) {
+      let nombre = fila.querySelector(".nombre-producto")?.textContent.trim() || "";
+      let marca = fila.querySelector(".marca-producto")?.textContent.trim() || "SENABELLA";
+      let color = fila.querySelector(".color-producto strong")?.textContent.trim() || "Estándar";
+      let precioText = fila.querySelector(".precio-actual")?.textContent.trim() || "$ 0";
+      let img = fila.querySelector(".imagen-producto")?.src || "";
+      let cantidad = parseInt(fila.querySelector(".selector-cantidad p")?.textContent) || 1;
+      let checked = fila.querySelector('input[type="checkbox"]')?.checked ?? true;
+
+      if (nombre) {
+        items.push({ nombre, marca, color, precioText, img, cantidad, checked });
+      }
+    });
+
+    if (window.SenabellaCart) {
+      window.SenabellaCart.guardarItems(items);
+    }
+  }
+
+  // 5. RECALCULAR RESUMEN DE LA ORDEN Y PRODUCTOS SELECCIONADOS
   function recalcularResumen() {
     let filas = document.querySelectorAll(".fila-producto");
     let totalPrecio = 0;
@@ -81,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
 
-    // Actualizar etiquetas de la interfaz
+    // Actualizar etiquetas en la interfaz
     let tituloCantidad = document.querySelector(".cantidad-carrito");
     let resumenSubtotalLabel = document.querySelector(".fila-resumen p");
     let precioResumen = document.querySelector(".precio-resumen");
@@ -98,13 +117,13 @@ document.addEventListener("DOMContentLoaded", function () {
     if (precioResumen) precioResumen.textContent = formatearPrecio(totalPrecio);
     if (precioTotal) precioTotal.textContent = formatearPrecio(totalPrecio);
 
-    actualizarContadorHeader(cantidadProductosSeleccionados);
     verificarEstadoCarritoVacio();
+    sincronizarConDB();
 
     return totalPrecio;
   }
 
-  // 5. CONTROL DE VISTA CARRITO VACÍO
+  // 6. CONTROL DE VISTA CARRITO VACÍO
   function verificarEstadoCarritoVacio() {
     let contenedorItems = document.getElementById("contenedor-items-carrito");
     let vistaVacio = document.getElementById("vista-carrito-vacio");
@@ -121,7 +140,93 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // 6. EVENTOS PARA CADA FILA DE PRODUCTO
+  // 7. RENDERIZAR PRODUCTOS DESDE BASE DE DATOS LOCAL (LOCALSTORAGE)
+  function cargarProductosDesdeDB() {
+    let items = window.SenabellaCart ? window.SenabellaCart.obtenerItems() : [];
+    let contenedorItems = document.getElementById("contenedor-items-carrito");
+    let vistaVacio = document.getElementById("vista-carrito-vacio");
+
+    if (!contenedorItems || !vistaVacio) return;
+
+    if (items.length === 0) {
+      contenedorItems.style.display = "none";
+      vistaVacio.style.display = "block";
+      recalcularResumen();
+      return;
+    }
+
+    contenedorItems.style.display = "block";
+    vistaVacio.style.display = "none";
+
+    let tarjetaCarrito = contenedorItems.querySelector(".tarjeta-carrito");
+    if (!tarjetaCarrito) {
+      tarjetaCarrito = document.createElement("div");
+      tarjetaCarrito.className = "tarjeta-carrito";
+      contenedorItems.appendChild(tarjetaCarrito);
+    }
+
+    let todosMarcados = items.every(function (it) { return it.checked; });
+
+    let cabecera = `
+      <div class="cabecera-vendedor">
+        <label class="contenedor-casilla">
+          <input type="checkbox" id="check-vendedor-master" ${todosMarcados ? "checked" : ""} />
+          <span class="marca-casilla"></span>
+          <p class="texto-vendedor">Vendido por <strong class="nombre-vendedor">Senabella</strong></p>
+        </label>
+        <i class="fa-solid fa-chevron-up"></i>
+      </div>
+      <div class="divisor-tarjeta"></div>
+    `;
+
+    let filasHTML = "";
+    items.forEach(function (item) {
+      filasHTML += `
+        <div class="fila-producto" data-nombre="${item.nombre}">
+          <label class="contenedor-casilla">
+            <input type="checkbox" ${item.checked ? "checked" : ""} />
+            <span class="marca-casilla"></span>
+          </label>
+          <img src="${item.img || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTnaxViT3U737FB2Z2wgIYSxpYhUeo0T-NOcwgXHJPl5A&s=10'}" alt="${item.nombre}" class="imagen-producto" />
+          <div class="detalles-producto">
+            <h3 class="nombre-producto">${item.nombre}</h3>
+            <p class="marca-producto">${item.marca || 'SENABELLA'}</p>
+            <p class="color-producto">Color: <strong>${item.color || 'Estándar'}</strong></p>
+          </div>
+          <div class="caja-precio-producto">
+            <div class="fila-precio">
+              <p class="precio-actual">${item.precioText}</p>
+            </div>
+          </div>
+          <div class="caja-acciones-producto">
+            <i class="fa-solid fa-trash-can icono-opciones" title="Eliminar producto"></i>
+            <div class="selector-cantidad">
+              <button><i class="fa-solid fa-minus"></i></button>
+              <p>${item.cantidad || 1}</p>
+              <button><i class="fa-solid fa-plus"></i></button>
+            </div>
+          </div>
+        </div>
+        <div class="divisor-tarjeta"></div>
+      `;
+    });
+
+    let garantia = `
+      <div class="caja-garantia">
+        <i class="fa-solid fa-chevron-down"></i>
+      </div>
+    `;
+
+    tarjetaCarrito.innerHTML = cabecera + filasHTML + garantia;
+
+    // Vincular eventos
+    tarjetaCarrito.querySelectorAll(".fila-producto").forEach(vincularEventosFila);
+    vincularEventosCabeceraVendedor(tarjetaCarrito);
+
+    recalcularResumen();
+  }
+
+  // 8. EVENTOS DE FILA INDIVIDUAL
   function vincularEventosFila(fila) {
     let check = fila.querySelector('input[type="checkbox"]');
     if (check) {
@@ -167,45 +272,45 @@ document.addEventListener("DOMContentLoaded", function () {
       iconoEliminar.addEventListener("click", function () {
         let nombre = fila.querySelector(".nombre-producto")?.textContent.trim() || "Producto";
         fila.remove();
+        if (window.SenabellaCart) {
+          window.SenabellaCart.eliminarProducto(nombre);
+        }
         recalcularResumen();
         window.SenabellaToast(nombre.substring(0, 30) + "... eliminado del carrito", "fa-trash-can", "info");
       });
     }
   }
 
-  // Vincular eventos a filas iniciales (si existieran)
-  document.querySelectorAll(".fila-producto").forEach(vincularEventosFila);
-
-  // 7. CONTROL DEL CHECKBOX DEL VENDEDOR Y ACORDEÓN
-  let checkVendedor = document.querySelector(".cabecera-vendedor input[type='checkbox']");
-  if (checkVendedor) {
-    checkVendedor.addEventListener("change", function () {
-      let estaMarcado = checkVendedor.checked;
-      document.querySelectorAll(".fila-producto input[type='checkbox']").forEach(function (chk) {
-        chk.checked = estaMarcado;
+  // 9. EVENTOS DE CABECERA DE VENDEDOR
+  function vincularEventosCabeceraVendedor(tarjeta) {
+    let checkVendedor = tarjeta.querySelector(".cabecera-vendedor input[type='checkbox']");
+    if (checkVendedor) {
+      checkVendedor.addEventListener("change", function () {
+        let estaMarcado = checkVendedor.checked;
+        tarjeta.querySelectorAll(".fila-producto input[type='checkbox']").forEach(function (chk) {
+          chk.checked = estaMarcado;
+        });
+        recalcularResumen();
       });
-      recalcularResumen();
-    });
+    }
+
+    let flechaVendedor = tarjeta.querySelector(".cabecera-vendedor .fa-chevron-up, .cabecera-vendedor .fa-chevron-down");
+    if (flechaVendedor) {
+      flechaVendedor.style.cursor = "pointer";
+      flechaVendedor.addEventListener("click", function () {
+        let elementos = tarjeta.querySelectorAll(".fila-producto, .caja-garantia, .divisor-tarjeta");
+        let estaVisible = flechaVendedor.classList.contains("fa-chevron-up");
+        elementos.forEach(function (el) {
+          el.style.display = estaVisible ? "none" : "";
+        });
+
+        flechaVendedor.classList.toggle("fa-chevron-up", !estaVisible);
+        flechaVendedor.classList.toggle("fa-chevron-down", estaVisible);
+      });
+    }
   }
 
-  let flechaVendedor = document.querySelector(".cabecera-vendedor .fa-chevron-up, .cabecera-vendedor .fa-chevron-down");
-  if (flechaVendedor) {
-    flechaVendedor.style.cursor = "pointer";
-    flechaVendedor.addEventListener("click", function () {
-      let tarjeta = flechaVendedor.closest(".tarjeta-carrito");
-      let elementos = tarjeta.querySelectorAll(".fila-producto, .caja-garantia, .divisor-tarjeta");
-      
-      let estaVisible = flechaVendedor.classList.contains("fa-chevron-up");
-      elementos.forEach(function (el) {
-        el.style.display = estaVisible ? "none" : "";
-      });
-
-      flechaVendedor.classList.toggle("fa-chevron-up", !estaVisible);
-      flechaVendedor.classList.toggle("fa-chevron-down", estaVisible);
-    });
-  }
-
-  // 8. AGREGAR PRODUCTOS DESDE SUGERENCIAS ("¿Y SI LE SUMAS LO ÚLTIMO?")
+  // 10. AGREGAR PRODUCTOS DESDE SUGERENCIAS ("¿Y SI LE SUMAS LO ÚLTIMO?")
   let botonesSugerencia = document.querySelectorAll(".tarjeta-sugerencia .boton-ver-producto");
   botonesSugerencia.forEach(function (btn) {
     btn.addEventListener("click", function () {
@@ -218,97 +323,16 @@ document.addEventListener("DOMContentLoaded", function () {
                        tarjetaSugerida.querySelector("p:not(.marca-sugerencia):not(.nombre-sugerencia):not(.precio-antiguo-pequeno)")?.textContent.trim() || "$ 199.900";
       let img = tarjetaSugerida.querySelector(".imagen-sugerencia")?.src || "";
 
-      let contenedorItems = document.getElementById("contenedor-items-carrito");
-      let vistaVacio = document.getElementById("vista-carrito-vacio");
-      
-      if (vistaVacio) vistaVacio.style.display = "none";
-      if (contenedorItems) contenedorItems.style.display = "block";
-
-      let tarjetaCarrito = document.querySelector(".tarjeta-carrito");
-      if (!tarjetaCarrito && contenedorItems) {
-        tarjetaCarrito = document.createElement("div");
-        tarjetaCarrito.className = "tarjeta-carrito";
-        tarjetaCarrito.innerHTML = `
-          <div class="cabecera-vendedor">
-            <label class="contenedor-casilla">
-              <input type="checkbox" checked />
-              <span class="marca-casilla"></span>
-              <p class="texto-vendedor">Vendido por <strong class="nombre-vendedor">Senabella</strong></p>
-            </label>
-            <i class="fa-solid fa-chevron-up"></i>
-          </div>
-          <div class="divisor-tarjeta"></div>
-          <div class="caja-garantia">
-            <i class="fa-solid fa-chevron-down"></i>
-          </div>
-        `;
-        contenedorItems.appendChild(tarjetaCarrito);
+      if (window.SenabellaCart) {
+        window.SenabellaCart.agregarProducto({
+          nombre: nombre,
+          marca: marca,
+          color: "Estándar",
+          precioText: precioText,
+          img: img,
+          cantidad: 1
+        });
       }
-
-      // Verificar si ya existe en el carrito
-      let filasExistentes = document.querySelectorAll(".fila-producto");
-      let productoExistente = null;
-
-      filasExistentes.forEach(function (fila) {
-        let nombreFila = fila.querySelector(".nombre-producto")?.textContent.trim();
-        if (nombreFila === nombre) {
-          productoExistente = fila;
-        }
-      });
-
-      if (productoExistente) {
-        let numEl = productoExistente.querySelector(".selector-cantidad p");
-        if (numEl) {
-          let cant = parseInt(numEl.textContent) || 1;
-          numEl.textContent = cant + 1;
-        }
-        let check = productoExistente.querySelector('input[type="checkbox"]');
-        if (check) check.checked = true;
-      } else {
-        // Crear nueva fila de producto
-        let nuevaFila = document.createElement("div");
-        nuevaFila.className = "fila-producto";
-        nuevaFila.innerHTML = `
-          <label class="contenedor-casilla">
-            <input type="checkbox" checked />
-            <span class="marca-casilla"></span>
-          </label>
-          <img src="${img}" alt="${nombre}" class="imagen-producto" />
-          <div class="detalles-producto">
-            <h3 class="nombre-producto">${nombre}</h3>
-            <p class="marca-producto">${marca}</p>
-            <p class="color-producto">Color: <strong>Estándar</strong></p>
-          </div>
-          <div class="caja-precio-producto">
-            <div class="fila-precio">
-              <p class="precio-actual">${precioText}</p>
-            </div>
-          </div>
-          <div class="caja-acciones-producto">
-            <i class="fa-solid fa-trash-can icono-opciones" title="Eliminar producto"></i>
-            <div class="selector-cantidad">
-              <button><i class="fa-solid fa-minus"></i></button>
-              <p>1</p>
-              <button><i class="fa-solid fa-plus"></i></button>
-            </div>
-          </div>
-        `;
-
-        let cajaGarantia = tarjetaCarrito.querySelector(".caja-garantia");
-        if (cajaGarantia) {
-          tarjetaCarrito.insertBefore(nuevaFila, cajaGarantia);
-          let divisor = document.createElement("div");
-          divisor.className = "divisor-tarjeta";
-          tarjetaCarrito.insertBefore(divisor, cajaGarantia);
-        } else {
-          tarjetaCarrito.appendChild(nuevaFila);
-        }
-
-        vincularEventosFila(nuevaFila);
-      }
-
-      // Marcar checkbox del vendedor si se agrega producto
-      if (checkVendedor) checkVendedor.checked = true;
 
       // Animación en el botón de la sugerencia
       let textoOriginal = btn.textContent;
@@ -322,12 +346,12 @@ document.addEventListener("DOMContentLoaded", function () {
         btn.style.color = "";
       }, 1500);
 
-      recalcularResumen();
+      cargarProductosDesdeDB();
       window.SenabellaToast(nombre + " agregado al carrito", "fa-cart-plus", "exito");
     });
   });
 
-  // 9. PROCESO DE COMPRA (BOTÓN CONTINUAR COMPRA / PAGAR)
+  // 11. PROCESO DE COMPRA (BOTÓN CONTINUAR COMPRA / PAGAR)
   let botonPagar = document.querySelector(".tarjeta-resumen .boton-pagar") || document.querySelector(".boton-pagar");
   if (botonPagar) {
     botonPagar.addEventListener("click", function (e) {
@@ -357,15 +381,11 @@ document.addEventListener("DOMContentLoaded", function () {
         window.SenabellaToast("¡Tu pedido se ha procesado con éxito!", "fa-circle-check", "exito");
 
         setTimeout(function () {
-          // Eliminar los productos comprados que estaban seleccionados
-          document.querySelectorAll(".fila-producto").forEach(function (fila) {
-            let check = fila.querySelector('input[type="checkbox"]');
-            if (check && check.checked) {
-              fila.remove();
-            }
-          });
+          if (window.SenabellaCart) {
+            window.SenabellaCart.limpiarComprados();
+          }
 
-          recalcularResumen();
+          cargarProductosDesdeDB();
           botonPagar.disabled = false;
           botonPagar.textContent = textoOriginal;
           botonPagar.style.backgroundColor = "";
@@ -375,6 +395,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // INICIALIZAR ESTADO AL CARGAR
-  recalcularResumen();
+  // INICIALIZAR Y CARGAR DESDE LA BASE DE DATOS LOCAL EN EL INICIO DE LA PÁGINA
+  cargarProductosDesdeDB();
 });
