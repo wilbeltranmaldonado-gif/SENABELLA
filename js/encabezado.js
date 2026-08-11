@@ -62,7 +62,7 @@ const headerHTML = `
 
         <div class="enlaces-navegacion">
 
-            <a href="inicio.html">
+            <a href="vender.html">
                 Vende en Senabella.com
             </a>
 
