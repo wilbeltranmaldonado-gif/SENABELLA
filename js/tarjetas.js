@@ -61,20 +61,37 @@ animarAlScroll();
 
 
 // ==========================================
-// ACTUALIZAR PREVIEW DE LA TARJETA
+// VALIDACIONES Y PREVIEW DE LA TARJETA
 // ==========================================
 
 const campoNombre = document.getElementById("nombre-completo");
+const campoDocumento = document.getElementById("documento");
+const campoTelefono = document.getElementById("telefono");
 const previewNombre = document.getElementById("preview-nombre");
 
-if (campoNombre && previewNombre) {
+// Validar Nombre: sin números y máximo 32 caracteres
+if (campoNombre) {
     campoNombre.addEventListener("input", function () {
-        const valor = campoNombre.value.trim();
-        if (valor.length > 0) {
-            previewNombre.textContent = valor.toUpperCase();
-        } else {
-            previewNombre.textContent = "JUAN PÉREZ";
+        this.value = this.value.replace(/[0-9]/g, "").slice(0, 32);
+
+        const valor = this.value.trim();
+        if (previewNombre) {
+            previewNombre.textContent = valor.length > 0 ? valor.toUpperCase() : "JUAN PÉREZ";
         }
+    });
+}
+
+// Validar Número de documento: no se pueden escribir letras (solo números)
+if (campoDocumento) {
+    campoDocumento.addEventListener("input", function () {
+        this.value = this.value.replace(/[^0-9]/g, "");
+    });
+}
+
+// Validar Teléfono: máximo 15 caracteres
+if (campoTelefono) {
+    campoTelefono.addEventListener("input", function () {
+        this.value = this.value.replace(/[^0-9+\s-]/g, "").slice(0, 15);
     });
 }
 
