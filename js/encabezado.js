@@ -102,10 +102,6 @@ const headerHTML = `
 
             <div class="contenido-desplegable" id="menu-ayuda">
 
-                <a href="preguntas.html">
-                    Preguntas frecuentes
-                </a>
-
                 <a href="contacto.html">
                     Contáctanos
                 </a>
