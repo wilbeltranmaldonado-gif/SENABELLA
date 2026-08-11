@@ -240,6 +240,117 @@ a {
 }
 
 /* ==========================================
+   MENÚS DESPLEGABLES
+   ========================================== */
+
+/* Contenedor de cada menú */
+.menu-desplegable {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+
+/* Botón de Tarjetas y cuentas / Ayuda */
+.boton-desplegable {
+    background: none;
+    border: none;
+    padding: 0;
+
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    transition: var(--transition-fast);
+}
+
+
+/* Efecto al pasar el mouse */
+.boton-desplegable:hover {
+    color: var(--primary-color);
+}
+
+
+/* Flecha */
+.boton-desplegable i {
+    font-size: 10px;
+
+    transition: transform 0.25s ease;
+}
+
+
+/* Girar la flecha cuando está abierto */
+.boton-desplegable.activo i {
+    transform: rotate(180deg);
+}
+
+
+/* ==========================================
+   CONTENIDO DEL MENÚ
+   ========================================== */
+
+.contenido-desplegable {
+    position: absolute;
+
+    top: calc(100% + 10px);
+    left: 0;
+
+    min-width: 200px;
+
+    background-color: #ffffff;
+
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+
+    box-shadow: var(--card-shadow);
+
+    padding: 8px 0;
+
+    z-index: 1000;
+
+    /* Oculto inicialmente */
+    display: none;
+}
+
+
+/* Cuando JavaScript agrega "mostrar" */
+.contenido-desplegable.mostrar {
+    display: block;
+}
+
+
+/* ==========================================
+   OPCIONES DEL MENÚ
+   ========================================== */
+
+.contenido-desplegable a {
+    display: block;
+
+    padding: 10px 16px;
+
+    font-size: 13px;
+
+    color: #4a4a4a;
+
+    transition: var(--transition-fast);
+}
+
+
+/* Hover de las opciones */
+.contenido-desplegable a:hover {
+    background-color: #f4f4f4;
+
+    color: var(--primary-color);
+}
+
+
+/* ==========================================
 MODO OSCURO GENERAL
 ========================================== */
 
@@ -502,3 +613,38 @@ background-color 0.3s ease,
 color 0.3s ease;
 }
 
+
+
+/* ==========================================
+   MODO OSCURO MENU DESPLEGABLE
+   ========================================== */
+
+body.modo-oscuro .contenido-desplegable {
+    background-color: #1e1e1e !important;
+
+    border-color: #444444 !important;
+
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+
+body.modo-oscuro .contenido-desplegable a {
+    color: white !important;
+}
+
+
+body.modo-oscuro .contenido-desplegable a:hover {
+    background-color: #292929 !important;
+
+    color: var(--primary-color) !important;
+}
+
+
+body.modo-oscuro .boton-desplegable {
+    color: white !important;
+}
+
+
+body.modo-oscuro .boton-desplegable:hover {
+    color: var(--primary-color) !important;
+}

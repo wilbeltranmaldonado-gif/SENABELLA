@@ -66,21 +66,66 @@ const headerHTML = `
                 Vende en Senabella.com
             </a>
 
-            <a href="catalogo.html">
+            
+        <!-- TARJETAS Y CUENTAS -->
+
+        <div class="menu-desplegable">
+
+            <button class="boton-desplegable" id="boton-tarjetas">
                 Tarjetas y cuentas
                 <i class="fa-solid fa-chevron-down"></i>
-            </a>
+            </button>
+
+            <div class="contenido-desplegable" id="menu-tarjetas">
+
+                <a href="catalogo.html">
+                    Tarjetas
+                </a>
+
+                <a href="cuentas.html">
+                    Cuentas
+                </a>
+
+                <a href="regalos.html">
+                    Tarjetas de regalo
+                </a>
+
+            </div>
+
+        </div>
 
             <a href="parejas.html">
                 Parejas
             </a>
 
-            <a href="usuario.html">
+
+             <!-- AYUDA -->
+
+        <div class="menu-desplegable">
+
+            <button class="boton-desplegable" id="boton-ayuda">
                 Ayuda
                 <i class="fa-solid fa-chevron-down"></i>
-            </a>
+            </button>
+
+            <div class="contenido-desplegable" id="menu-ayuda">
+
+                <a href="preguntas.html">
+                    Preguntas frecuentes
+                </a>
+
+                <a href="contacto.html">
+                    Contáctanos
+                </a>
+
+                <a href="soporte.html">
+                    Soporte
+                </a>
+
+            </div>
 
         </div>
+
 
     </div>
 `;
@@ -176,3 +221,29 @@ botonUbicacion.addEventListener("click", function () {
 
 });
 
+// ==========================================
+// MENÚ TARJETAS Y CUENTAS
+// ==========================================
+
+const botonTarjetas = document.querySelector("#boton-tarjetas");
+const menuTarjetas = document.querySelector("#menu-tarjetas");
+
+botonTarjetas.addEventListener("click", function () {
+
+    menuTarjetas.classList.toggle("mostrar");
+
+});
+
+
+// ==========================================
+// MENÚ AYUDA
+// ==========================================
+
+const botonAyuda = document.querySelector("#boton-ayuda");
+const menuAyuda = document.querySelector("#menu-ayuda");
+
+botonAyuda.addEventListener("click", function () {
+
+    menuAyuda.classList.toggle("mostrar");
+
+});
