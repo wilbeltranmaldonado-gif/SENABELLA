@@ -217,9 +217,19 @@ const botonTarjetas = document.querySelector("#boton-tarjetas");
 const menuTarjetas = document.querySelector("#menu-tarjetas");
 
 botonTarjetas.addEventListener("click", function () {
-
     menuTarjetas.classList.toggle("mostrar");
+});
 
+
+// ==========================================
+// MENÚ AYUDA
+// ==========================================
+
+const botonAyuda = document.querySelector("#boton-ayuda");
+const menuAyuda = document.querySelector("#menu-ayuda");
+
+botonAyuda.addEventListener("click", function () {
+    menuAyuda.classList.toggle("mostrar");
 });
 
 
