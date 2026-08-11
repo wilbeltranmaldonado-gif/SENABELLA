@@ -66,7 +66,9 @@ animarAlScroll();
 
 const campoNombre = document.getElementById("nombre-completo");
 const campoDocumento = document.getElementById("documento");
+const campoCorreo = document.getElementById("correo");
 const campoTelefono = document.getElementById("telefono");
+const campoPrograma = document.getElementById("programa");
 const previewNombre = document.getElementById("preview-nombre");
 
 // Validar Nombre: sin números y máximo 32 caracteres
@@ -81,10 +83,17 @@ if (campoNombre) {
     });
 }
 
-// Validar Número de documento: no se pueden escribir letras (solo números)
+// Validar Número de documento: solo números y máximo 32 caracteres
 if (campoDocumento) {
     campoDocumento.addEventListener("input", function () {
-        this.value = this.value.replace(/[^0-9]/g, "");
+        this.value = this.value.replace(/[^0-9]/g, "").slice(0, 32);
+    });
+}
+
+// Validar Correo electrónico: máximo 50 caracteres
+if (campoCorreo) {
+    campoCorreo.addEventListener("input", function () {
+        this.value = this.value.slice(0, 50);
     });
 }
 
@@ -92,6 +101,13 @@ if (campoDocumento) {
 if (campoTelefono) {
     campoTelefono.addEventListener("input", function () {
         this.value = this.value.replace(/[^0-9+\s-]/g, "").slice(0, 15);
+    });
+}
+
+// Validar Programa de formación: máximo 100 caracteres
+if (campoPrograma) {
+    campoPrograma.addEventListener("input", function () {
+        this.value = this.value.slice(0, 100);
     });
 }
 
