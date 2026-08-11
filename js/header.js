@@ -46,7 +46,7 @@ const headerHTML = `
 
             <a href="carrito.html" class="icono-carrito">
                 <i class="fa-solid fa-cart-shopping"></i>
-                <p class="contador-carrito">1</p>
+                <p class="contador-carrito"> 0 </p>
             </a>
 
         </div>

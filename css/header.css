@@ -291,6 +291,7 @@ a {
 }
 
 
+
 /* ==========================================
    CONTENIDO DEL MENÚ
    ========================================== */
@@ -349,6 +350,10 @@ a {
     color: var(--primary-color);
 }
 
+#menu-ayuda {
+    left: auto;
+    right: 0;
+}
 
 /* ==========================================
 MODO OSCURO GENERAL
@@ -646,5 +651,20 @@ body.modo-oscuro .boton-desplegable {
 
 
 body.modo-oscuro .boton-desplegable:hover {
+    color: var(--primary-color) !important;
+}
+
+/* ==========================================
+   CORRECCIÓN BOTONES DE MENÚ EN MODO OSCURO
+   ========================================== */
+
+body.modo-oscuro .boton-desplegable {
+    background-color: transparent !important;
+    color: white !important;
+    border: none !important;
+}
+
+body.modo-oscuro .boton-desplegable:hover {
+    background-color: transparent !important;
     color: var(--primary-color) !important;
 }
