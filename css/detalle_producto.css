@@ -136,28 +136,48 @@
 
 .acciones-producto {
   display: flex;
-  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
   flex-wrap: wrap;
+  margin-top: 15px;
 }
 
 .btn-primario,
 .btn-secundario {
+  flex: 1;
+  min-width: 180px;
   border: none;
-  border-radius: 12px;
-  padding: 14px 20px;
-  font-size: 0.98rem;
+  border-radius: 30px;
+  padding: 14px 24px;
+  font-size: 1rem;
   font-weight: 800;
   cursor: pointer;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
 }
 
 .btn-primario {
-  background: #eef2f7;
-  color: rgb(0, 0, 0);
+  background: #84b814;
+  color: #ffffff;
+}
+
+.btn-primario:hover {
+  background: #6e9b10;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(132, 184, 20, 0.35);
 }
 
 .btn-secundario {
-  background: #eef2f7;
-  color: var(--texto);
+  background: #333d45;
+  color: #ffffff;
+}
+
+.btn-secundario:hover {
+  background: #1f262c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(51, 61, 69, 0.35);
 }
 
 .footer {

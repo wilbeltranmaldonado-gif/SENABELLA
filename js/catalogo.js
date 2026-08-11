@@ -1,7 +1,31 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-  
-  // 2. Slider horizontal de marcas
+  // 1. Elementos y datos
+  let productos = Array.from(document.querySelectorAll(".tar-producto"));
+  let gridProductos = document.querySelector(".tarjeta-producto");
+  let numResultados = document.querySelector(".resultados");
+
+  let filtroMarcaButtons = document.querySelectorAll(".filtro-marca .botones button");
+  let categoriasCirculares = document.querySelectorAll(".categorias-circulares .categoria");
+  let categoriasLista = document.querySelectorAll(".categorias-lista .categoria-lis");
+  let paginacionNumeros = document.querySelectorAll(".num-pagina span.pag-2");
+  let paginacionFlechaIzq = document.querySelector(".num-pagina .fa-chevron-left");
+  let paginacionFlechaDer = document.querySelector(".num-pagina .fa-chevron-right");
+  let selectOrden = document.querySelector(".opciones-recomendacion");
+
+  let estadoFiltro = {
+    marcas: [],
+    categoria: "",
+    procesadores: [],
+    rams: [],
+    pantallas: [],
+    resoluciones: [],
+    precioMax: null,
+    descuentoMin: null,
+    paginaActual: 1
+  };
+
+  // 2. Slider horizontal de marcas (Botón Flecha)
   let contenedorBotones = document.querySelector(".botones");
   let flecha = document.querySelector(".boton-flecha");
 
@@ -12,29 +36,300 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Resaltar marca seleccionada
-  let botonesMarca = document.querySelectorAll(".botones button");
-  for (let i = 0; i < botonesMarca.length; i++) {
-    botonesMarca[i].addEventListener("click", function () {
-      for (let j = 0; j < botonesMarca.length; j++) {
-        botonesMarca[j].classList.remove("sn-activo");
-        botonesMarca[j].style.background = "";
-        botonesMarca[j].style.color = "";
-      }
-      this.classList.add("sn-activo");
-      this.style.background = "#84b814";
-      this.style.color = "#fff";
+  // 3. Función principal de filtrado y actualización
+  function aplicarFiltros() {
+    let productosVisibles = 0;
 
-      if (window.SenabellaToast) {
-        window.SenabellaToast("Filtrando por " + this.textContent.trim(), "fa-tag");
+    productos.forEach(function (tarjeta) {
+      let nomMarcaEl = tarjeta.querySelector(".nom-producto");
+      let descEl = tarjeta.querySelector(".descripcion");
+      let precioEl = tarjeta.querySelector(".precio");
+      let descuentoEl = tarjeta.querySelector(".descuento");
+
+      let marcaTexto = nomMarcaEl ? nomMarcaEl.textContent.trim().toUpperCase() : "";
+      let descTexto = descEl ? descEl.textContent.trim().toLowerCase() : "";
+      let precioTexto = precioEl ? precioEl.textContent.replace(/[^\d]/g, "") : "0";
+      let precioValor = parseFloat(precioTexto) || 0;
+      let descuentoTexto = descuentoEl ? descuentoEl.textContent.replace(/[^\d]/g, "") : "0";
+      let descuentoValor = parseFloat(descuentoTexto) || 0;
+
+      // Filtro de Marca (lista múltiple o individual)
+      let cumpleMarca = estadoFiltro.marcas.length === 0 || estadoFiltro.marcas.includes(marcaTexto);
+
+      // Filtro de Categoría
+      let cumpleCategoria = !estadoFiltro.categoria || descTexto.includes(estadoFiltro.categoria.toLowerCase());
+
+      // Filtro de Procesador
+      let cumpleProcesador = estadoFiltro.procesadores.length === 0 || estadoFiltro.procesadores.some(p => descTexto.includes(p.toLowerCase()));
+
+      // Filtro de Memoria RAM
+      let cumpleRAM = estadoFiltro.rams.length === 0 || estadoFiltro.rams.some(r => descTexto.includes(r.toLowerCase()));
+
+      // Filtro de Pantalla
+      let cumplePantalla = estadoFiltro.pantallas.length === 0 || estadoFiltro.pantallas.some(p => descTexto.includes(p.toLowerCase()));
+
+      // Filtro de Resolución
+      let cumpleResolucion = estadoFiltro.resoluciones.length === 0 || estadoFiltro.resoluciones.some(r => descTexto.includes(r.toLowerCase()));
+
+      // Filtro de Precio
+      let cumplePrecio = true;
+      if (estadoFiltro.precioMax !== null) {
+        if (estadoFiltro.precioMax === 500000) cumplePrecio = precioValor < 500000;
+        else if (estadoFiltro.precioMax === 1000000) cumplePrecio = precioValor >= 500000 && precioValor <= 1000000;
+        else if (estadoFiltro.precioMax === 2000000) cumplePrecio = precioValor > 1000000;
+      }
+
+      // Filtro de Descuento
+      let cumpleDescuento = estadoFiltro.descuentoMin === null || descuentoValor >= estadoFiltro.descuentoMin;
+
+      if (cumpleMarca && cumpleCategoria && cumpleProcesador && cumpleRAM && cumplePantalla && cumpleResolucion && cumplePrecio && cumpleDescuento) {
+        tarjeta.style.display = "block";
+        productosVisibles++;
+      } else {
+        tarjeta.style.display = "none";
+      }
+    });
+
+    if (numResultados) {
+      numResultados.textContent = "Resultados (" + productosVisibles + ")";
+    }
+
+    if (window.SenabellaToast && (estadoFiltro.marcas.length > 0 || estadoFiltro.categoria)) {
+      let textoToast = "Filtrando por: " + (estadoFiltro.marcas.join(", ") || estadoFiltro.categoria);
+      window.SenabellaToast(textoToast, "fa-filter");
+    }
+  }
+
+  // 4. Filtros de Marcas superiores (Botones de Marca)
+  filtroMarcaButtons.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      let marcaSeleccionada = this.textContent.trim().toUpperCase();
+
+      if (this.classList.contains("sn-activo")) {
+        this.classList.remove("sn-activo");
+        this.style.background = "";
+        this.style.color = "";
+        estadoFiltro.marcas = estadoFiltro.marcas.filter(m => m !== marcaSeleccionada);
+      } else {
+        filtroMarcaButtons.forEach(function (b) {
+          b.classList.remove("sn-activo");
+          b.style.background = "";
+          b.style.color = "";
+        });
+        this.classList.add("sn-activo");
+        this.style.background = "#84b814";
+        this.style.color = "#fff";
+        estadoFiltro.marcas = [marcaSeleccionada];
+      }
+      aplicarFiltros();
+    });
+  });
+
+  // 5. Botones Circulares Superiores (Categorías circulares - Sin contorno permanente al desmarcar)
+  categoriasCirculares.forEach(function (cat) {
+    cat.style.cursor = "pointer";
+    let imgDiv = cat.querySelector(".imagen-cat");
+
+    cat.addEventListener("click", function () {
+      let titulo = this.querySelector(".titulo-cat") ? this.querySelector(".titulo-cat").textContent.trim() : "";
+      let yaActivo = this.classList.contains("circulo-activo");
+
+      // Limpiar estado activo de todos los círculos
+      categoriasCirculares.forEach(function (c) {
+        c.classList.remove("circulo-activo");
+        c.style.transform = "";
+        let iDiv = c.querySelector(".imagen-cat");
+        if (iDiv) {
+          iDiv.style.border = "";
+          iDiv.style.borderColor = "";
+          iDiv.style.boxShadow = "";
+        }
+      });
+
+      if (!yaActivo) {
+        this.classList.add("circulo-activo");
+        this.style.transform = "scale(1.08)";
+        if (imgDiv) {
+          imgDiv.style.border = "2px solid #84b814";
+          imgDiv.style.boxShadow = "0 0 10px rgba(132, 184, 20, 0.4)";
+        }
+
+        // Mapear nombres clave para filtrar la descripción
+        if (titulo.toLowerCase().includes("portátiles")) estadoFiltro.categoria = "portátil";
+        else if (titulo.toLowerCase().includes("impresoras")) estadoFiltro.categoria = "impresora";
+        else if (titulo.toLowerCase().includes("tablets")) estadoFiltro.categoria = "tablet";
+        else if (titulo.toLowerCase().includes("almacenamiento")) estadoFiltro.categoria = "disco";
+        else if (titulo.toLowerCase().includes("monitores")) estadoFiltro.categoria = "monitor";
+        else if (titulo.toLowerCase().includes("software")) estadoFiltro.categoria = "software";
+        else estadoFiltro.categoria = titulo.split(" ")[0];
+      } else {
+        estadoFiltro.categoria = "";
+      }
+
+      aplicarFiltros();
+    });
+  });
+
+  // 6. Botones del menú lateral izquierdo (Categorías y Filtros desplegables funcionales)
+  categoriasLista.forEach(function (catItem) {
+    catItem.style.cursor = "pointer";
+    catItem.addEventListener("click", function () {
+      let textoCat = this.textContent.trim();
+      let yaActiva = this.classList.contains("cat-lista-activa");
+
+      categoriasLista.forEach(function (c) {
+        c.classList.remove("cat-lista-activa");
+        c.style.fontWeight = "normal";
+        c.style.color = "";
+      });
+
+      if (!yaActiva) {
+        this.classList.add("cat-lista-activa");
+        this.style.fontWeight = "bold";
+        this.style.color = "#84b814";
+
+        if (textoCat.toLowerCase().includes("portátiles")) estadoFiltro.categoria = "portátil";
+        else if (textoCat.toLowerCase().includes("impresoras")) estadoFiltro.categoria = "impresora";
+        else if (textoCat.toLowerCase().includes("tablets")) estadoFiltro.categoria = "tablet";
+        else estadoFiltro.categoria = textoCat.split(" ")[0];
+      } else {
+        estadoFiltro.categoria = "";
+      }
+
+      aplicarFiltros();
+    });
+  });
+
+  // Acordeones interactivos desplegables del menú lateral
+  let desplegablesIzquierda = document.querySelectorAll(".menu_lateral .filtro1");
+  desplegablesIzquierda.forEach(function (headerFiltro) {
+    headerFiltro.style.cursor = "pointer";
+    headerFiltro.addEventListener("click", function () {
+      let contenedorPadre = this.closest(".filtro");
+      let icono = this.querySelector("i");
+      let contenidoOculto = contenedorPadre.querySelectorAll(".opcion-domicilio, .info-entrega, .categorias-lista, .opciones-filtro-lateral");
+
+      if (contenidoOculto.length > 0) {
+        let estaVisible = contenidoOculto[0].style.display !== "none";
+        contenidoOculto.forEach(function (el) {
+          el.style.display = estaVisible ? "none" : "block";
+        });
+        if (icono) {
+          icono.classList.toggle("fa-chevron-up", !estaVisible);
+          icono.classList.toggle("fa-chevron-down", estaVisible);
+        }
+      }
+    });
+  });
+
+  // Escuchar checkboxes del menú lateral
+  document.querySelectorAll(".opciones-filtro-lateral input[type='checkbox']").forEach(function (input) {
+    input.addEventListener("change", function () {
+      let filtroPadre = this.closest(".filtro").querySelector(".filtro1").textContent.trim();
+
+      // Recopilar selección de marcas del menú lateral
+      if (filtroPadre.includes("Marca")) {
+        estadoFiltro.marcas = Array.from(document.querySelectorAll(".menu_lateral input[type='checkbox']:checked"))
+          .filter(chk => chk.closest(".filtro").querySelector(".filtro1").textContent.includes("Marca"))
+          .map(chk => chk.value.toUpperCase());
+      }
+
+      // Recopilar selección de procesadores
+      if (filtroPadre.includes("Procesador")) {
+        estadoFiltro.procesadores = Array.from(document.querySelectorAll(".menu_lateral input[type='checkbox']:checked"))
+          .filter(chk => chk.closest(".filtro").querySelector(".filtro1").textContent.includes("Procesador"))
+          .map(chk => chk.value);
+      }
+
+      // Recopilar selección de RAM
+      if (filtroPadre.includes("Memoria RAM")) {
+        estadoFiltro.rams = Array.from(document.querySelectorAll(".menu_lateral input[type='checkbox']:checked"))
+          .filter(chk => chk.closest(".filtro").querySelector(".filtro1").textContent.includes("Memoria RAM"))
+          .map(chk => chk.value);
+      }
+
+      // Recopilar selección de Pantalla
+      if (filtroPadre.includes("Tamaño de pantalla")) {
+        estadoFiltro.pantallas = Array.from(document.querySelectorAll(".menu_lateral input[type='checkbox']:checked"))
+          .filter(chk => chk.closest(".filtro").querySelector(".filtro1").textContent.includes("Tamaño de pantalla"))
+          .map(chk => chk.value);
+      }
+
+      // Recopilar selección de Resolución
+      if (filtroPadre.includes("Resolución de pantalla")) {
+        estadoFiltro.resoluciones = Array.from(document.querySelectorAll(".menu_lateral input[type='checkbox']:checked"))
+          .filter(chk => chk.closest(".filtro").querySelector(".filtro1").textContent.includes("Resolución de pantalla"))
+          .map(chk => chk.value);
+      }
+
+      // Recopilar selección de Precio
+      if (filtroPadre.includes("Precio")) {
+        let precioChk = document.querySelector(".menu_lateral input[type='checkbox']:checked");
+        estadoFiltro.precioMax = precioChk ? parseFloat(precioChk.value) : null;
+      }
+
+      // Recopilar selección de Descuentos
+      if (filtroPadre.includes("Descuentos")) {
+        let descChk = document.querySelector(".menu_lateral input[type='checkbox']:checked");
+        estadoFiltro.descuentoMin = descChk ? parseFloat(descChk.value) : null;
+      }
+
+      aplicarFiltros();
+    });
+  });
+
+  // 7. Paginación de Productos (Cambiar de página)
+  paginacionNumeros.forEach(function (pagBtn) {
+    pagBtn.style.cursor = "pointer";
+    pagBtn.addEventListener("click", function () {
+      let numPag = parseInt(this.textContent.trim());
+      if (!isNaN(numPag)) {
+        cambiarPagina(numPag);
+      }
+    });
+  });
+
+  if (paginacionFlechaIzq) {
+    paginacionFlechaIzq.style.cursor = "pointer";
+    paginacionFlechaIzq.addEventListener("click", function () {
+      if (estadoFiltro.paginaActual > 1) {
+        cambiarPagina(estadoFiltro.paginaActual - 1);
       }
     });
   }
 
-  // 3. Ordenar productos por precio
-  let selectOrden = document.querySelector(".opciones-recomendacion");
-  let gridProductos = document.querySelector(".tarjeta-producto");
+  if (paginacionFlechaDer) {
+    paginacionFlechaDer.style.cursor = "pointer";
+    paginacionFlechaDer.addEventListener("click", function () {
+      if (estadoFiltro.paginaActual < 3) {
+        cambiarPagina(estadoFiltro.paginaActual + 1);
+      }
+    });
+  }
 
+  function cambiarPagina(numPag) {
+    estadoFiltro.paginaActual = numPag;
+
+    paginacionNumeros.forEach(function (span) {
+      if (parseInt(span.textContent.trim()) === numPag) {
+        span.classList.add("active");
+        span.style.fontWeight = "bold";
+        span.style.color = "#84b814";
+      } else {
+        span.classList.remove("active");
+        span.style.fontWeight = "normal";
+        span.style.color = "";
+      }
+    });
+
+    if (window.SenabellaToast) {
+      window.SenabellaToast("Página " + numPag + " cargada", "fa-file-lines");
+    }
+
+    gridProductos.scrollIntoView({ behavior: "smooth" });
+  }
+
+  // 8. Ordenar productos por precio
   if (selectOrden && gridProductos) {
     selectOrden.addEventListener("change", function () {
       let tarjetas = Array.from(gridProductos.querySelectorAll(".tar-producto"));
@@ -57,13 +352,84 @@ document.addEventListener("DOMContentLoaded", function () {
         return 0;
       });
 
-      for (let i = 0; i < tarjetas.length; i++) {
-        gridProductos.appendChild(tarjetas[i]);
-      }
+      tarjetas.forEach(function (t) {
+        gridProductos.appendChild(t);
+      });
 
       if (window.SenabellaToast) {
         window.SenabellaToast("Orden aplicado: " + selectOrden.value, "fa-arrow-down-wide-short");
       }
     });
   }
+
+  // 9. Redirección dinámica al hacer clic en un producto (Guardar producto seleccionado)
+  productos.forEach(function (card) {
+    let enlace = card.querySelector("a");
+    if (enlace) {
+      enlace.addEventListener("click", function (e) {
+        let titulo = card.querySelector(".descripcion")?.textContent.trim() || "Producto";
+        let marca = card.querySelector(".nom-producto")?.textContent.trim() || "SENABELLA";
+        let precioActual = card.querySelector(".precio")?.textContent.split("\n")[0].trim() || "$ 0";
+        let precioAntiguo = card.querySelector(".precio-secundario1")?.textContent.trim() || "$ 0";
+        let img = card.querySelector("img")?.src || "";
+
+        let productoSeleccionado = {
+          titulo: titulo,
+          marca: marca,
+          descripcion: titulo + " - Excelente opción con garantía oficial Senabella.",
+          precioActual: precioActual,
+          precioAntiguo: precioAntiguo,
+          imagen: img
+        };
+
+        localStorage.setItem("productoSeleccionado", JSON.stringify(productoSeleccionado));
+      });
+    }
+  });
+
+  // 10. Botón Favoritos en las tarjetas
+  let favButtons = document.querySelectorAll(".favorite-btn");
+  favButtons.forEach(function (btn) {
+    btn.style.cursor = "pointer";
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      let esFav = this.classList.contains("fa-regular");
+      this.classList.toggle("fa-regular", !esFav);
+      this.classList.toggle("fa-solid", esFav);
+      this.style.color = esFav ? "#e63946" : "";
+
+      if (window.SenabellaToast) {
+        window.SenabellaToast(esFav ? "Agregado a tus favoritos" : "Eliminado de favoritos", esFav ? "fa-heart" : "fa-heart-crack");
+      }
+    });
+  });
+
+  // 10. Guardar datos del producto seleccionado para la vista detalle
+  productos.forEach(function (producto) {
+    producto.addEventListener("click", function (e) {
+      if (e.target.classList.contains("favorite-btn")) return;
+
+      let marca = producto.querySelector(".nom-producto") ? producto.querySelector(".nom-producto").textContent.trim() : "";
+      let descripcion = producto.querySelector(".descripcion") ? producto.querySelector(".descripcion").textContent.trim() : "";
+      let imagen = producto.querySelector("img") ? producto.querySelector("img").src : "";
+      let precioEl = producto.querySelector(".precio");
+      let precioActual = precioEl ? (precioEl.childNodes[0] ? precioEl.childNodes[0].textContent.trim() : precioEl.textContent.trim()) : "";
+      let precioAntiguo = producto.querySelector(".precio-secundario1") ? producto.querySelector(".precio-secundario1").textContent.trim() : "";
+      let referencia = producto.querySelector(".referencia") ? producto.querySelector(".referencia").textContent.trim() : "";
+
+      let datosProducto = {
+        marca: marca,
+        titulo: marca + " - " + descripcion,
+        descripcion: descripcion,
+        imagen: imagen,
+        precioActual: precioActual,
+        precioAntiguo: precioAntiguo,
+        referencia: referencia
+      };
+
+      localStorage.setItem("productoSeleccionado", JSON.stringify(datosProducto));
+    });
+  });
+
 });
