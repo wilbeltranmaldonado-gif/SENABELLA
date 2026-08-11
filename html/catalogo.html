@@ -1,0 +1,610 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Catalogo</title>
+
+    <!-- Iconos de font awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <!-- Bootstrap 5.3 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+
+    <link rel="stylesheet" href="../css/catalogo.css" />
+    <link rel="stylesheet" href="../css/header.css" />
+
+  </head>
+  <body>
+  
+    <!-- Header -->
+  <div id="header-container"> </div>
+
+
+
+    <!-- sesion categorias circulares -->
+    <section class="categorias-circulares">
+      <!-- Circulo-1 -->
+      <div class="categoria">
+        <div class="imagen-cat">
+          <a href="detalle_producto.html"
+            ><img src="../recursos/public (1).webp" alt="Portátiles"
+          /></a>
+        </div>
+        <div class="titulo-cat">Computadores Portátiles</div>
+      </div>
+
+      <!-- Circulo-2 -->
+      <div class="categoria">
+        <div class="imagen-cat">
+          <a href="detalle_producto.html"
+            ><img src="../recursos/teclado.webp" alt="Accesorios"
+          /></a>
+        </div>
+        <div class="titulo-cat">Accesorios de computación</div>
+      </div>
+
+      <!-- Circulo-3 -->
+      <div class="categoria">
+        <div class="imagen-cat">
+          <a href="detalle_producto.html"
+            ><img src="../recursos/public (1) (1).webp" alt="Tablets"
+          /></a>
+        </div>
+        <div class="titulo-cat">Tablets</div>
+      </div>
+
+      <!-- Circulo-4 -->
+      <div class="categoria">
+        <div class="imagen-cat">
+          <a href="detalle_producto.html"
+            ><img src="../recursos/public (2) (1).webp" alt="Impresoras"
+          /></a>
+        </div>
+        <div class="titulo-cat">Impresoras y Tintas</div>
+      </div>
+
+      <!-- Circulo-5 -->
+      <div class="categoria">
+        <div class="imagen-cat">
+          <a href="detalle_producto.html"
+            ><img src="../recursos/public (3) (1).webp" alt="Desktops"
+          /></a>
+        </div>
+        <div class="titulo-cat">Desktops</div>
+      </div>
+
+      <!-- Circulo-6 -->
+      <div class="categoria">
+        <div class="imagen-cat">
+          <a href="detalle_producto.html"
+            ><img src="../recursos/public (4).webp" alt="All in one"
+          /></a>
+        </div>
+        <div class="titulo-cat">Computadora Todo en uno</div>
+      </div>
+
+      <!-- Circulo-7 -->
+      <div class="categoria">
+        <div class="imagen-cat">
+          <a href="detalle_producto.html"
+            ><img src="../recursos/public (5).webp" alt="Software"
+          /></a>
+        </div>
+        <div class="titulo-cat">Software</div>
+      </div>
+
+      <!-- Circulo-8 -->
+      <div class="categoria">
+        <div class="imagen-cat">
+          <a href="detalle_producto.html"
+            ><img src="../recursos/public (6).webp" alt="Monitores"
+          /></a>
+        </div>
+        <div class="titulo-cat">Monitores para pc</div>
+      </div>
+
+      <!-- Circulo-9 -->
+      <div class="categoria">
+        <div class="imagen-cat">
+          <a href="detalle_producto.html"
+            ><img src="../recursos/public (7).webp" alt="Almacenamiento"
+          /></a>
+        </div>
+        <div class="titulo-cat">Almacenamiento</div>
+      </div>
+    </section>
+
+    <!-- Contenido Principal-->
+    <main class="main">
+      <!-- Menu lateral -->
+      <aside class="menu_lateral">
+        <div class="contenido-menu">
+          <div class="menu-texto">
+            <h3>Tecnología</h3>
+            <h2>Computadores</h2>
+            <div class="resultados">Resultados (36608)</div>
+          </div>
+
+          <!-- Filtro: Tipo de Entrega -->
+          <div class="filtro">
+            <div class="filtro1">
+              Tipo de Entrega
+              <i class="fa-solid fa-chevron-up"></i>
+            </div>
+
+            <div class="opcion-domicilio">
+              <div>
+                <i class="fa-solid fa-truck"></i>
+                Envío a domicilio
+              </div>
+              <input type="checkbox" />
+            </div>
+            <div class="info-entrega">
+              <span class="texto-gratis">Gratis</span>
+              <span class="texto-2">Llega mañana</span>
+            </div>
+          </div>
+
+          <!-- Filtro: Categorías -->
+          <div class="filtro">
+            <div class="filtro1">
+              Categoría
+              <i class="fa-solid fa-chevron-up"></i>
+            </div>
+
+            <div class="categorias-lista">
+              <span class="categoria-lis">Computadores portátiles</span>
+              <span class="categoria-lis">Accesorios de computación</span>
+              <span class="categoria-lis">Tablets</span>
+              <span class="categoria-lis">Impresoras y tintas</span>
+              <span class="categoria-lis">Desktops</span>
+              <span class="categoria-lis">Computadora todo en uno</span>
+              <span class="categoria-lis">Software</span>
+              <span class="categoria-lis">Monitores para pc</span>
+            </div>
+          </div>
+
+          <!-- Filtros individuales -->
+          <div class="filtro">
+            <div class="filtro1">
+              Marca
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+          </div>
+
+          <div class="filtro">
+            <div class="filtro1">
+              Procesador
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+          </div>
+
+          <div class="filtro">
+            <div class="filtro1">
+              Memoria RAM
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+          </div>
+
+          <div class="filtro">
+            <div class="filtro1">
+              Tamaño de pantalla
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+          </div>
+
+          <div class="filtro">
+            <div class="filtro1">
+              Resolución de pantalla
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+          </div>
+
+          <div class="filtro">
+            <div class="filtro1">
+              Precio
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+          </div>
+
+          <div class="filtro">
+            <div class="filtro1">
+              Descuentos
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Productos -->
+      <section class="marca">
+        <!-- Filtro por marca -->
+        <div class="filtro-marca">
+          <span class="titulo-marca">Filtrar por <strong>Marca</strong></span>
+          <div class="botones">
+            <button>LENOVO</button>
+            <button>HP</button>
+            <button>DELL</button>
+            <button>ASUS</button>
+            <button>STARLINK</button>
+            <button>EPSON</button>
+            <button>ACER</button>
+            <button>LOGITECH</button>
+            <button>MICROSOFT</button>
+            <button>AMD</button>
+            <button>GENERICO</button>
+            <button>JALTECH</button>
+          </div>
+          <!--boton flecha-->
+          <button class="boton-flecha">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+
+        <!-- Recomendacion -->
+        <div class="recomendacion">
+          <div class="recomendacion1">
+            <span>Ordenar por:</span>
+            <select class="opciones-recomendacion">
+              <option>Recomendados</option>
+              <option>Menor precio</option>
+              <option>Mayor precio</option>
+            </select>
+          </div>
+          <!--Numeros de pagina-->
+          <div class="num-pagina">
+            <i class="fa-solid fa-chevron-left"></i>
+            <span class="pag-2 active">1</span>
+            <span class="pag-2">2</span>
+            <span class="pag-2">3</span>
+            <span>...</span>
+            <span>200</span>
+            <i class="fa-solid fa-chevron-right"></i>
+          </div>
+        </div>
+
+        <!--Tarjetas de los producto -->
+        <div class="tarjeta-producto">
+          <!-- Producto 1 -->
+          <div class="tar-producto">
+            <a href="detalle_producto.html">
+              <img
+                src="https://media.falabella.com/falabellaCO/142972175_01/w=1200,h=1200,fit=pad"
+                alt="Office 365"
+              />
+            </a>
+            <div class="etiqueta">
+              <span>CYBER</span>
+            </div>
+            <div class="nom-producto">LENOVO</div>
+            <div class="descripcion">
+              Kindle paperwhite 2024 32gb 7" Signature Edition Negra
+            </div>
+            <div class="referencia">por pctel computo</div>
+            <!--icono favoritos-->
+            <i class="fa-regular fa-heart favorite-btn"></i>
+
+            <div>
+              <!--cuadros-metodo-->
+              <div class="metodo">
+                <span class="unica">ÚNICA</span>
+                <span class="cmr">CMR</span>
+                <span class="debito">Débito</span>
+              </div>
+              <div class="precio">
+                $ 979.900
+                <span class="descuento">-30%</span>
+              </div>
+              <div class="precio-secundario">$ 1.019.000</div>
+              <div class="precio-secundario1">$ 1.399.000</div>
+            </div>
+          </div>
+
+          <!-- Producto 2 -->
+          <div class="tar-producto">
+            <a href="detalle_producto.html">
+              <img
+                src="https://media.falabella.com.co/falabellaCO/137155110_01/width=480,height=480,quality=70,format=webp,fit=pad"
+                alt="Impresora HP"
+              />
+            </a>
+            <div class="etiqueta">
+              <span>CYBER</span>
+            </div>
+            <div class="nom-producto">HP</div>
+            <div class="descripcion">
+              Impresora Multifuncional Smart Tank 585 Wifi + resma
+            </div>
+            <div class="referencia">Por TS ONLINE</div>
+
+            <!--icono favoritos-->
+            <i class="fa-regular fa-heart favorite-btn"></i>
+            <div>
+              <!--cuadros-metodo-->
+              <div class="metodo">
+                <span class="unica">ÚNICA</span>
+                <span class="cmr">CMR</span>
+                <span class="debito">Débito</span>
+              </div>
+
+              <div class="precio">
+                $ 679.900
+                <span class="descuento">-43%</span>
+              </div>
+              <div class="precio-secundario">$ 709.900</div>
+              <div class="precio-secundario1">$ 1.199.000</div>
+            </div>
+          </div>
+
+          <!-- Producto 3 -->
+          <div class="tar-producto">
+            <span class="promocion">NUEVO - REPOTENCIADO</span>
+            <a href="detalle_producto.html">
+              <img
+                src="https://media.falabella.com.co/falabellaCO/127619968_01/width=480,height=480,quality=70,format=webp,fit=pad"
+                alt="Portátil HP"
+              />
+            </a>
+            <div class="etiqueta">
+              <span>CYBER</span>
+              <span class="etiqueta-envio">Envío gratis</span>
+            </div>
+            <div class="nom-producto">HP</div>
+            <div class="descripcion">
+              Portátil 15.6" Full HD AMD Ryzen 7 7730U 16GB RAM 512GB SSD Plata
+            </div>
+            <div class="referencia">Por Compumarket Bga</div>
+
+            <!--icono favoritos-->
+            <i class="fa-regular fa-heart favorite-btn"></i>
+            <div>
+              <!--cuadros-metodo-->
+              <div class="metodo">
+                <span class="unica">ÚNICA</span>
+                <span class="cmr">CMR</span>
+                <span class="debito">Débito</span>
+              </div>
+
+              <div class="precio">
+                $ 1.979.900
+                <span class="descuento">-46%</span>
+              </div>
+              <div class="precio-secundario">$ 2.099.900</div>
+              <div class="precio-secundario1">$ 3.699.780</div>
+            </div>
+          </div>
+
+          <!-- Producto 4 -->
+          <div class="tar-producto">
+            <a href="detalle_producto.html">
+              <img
+                src="https://media.falabella.com.co/falabellaCO/73053329_1/width=340,height=340,quality=70,format=webp,fit=pad"
+                alt="Portátil Lenovo"
+              />
+            </a>
+            <div class="etiqueta">
+              <span>CYBER</span>
+            </div>
+            <div class="nom-producto">STARLINK</div>
+            <div class="descripcion">Kit de internet satelital estándar V4</div>
+            <div class="referencia">
+              Por SENABELLA <i class="fa-solid fa-check-circle"></i>
+            </div>
+
+            <!--icono-favoritos-->
+            <i class="fa-regular fa-heart favorite-btn"></i>
+            <div>
+              <!--cuadros-metodo-->
+              <div class="metodo">
+                <span class="unica">ÚNICA</span>
+                <span class="cmr">CMR</span>
+                <span class="debito">Débito</span>
+              </div>
+              <div class="precio">
+                $ 1.599.000
+                <span class="descuento">-44%</span>
+              </div>
+              <div class="precio-secundario">$ 2.790.000</div>
+              <div class="precio-secundario1">$ 3.599.900</div>
+            </div>
+          </div>
+
+          <!-- Producto 5 -->
+          <div class="tar-producto">
+            <a href="detalle_producto.html">
+              <img
+                src="https://media.falabella.com.co/falabellaCO/73354813_01/width=340,height=340,quality=70,format=webp,fit=pad"
+                alt="Office 365"
+              />
+            </a>
+            <div class="etiqueta">
+              <span>CYBER</span>
+            </div>
+            <div class="nom-producto">HP</div>
+            <div class="descripcion">
+              Portátil HP 15-Fc0276La Amd Ryzen7 7730U 8Cores/16Gb/ 1Tb Ssd/Fhd
+              15.6/ Plateado Natural Win11 1.59Kg
+            </div>
+            <div class="referencia">Por SENABELLA</div>
+            <!--icono favoritos-->
+            <i class="fa-regular fa-heart favorite-btn"></i>
+
+            <div>
+              <!--cuadros-metodo-->
+              <div class="metodo">
+                <span class="unica">ÚNICA</span>
+                <span class="cmr">CMR</span>
+                <span class="debito">Débito</span>
+              </div>
+              <div class="precio">
+                $ 279.900
+                <span class="descuento">-53%</span>
+              </div>
+              <div class="precio-secundario">$ 299.900</div>
+              <div class="precio-secundario1">$ 599.900</div>
+            </div>
+          </div>
+
+          <!-- Producto 6 -->
+          <div class="tar-producto">
+            <a href="detalle_producto.html">
+              <img
+                src="https://media.falabella.com.co/falabellaCO/139001771_01/width=480,height=480,quality=70,format=webp,fit=pad"
+                alt="Office 365"
+              />
+            </a>
+            <div class="etiqueta">
+              <span>CYBER</span>
+            </div>
+            <div class="nom-producto">LENOVO</div>
+            <div class="descripcion">
+              Tablet Lenovo Tab Plus 8GB RAM 128GB / 8 Speakers / Funda +
+              auriculares Moto Buds - Gris
+            </div>
+            <div class="referencia">
+              Lenovo asia pacific limited sucursal colombia
+            </div>
+            <!--icono favoritos-->
+            <i class="fa-regular fa-heart favorite-btn"></i>
+
+            <div>
+              <!--cuadros-metodo-->
+              <div class="metodo">
+                <span class="unica">ÚNICA</span>
+                <span class="cmr">CMR</span>
+                <span class="debito">Débito</span>
+              </div>
+              <div class="precio">
+                $ 809.900
+                <span class="descuento">-60%</span>
+              </div>
+              <div class="precio-secundario">$ 849.900</div>
+              <div class="precio-secundario1">$ 1.999.900</div>
+            </div>
+          </div>
+
+          <!-- Producto 7 -->
+          <div class="tar-producto">
+            <a href="detalle_producto.html">
+              <img
+                src="https://media.falabella.com.co/falabellaCO/134370606_01/width=480,height=480,quality=70,format=webp,fit=pad"
+                alt="Office 365"
+              />
+            </a>
+            <div class="etiqueta">
+              <span>CYBER</span>
+            </div>
+            <div class="nom-producto">HP</div>
+            <div class="descripcion">
+              Impresora Multifuncional HP Smart Tank 585 Wifi + resma
+            </div>
+            <div class="referencia">por ts online</div>
+            <!--icono favoritos-->
+            <i class="fa-regular fa-heart favorite-btn"></i>
+
+            <div>
+              <!--cuadros-metodo-->
+              <div class="metodo">
+                <span class="unica">ÚNICA</span>
+                <span class="cmr">CMR</span>
+                <span class="debito">Débito</span>
+              </div>
+              <div class="precio">
+                $ 679.900
+                <span class="descuento">-43%</span>
+              </div>
+              <div class="precio-secundario">$ 709.900</div>
+              <div class="precio-secundario1">$ 1.199.000</div>
+            </div>
+          </div>
+
+          <!-- Producto 8 -->
+          <div class="tar-producto">
+            <a href="detalle_producto.html">
+              <img
+                src="https://media.falabella.com/falabellaCO/124164429_01/w=1200,h=1200,fit=pad"
+                alt="Portátil Lenovo"
+              />
+            </a>
+            <div class="etiqueta">
+              <span>CYBER</span>
+            </div>
+            <div class="nom-producto">TOSHIBA</div>
+            <div class="descripcion">
+              Disco duro externo 2tb toshiba usb 3.0 + estuche
+            </div>
+            <div class="referencia">
+              por lapto partes <i class="fa-solid fa-check-circle"></i>
+            </div>
+
+            <!--icono-favoritos-->
+            <i class="fa-regular fa-heart favorite-btn"></i>
+            <div>
+              <!--cuadros-metodo-->
+              <div class="metodo">
+                <span class="unica">ÚNICA</span>
+                <span class="cmr">CMR</span>
+                <span class="debito">Débito</span>
+              </div>
+              <div class="precio">
+                $ 429.210
+                <span class="descuento">-22%</span>
+              </div>
+              <div class="precio-secundario">$ 476.900</div>
+              <div class="precio-secundario1">$ 550.000</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-top">
+        <div>
+          <h3>Servicio al Cliente</h3>
+          <a href="#">Centro de ayuda</a>
+          <a href="#">Estado de tu pedido</a>
+          <a href="#">Devoluciones y Cambios</a>
+        </div>
+        <div>
+          <h3>Mi Cuenta</h3>
+          <a href="#">Inicia sesión</a>
+          <a href="#">Registrarse</a>
+          <a href="#">Mis compras</a>
+        </div>
+        <div>
+          <h3>Acerca de Senabella</h3>
+          <a href="#">Nuestra historia</a>
+          <a href="#">Sostenibilidad</a>
+          <a href="#">Trabaja con nosotros</a>
+        </div>
+        <div>
+          <h3>Síguenos</h3>
+          <a href="#">Facebook</a>
+          <a href="#">Instagram</a>
+          <a href="#">Twitter</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Senabella. Todos los derechos reservados.</p>
+      </div>
+      
+    </footer>
+
+
+
+    <script src="../js/header.js"></script>
+    <script src="../js/catalogo.js"></script>
+    
+  </body>
+</html>
