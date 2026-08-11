@@ -30,66 +30,40 @@
       <!-- Columna Izquierda: Carro y Productos -->
       <section class="seccion-carrito">
         <h2 class="titulo-seccion">
-          Carro <span class="cantidad-carrito">(1 producto)</span>
+          Carro <span class="cantidad-carrito">(0 productos)</span>
         </h2>
 
-        <div class="tarjeta-carrito">
-          <!-- Cabecera del vendedor -->
-          <div class="cabecera-vendedor">
-            <label class="contenedor-casilla">
-              <input type="checkbox" checked />
-              <span class="marca-casilla"></span>
-              <p class="texto-vendedor">
-                Vendido por <strong class="nombre-vendedor">Senabella</strong>
-              </p>
-            </label>
-            <i class="fa-solid fa-chevron-up"></i>
-          </div>
-
-          <div class="divisor-tarjeta"></div>
-
-          <!-- Detalle del producto -->
-          <div class="fila-producto">
-            <label class="contenedor-casilla">
-              <input type="checkbox" checked />
-              <span class="marca-casilla"></span>
-            </label>
-
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTnaxViT3U737FB2Z2wgIYSxpYhUeo0T-NOcwgXHJPl5A&s=10"
-              alt="Freidora Ninja"
-              class="imagen-producto"
-            />
-
-            <div class="detalles-producto">
-              <h3 class="nombre-producto">
-                Ninja Crispi Freidora de Aire 4 en 1 | 4 Funciones
-                Predeterminadas | Freír con...
-              </h3>
-              <p class="marca-producto">NINJA</p>
-              <p class="color-producto">Color: <strong>Navy</strong></p>
+        <div id="contenedor-items-carrito" style="display: none;">
+          <div class="tarjeta-carrito">
+            <!-- Cabecera del vendedor -->
+            <div class="cabecera-vendedor">
+              <label class="contenedor-casilla">
+                <input type="checkbox" />
+                <span class="marca-casilla"></span>
+                <p class="texto-vendedor">
+                  Vendido por <strong class="nombre-vendedor">Senabella</strong>
+                </p>
+              </label>
+              <i class="fa-solid fa-chevron-up"></i>
             </div>
 
-            <div class="caja-precio-producto">
-              <div class="fila-precio">
-                <p class="precio-actual">$ 599.900</p>
-              </div>
-            </div>
+            <div class="divisor-tarjeta"></div>
 
-            <div class="caja-acciones-producto">
-              <i class="fa-solid fa-ellipsis-vertical icono-opciones"></i>
-              <div class="selector-cantidad">
-                <button><i class="fa-solid fa-minus"></i></button>
-                <p>1</p>
-                <button><i class="fa-solid fa-plus"></i></button>
-              </div>
+            <!-- Garantía extendida -->
+            <div class="caja-garantia">
+              <i class="fa-solid fa-chevron-down"></i>
             </div>
           </div>
+        </div>
 
-          <!-- Garantía extendida -->
-          <div class="caja-garantia">
-            <i class="fa-solid fa-chevron-down"></i>
-          </div>
+        <!-- Vista de Carrito Vacío -->
+        <div id="vista-carrito-vacio" class="tarjeta-carrito text-center py-5" style="display: block;">
+          <i class="fa-solid fa-basket-shopping fa-3x mb-3" style="color: #aad100 !important;"></i>
+          <h3 class="h5 font-weight-bold mb-2">Tu carrito está vacío</h3>
+          <p class="text-muted mb-4" style="font-size: 14px;">Explora nuestros productos y añade lo que más te guste.</p>
+          <a href="catalogo.html" class="boton-vacios" style="display: inline-block; width: auto; padding: 10px 30px; text-decoration: none; background-color: #333d45; color: #fff; border-radius: 25px; font-weight: bold;">
+            Ver catálogo de productos
+          </a>
         </div>
       </section>
 
@@ -99,15 +73,15 @@
 
         <div class="tarjeta-resumen">
           <div class="fila-resumen">
-            <p>Productos (1)</p>
-            <p class="precio-resumen">$599.900</p>
+            <p>Productos (0)</p>
+            <p class="precio-resumen">$ 0</p>
           </div>
 
           <div class="divisor-tarjeta"></div>
 
           <div class="fila-resumen fila-total">
             <p>Total:</p>
-            <p class="precio-total">$599.900</p>
+            <p class="precio-total">$ 0</p>
           </div>
 
           <button class="boton-pagar">Continuar compra</button>
