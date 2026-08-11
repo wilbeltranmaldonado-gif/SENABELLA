@@ -227,6 +227,9 @@
         if (usuarioGuardado.nombre) {
           SECCIONES["datos-personales"].campos[0].valor = usuarioGuardado.nombre;
         }
+        if (usuarioGuardado.celular) {
+          SECCIONES["datos-personales"].campos[2].valor = usuarioGuardado.celular;
+        }
         if (usuarioGuardado.correo) {
           SECCIONES["datos-personales"].campos[3].valor = usuarioGuardado.correo;
         }

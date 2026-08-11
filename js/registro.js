@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const formulario = document.getElementById('formularioRegistro');
   const nombreInput = document.getElementById('nombreCompleto');
   const correoInput = document.getElementById('correoElectronico');
+  const celularInput = document.getElementById('celular');
   const contrasenaInput = document.getElementById('contrasena');
   const confirmarContrasenaInput = document.getElementById('confirmarContrasena');
   const aceptoTerminos = document.getElementById('aceptoTerminos');
@@ -79,6 +80,12 @@ document.addEventListener('DOMContentLoaded', () => {
   if (nombreInput) {
     nombreInput.addEventListener('input', () => {
       nombreInput.value = nombreInput.value.replace(/[0-9]/g, '');
+    });
+  }
+
+  if (celularInput) {
+    celularInput.addEventListener('input', () => {
+      celularInput.value = celularInput.value.replace(/[^0-9\s]/g, '');
     });
   }
 
@@ -182,6 +189,14 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
+      // Validar Celular
+      const celularTexto = celularInput ? celularInput.value.trim() : '';
+      if (celularTexto === '') {
+        mostrarError('Por favor, ingresa tu número de celular.');
+        if (celularInput) celularInput.focus();
+        return;
+      }
+
       // Validar Contraseña
       if (!contrasenaInput || contrasenaInput.value.length < 8) {
         mostrarError('La contraseña debe tener al menos 8 caracteres.');
@@ -199,7 +214,8 @@ document.addEventListener('DOMContentLoaded', () => {
       // Guardar datos del usuario registrado en localStorage
       const datosUsuario = {
         nombre: nombreTexto,
-        correo: correoInput ? correoInput.value.trim() : ''
+        correo: correoInput ? correoInput.value.trim() : '',
+        celular: celularTexto
       };
       localStorage.setItem('senabella_usuario', JSON.stringify(datosUsuario));
       localStorage.setItem('senabella_sesion', 'activa');
