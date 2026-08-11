@@ -263,23 +263,504 @@
   /* =====================================================================
      NAVEGACIÓN LATERAL (resalta la vista activa)
      ===================================================================== */
-  function setupNavegacion() {
-    const items = $$(".admin-nav-item");
-    const tituloVista = $("#adminTituloVista");
+/* =====================================================================
+   CAMBIO DE VISTAS DEL PANEL
+   ===================================================================== */
 
-    items.forEach((item) => {
-      item.addEventListener("click", (e) => {
-        e.preventDefault();
-        items.forEach((i) => i.classList.remove("activo"));
-        item.classList.add("activo");
+function setupNavegacion() {
 
-        const nombre = $("span", item)?.textContent.trim() ?? "Resumen";
-        if (tituloVista) tituloVista.textContent = nombre === "Resumen" ? "Resumen general" : nombre;
+  const items = $$(".admin-nav-item");
+  const tituloVista = $("#adminTituloVista");
+  const contenido = $("#contenidoVista");
 
-        cerrarSidebarMovil();
+  /* Contenido de cada apartado */
+  const vistas = {
+
+    resumen: `
+      <div class="admin-bienvenida">
+        <div>
+          <h2>Hola, Admin</h2>
+          <p>Este es el resumen de la tienda</p>
+        </div>
+
+        <div class="admin-acciones-rapidas">
+          <button class="admin-boton admin-boton-primario">
+            <i class="fa-solid fa-plus"></i>
+            Nuevo producto
+          </button>
+
+          <button class="admin-boton admin-boton-secundario">
+            <i class="fa-solid fa-file-arrow-down"></i>
+            Exportar reporte
+          </button>
+        </div>
+      </div>
+
+      <section class="admin-grid-kpi" id="adminGridKpi"></section>
+
+      <section class="admin-grid-charts">
+
+        <div class="admin-tarjeta admin-tarjeta-chart">
+          <div class="admin-tarjeta-header">
+            <h3>Ventas de la semana</h3>
+          </div>
+
+          <canvas id="chartVentas" height="230"></canvas>
+        </div>
+
+        <div class="admin-tarjeta admin-tarjeta-chart">
+          <div class="admin-tarjeta-header">
+            <h3>Pedidos por estado</h3>
+          </div>
+
+          <canvas id="chartEstados" height="230"></canvas>
+
+          <ul class="admin-leyenda" id="adminLeyendaEstados"></ul>
+        </div>
+
+      </section>
+
+      <section class="admin-grid-tablas">
+
+        <div class="admin-tarjeta admin-tarjeta-tabla">
+
+          <div class="admin-tarjeta-header">
+            <h3>Últimos pedidos</h3>
+          </div>
+
+          <div class="admin-tabla-scroll">
+
+            <table class="admin-tabla">
+
+              <thead>
+                <tr>
+                  <th>Pedido</th>
+                  <th>Cliente</th>
+                  <th>Producto</th>
+                  <th>Estado</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+
+              <tbody id="adminTablaPedidos"></tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+        <div class="admin-tarjeta admin-tarjeta-stock">
+
+          <div class="admin-tarjeta-header">
+            <h3>Stock bajo</h3>
+          </div>
+
+          <ul class="admin-lista-stock" id="adminListaStock"></ul>
+
+        </div>
+
+      </section>
+    `,
+
+
+    pedidos: `
+      <div class="admin-bienvenida">
+        <div>
+          <h2>Pedidos</h2>
+          <p>Administra los pedidos realizados en la tienda.</p>
+        </div>
+
+        <button class="admin-boton admin-boton-primario">
+          <i class="fa-solid fa-plus"></i>
+          Nuevo pedido
+        </button>
+      </div>
+
+      <div class="admin-tarjeta">
+
+        <div class="admin-tarjeta-header">
+          <h3>Lista de pedidos</h3>
+        </div>
+
+        <div class="admin-tabla-scroll">
+
+          <table class="admin-tabla">
+
+            <thead>
+              <tr>
+                <th>Pedido</th>
+                <th>Cliente</th>
+                <th>Producto</th>
+                <th>Estado</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+
+            <tbody id="adminTablaPedidos"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+    `,
+
+
+    productos: `
+      <div class="admin-bienvenida">
+        <div>
+          <h2>Productos</h2>
+          <p>Gestiona los productos de la tienda.</p>
+        </div>
+
+        <button class="admin-boton admin-boton-primario">
+          <i class="fa-solid fa-plus"></i>
+          Nuevo producto
+        </button>
+      </div>
+
+      <div class="admin-grid-kpi">
+
+        <div class="admin-kpi">
+          <div class="admin-kpi-etiqueta">
+            Productos activos
+          </div>
+
+          <div class="admin-kpi-valor">
+            512
+          </div>
+        </div>
+
+        <div class="admin-kpi">
+          <div class="admin-kpi-etiqueta">
+            Stock bajo
+          </div>
+
+          <div class="admin-kpi-valor">
+            4
+          </div>
+        </div>
+
+      </div>
+
+      <div class="admin-tarjeta">
+
+        <div class="admin-tarjeta-header">
+          <h3>Productos registrados</h3>
+        </div>
+
+        <p>
+          Aquí aparecerá la lista de productos.
+        </p>
+
+      </div>
+    `,
+
+
+    clientes: `
+      <div class="admin-bienvenida">
+
+        <div>
+          <h2>Clientes</h2>
+          <p>Consulta y administra los clientes registrados.</p>
+        </div>
+
+        <button class="admin-boton admin-boton-primario">
+          <i class="fa-solid fa-user-plus"></i>
+          Nuevo cliente
+        </button>
+
+      </div>
+
+      <div class="admin-grid-kpi">
+
+        <div class="admin-kpi">
+          <div class="admin-kpi-etiqueta">
+            Clientes registrados
+          </div>
+
+          <div class="admin-kpi-valor">
+            8.940
+          </div>
+        </div>
+
+        <div class="admin-kpi">
+          <div class="admin-kpi-etiqueta">
+            Nuevos este mes
+          </div>
+
+          <div class="admin-kpi-valor">
+            112
+          </div>
+        </div>
+
+      </div>
+
+      <div class="admin-tarjeta">
+
+        <div class="admin-tarjeta-header">
+          <h3>Clientes</h3>
+        </div>
+
+        <p>
+          Aquí aparecerá la información de los clientes.
+        </p>
+
+      </div>
+    `,
+
+
+    categorias: `
+      <div class="admin-bienvenida">
+
+        <div>
+          <h2>Categorías</h2>
+          <p>Organiza los productos de la tienda.</p>
+        </div>
+
+        <button class="admin-boton admin-boton-primario">
+          <i class="fa-solid fa-plus"></i>
+          Nueva categoría
+        </button>
+
+      </div>
+
+      <div class="admin-tarjeta">
+
+        <div class="admin-tarjeta-header">
+          <h3>Categorías registradas</h3>
+        </div>
+
+        <ul>
+          <li>Ropa</li>
+          <li>Calzado</li>
+          <li>Tecnología</li>
+          <li>Hogar</li>
+          <li>Accesorios</li>
+        </ul>
+
+      </div>
+    `,
+
+
+    cupones: `
+      <div class="admin-bienvenida">
+
+        <div>
+          <h2>Cupones</h2>
+          <p>Administra los descuentos disponibles.</p>
+        </div>
+
+        <button class="admin-boton admin-boton-primario">
+          <i class="fa-solid fa-plus"></i>
+          Nuevo cupón
+        </button>
+
+      </div>
+
+      <div class="admin-tarjeta">
+
+        <div class="admin-tarjeta-header">
+          <h3>Cupones registrados</h3>
+        </div>
+
+        <p>
+          Aquí aparecerán los cupones disponibles.
+        </p>
+
+      </div>
+    `,
+
+
+    reportes: `
+      <div class="admin-bienvenida">
+
+        <div>
+          <h2>Reportes</h2>
+          <p>Consulta los reportes de la tienda.</p>
+        </div>
+
+        <button class="admin-boton admin-boton-primario">
+          <i class="fa-solid fa-file-pdf"></i>
+          Generar reporte
+        </button>
+
+      </div>
+
+      <div class="admin-grid-kpi">
+
+        <div class="admin-kpi">
+          <div class="admin-kpi-etiqueta">
+            Ventas del mes
+          </div>
+
+          <div class="admin-kpi-valor">
+            $48.250.000
+          </div>
+        </div>
+
+        <div class="admin-kpi">
+          <div class="admin-kpi-etiqueta">
+            Pedidos
+          </div>
+
+          <div class="admin-kpi-valor">
+            342
+          </div>
+        </div>
+
+      </div>
+
+      <div class="admin-tarjeta">
+
+        <div class="admin-tarjeta-header">
+          <h3>Reportes disponibles</h3>
+        </div>
+
+        <p>
+          Reporte de ventas
+        </p>
+
+        <p>
+          Reporte de productos
+        </p>
+
+        <p>
+          Reporte de clientes
+        </p>
+
+      </div>
+    `,
+
+
+    configuracion: `
+      <div class="admin-bienvenida">
+
+        <div>
+          <h2>Configuración</h2>
+          <p>Configura las opciones del panel administrativo.</p>
+        </div>
+
+      </div>
+
+      <div class="admin-tarjeta">
+
+        <div class="admin-tarjeta-header">
+          <h3>Configuración general</h3>
+        </div>
+
+        <label>
+          Nombre de la tienda
+        </label>
+
+        <input
+          type="text"
+          value="Senabella"
+          style="display:block; margin-top:8px; padding:10px;"
+        >
+
+        <br>
+
+        <label>
+          Correo de administración
+        </label>
+
+        <input
+          type="email"
+          value="admin@senabella.com"
+          style="display:block; margin-top:8px; padding:10px;"
+        >
+
+      </div>
+    `
+  };
+
+
+  /* Al hacer clic en una opción del menú */
+  items.forEach((item) => {
+
+    item.addEventListener("click", (e) => {
+
+      e.preventDefault();
+
+      /* Quitar activo de todos */
+      items.forEach((i) => {
+        i.classList.remove("activo");
       });
+
+      /* Activar el seleccionado */
+      item.classList.add("activo");
+
+
+      /* Obtener la vista */
+      const vista = item.dataset.vista;
+
+
+      /* Cambiar título */
+      const nombre = $("span", item)?.textContent.trim() || "Resumen";
+
+      if (tituloVista) {
+
+        tituloVista.textContent =
+          vista === "resumen"
+            ? "Resumen general"
+            : nombre;
+
+      }
+
+
+      /* Cambiar contenido */
+      if (contenido && vistas[vista]) {
+
+        contenido.innerHTML = vistas[vista];
+
+      }
+
+
+      /* Volver a ejecutar los elementos dinámicos */
+      if (vista === "resumen") {
+
+        renderKpis();
+        renderPedidos();
+        renderStockBajo();
+
+        setTimeout(() => {
+          initGraficas();
+        }, 100);
+
+      }
+
+      if (vista === "pedidos") {
+        renderPedidos();
+      }
+
+
+      /* Cerrar menú en móvil */
+      cerrarSidebarMovil();
+
     });
+
+  });
+
+
+  /* Mostrar Resumen al cargar */
+  if (contenido) {
+
+    contenido.innerHTML = vistas.resumen;
+
+    renderKpis();
+    renderPedidos();
+    renderStockBajo();
+
+    setTimeout(() => {
+      initGraficas();
+    }, 100);
+
   }
+
+}
+
 
   /* =====================================================================
      SIDEBAR MÓVIL

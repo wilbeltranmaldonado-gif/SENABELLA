@@ -12,8 +12,8 @@
     />
 
     <!-- Variables globales del sitio (colores, modo oscuro) -->
-    <link rel="stylesheet" href="../css/encabezado.css" />
     <link rel="stylesheet" href="../css/administrador.css" />
+    <link rel="stylesheet" href="../css/encabezado.css" />
   </head>
 
   <body class="cuerpo-admin">
@@ -151,11 +151,20 @@
       </header>
 
       <!-- CONTENIDO -->
-      <main class="admin-contenido">
+<!-- ============================================
+     CONTENIDO PRINCIPAL
+     ============================================ -->
+<main class="admin-contenido">
+
+    <!-- Aquí JavaScript cambiará la información -->
+    <div id="contenidoVista"></div>
+
+</main>
+
         <!-- Bienvenida + acciones rápidas -->
         <div class="admin-bienvenida">
           <div>
-            <h2>Hola, Admin</h2>
+            <h2>Hola, Admin 👋</h2>
             <p id="adminFecha">Este es el resumen de la tienda hoy</p>
           </div>
           <div class="admin-acciones-rapidas">
