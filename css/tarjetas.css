@@ -324,7 +324,13 @@
   margin-bottom: 22px; font-size: 0.84rem; color: #666;
 }
 
-.formulario-check input[type="checkbox"] { width: 17px; height: 17px; accent-color: var(--primary-color); cursor: pointer; margin-top: 2px; }
+.formulario-check input[type="checkbox"] { width: 17px; 
+  height: 17px; 
+  accent-color: var(--primary-color); 
+  cursor: pointer; 
+  margin-top: 2px; 
+}
+
 .formulario-check a { color: var(--primary-hover); text-decoration: underline; font-weight: 600; }
 
 .boton-solicitar {
