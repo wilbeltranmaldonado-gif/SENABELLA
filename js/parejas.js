@@ -3,7 +3,7 @@
 // ==========================================
 
 const secciones = document.querySelectorAll(
-  ".parejas-info-cards, .parejas-galeria, .parejas-cta"
+  ".parejas-info-cards, .parejas-galeria, .productos-parejas, .parejas-cta"
 );
 
 // Agregar clase inicial para ocultar
@@ -46,3 +46,52 @@ if (botonExplorar) {
     }
   });
 }
+
+// ==========================================
+// AGREGAR AL CARRITO
+// ==========================================
+document.addEventListener("DOMContentLoaded", function () {
+  const botonesCarrito = document.querySelectorAll(".btn-agregar-carrito");
+
+  botonesCarrito.forEach(function (btn) {
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const card = btn.closest(".card");
+      if (!card) return;
+
+      const nombre = card.querySelector(".card-title").textContent.trim();
+      const precio = card.querySelector(".card-text").textContent.trim();
+      const img = card.querySelector("img") ? card.querySelector("img").src : "";
+
+      if (window.SenabellaCart) {
+        window.SenabellaCart.agregarProducto({
+          nombre: nombre,
+          marca: "SENABELLA",
+          color: "Único",
+          precioText: precio,
+          img: img,
+          cantidad: 1
+        });
+      }
+
+      // Feedback visual en el botón
+      const btnOriginalText = btn.innerHTML;
+      btn.innerHTML = '<i class="fa-solid fa-check"></i> Agregado';
+      btn.style.background = "linear-gradient(135deg, #27ae60, #2ecc71)";
+      btn.style.color = "#ffffff";
+
+      setTimeout(function () {
+        btn.innerHTML = btnOriginalText;
+        btn.style.background = "";
+        btn.style.color = "";
+      }, 1500);
+
+      // Si existe el sistema de Toasts (opcional)
+      if (window.SenabellaToast) {
+        window.SenabellaToast(nombre + " agregado al carrito", "fa-cart-shopping", "exito");
+      }
+    });
+  });
+});

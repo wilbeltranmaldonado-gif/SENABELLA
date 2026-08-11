@@ -402,3 +402,26 @@ body.modo-oscuro .parejas-cta {
     height: 220px;
   }
 }
+
+/* PRODUCTOS PARA PAREJAS */
+.productos-parejas {
+  margin-bottom: 48px;
+}
+
+.productos-encabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.productos-encabezado h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--dark-color);
+  margin: 0;
+}
+
+body.modo-oscuro .productos-encabezado h2 {
+  color: #fff;
+}
