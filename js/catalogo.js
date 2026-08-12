@@ -49,7 +49,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
       let marcaTexto = nomMarcaEl ? nomMarcaEl.textContent.trim().toUpperCase() : "";
       let descTexto = descEl ? descEl.textContent.trim().toLowerCase() : "";
-      let precioTexto = precioEl ? precioEl.textContent.replace(/[^\d]/g, "") : "0";
+      // Extraer solo el texto directo del nodo precio (sin el span de descuento)
+      let precioTexto = "0";
+      if (precioEl) {
+        let precioNode = Array.from(precioEl.childNodes).find(n => n.nodeType === Node.TEXT_NODE);
+        precioTexto = precioNode ? precioNode.textContent.replace(/[^\d]/g, "") : precioEl.textContent.replace(/[^\d]/g, "");
+      }
       let precioValor = parseFloat(precioTexto) || 0;
       let descuentoTexto = descuentoEl ? descuentoEl.textContent.replace(/[^\d]/g, "") : "0";
       let descuentoValor = parseFloat(descuentoTexto) || 0;
@@ -386,11 +391,16 @@ document.addEventListener("DOMContentLoaded", function () {
         let precioAEl = a.querySelector(".precio");
         let precioBEl = b.querySelector(".precio");
 
-        let textoA = precioAEl ? precioAEl.textContent : "0";
-        let textoB = precioBEl ? precioBEl.textContent : "0";
+        // Extraer solo el texto directo del nodo precio (sin el span de descuento)
+        let getPrecioNum = function(el) {
+          if (!el) return 0;
+          let node = Array.from(el.childNodes).find(n => n.nodeType === Node.TEXT_NODE);
+          let txt = node ? node.textContent : el.textContent;
+          return parseFloat(txt.replace(/[^\d]/g, "")) || 0;
+        };
 
-        let numA = parseFloat(textoA.replace(/[^\d]/g, "")) || 0;
-        let numB = parseFloat(textoB.replace(/[^\d]/g, "")) || 0;
+        let numA = getPrecioNum(precioAEl);
+        let numB = getPrecioNum(precioBEl);
 
         if (selectOrden.value === "Menor precio") {
           return numA - numB;

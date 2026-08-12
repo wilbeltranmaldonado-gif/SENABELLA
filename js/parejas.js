@@ -1,4 +1,21 @@
 // ==========================================
+// REDIRECCIÓN AL DETALLE DEL PRODUCTO
+// ==========================================
+
+function verProductoParejas(titulo, marca, descripcion, precioActual, precioAntiguo, imagen) {
+  localStorage.setItem("productoSeleccionado", JSON.stringify({
+    titulo: titulo,
+    marca: marca,
+    descripcion: descripcion,
+    precioActual: precioActual,
+    precioAntiguo: precioAntiguo,
+    imagen: imagen,
+    referencia: marca
+  }));
+  window.location.href = "detalle_producto.html";
+}
+
+// ==========================================
 // ANIMACIONES AL HACER SCROLL
 // ==========================================
 

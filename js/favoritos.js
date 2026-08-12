@@ -25,6 +25,20 @@ window.SenabellaFavoritos = {
   },
 
   agregar: function (producto) {
+    // Solo permite favoritos si hay sesión activa
+    const sesionActiva = localStorage.getItem("senabella_sesion") === "activa";
+    if (!sesionActiva) {
+      if (window.SenabellaToast) {
+        window.SenabellaToast("Inicia sesión para guardar favoritos", "fa-user-lock", "advertencia");
+      } else {
+        alert("Debes iniciar sesión para agregar favoritos.");
+      }
+      setTimeout(function() {
+        window.location.href = "login.html";
+      }, 1500);
+      return false;
+    }
+
     let items = this.obtenerTodos();
     
     // Verificar si ya existe (por ID o por nombre)
