@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Catálogo Ropa y Accesorios · Senabella</title>
+  <meta name="description" content="Catálogo de ropa, moda y accesorios en Senabella. Encuentra vestidos, chaquetas, calzado y más." />
+
+  <!-- Iconos de font awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Bootstrap 5.3 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+
+  <link rel="stylesheet" href="../css/catalogo.css" />
+  <link rel="stylesheet" href="../css/encabezado.css" />
+</head>
+
+<body>
+  <!-- Header -->
+  <div id="header-container"></div>
+
+  <!-- Categorías circulares -->
+  <section class="categorias-circulares">
+    <div class="categoria">
+      <div class="imagen-cat">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4j0PMoypc__UeVq6nD4bIh6qFQ4FaGSnEI4GclFl7iw&s=10" alt="Mujer" />
+      </div>
+      <div class="titulo-cat">Moda Mujer</div>
+    </div>
+    <div class="categoria">
+      <div class="imagen-cat">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWwkq93t5FnksulxA2YfZpSKAUiaqGZ7sNWSgR0wOtoQ&s=10" alt="Hombre" />
+      </div>
+      <div class="titulo-cat">Moda Hombre</div>
+    </div>
+    <div class="categoria">
+      <div class="imagen-cat">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREmL4kn7HnCXVri8EmYY9FT-MtzgKWj5fhj7F1MvHkRQ&s=10" alt="Calzado" />
+      </div>
+      <div class="titulo-cat">Calzado</div>
+    </div>
+    <div class="categoria">
+      <div class="imagen-cat">
+        <img src="https://media.falabella.com/falabellaCO/155656024_01/w=1200,h=1200,fit=pad" alt="Accesorios" />
+      </div>
+      <div class="titulo-cat">Accesorios</div>
+    </div>
+    <div class="categoria">
+      <div class="imagen-cat">
+        <img src="https://images.falabella.com/v3/assets/blt088e6fffbba20f16/blt5da4c0580b8c656d/6a59c7bf15befe0a433a8a5a/powercard7_home_relojes_desk.jpg?auto=webp&disable=upscale&quality=70&width=1280" alt="Relojes" />
+      </div>
+      <div class="titulo-cat">Relojes</div>
+    </div>
+    <div class="categoria">
+      <div class="imagen-cat">
+        <img src="https://images.falabella.com/v3/assets/blt088e6fffbba20f16/bltf413d366cc29e9bf/6a5a7cfd5c7ce2611d2d8c44/powercard10_home_belleza_desk.jpg?auto=webp&disable=upscale&quality=70&width=1280" alt="Belleza" />
+      </div>
+      <div class="titulo-cat">Belleza</div>
+    </div>
+  </section>
+
+  <!-- Contenido Principal -->
+  <main class="main">
+    <!-- Menu lateral -->
+    <aside class="menu_lateral">
+      <div class="contenido-menu">
+        <div class="menu-texto">
+          <h3>Moda</h3>
+          <h2>Ropa y Accesorios</h2>
+          <div class="resultados">Resultados (16)</div>
+        </div>
+
+        <!-- Filtro: Tipo de Entrega -->
+        <div class="filtro">
+          <div class="filtro1">
+            Tipo de Entrega
+            <i class="fa-solid fa-chevron-up"></i>
+          </div>
+          <div class="opcion-domicilio">
+            <div>
+              <i class="fa-solid fa-truck"></i>
+              Envío a domicilio
+            </div>
+            <input type="checkbox" />
+          </div>
+          <div class="info-entrega">
+            <span class="texto-gratis">Gratis</span>
+            <span class="texto-2">Llega mañana</span>
+          </div>
+        </div>
+
+        <!-- Filtro: Categorías -->
+        <div class="filtro">
+          <div class="filtro1">
+            Categoría
+            <i class="fa-solid fa-chevron-up"></i>
+          </div>
+          <div class="categorias-lista">
+            <span class="categoria-lis">Moda Mujer</span>
+            <span class="categoria-lis">Moda Hombre</span>
+            <span class="categoria-lis">Calzado</span>
+            <span class="categoria-lis">Accesorios</span>
+            <span class="categoria-lis">Relojes</span>
+            <span class="categoria-lis">Belleza</span>
+          </div>
+        </div>
+
+        <!-- Filtro: Marca -->
+        <div class="filtro">
+          <div class="filtro1">
+            Marca
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+          <div class="opciones-filtro-lateral" style="display:none; padding: 8px 0; font-size: 13px;">
+            <div><label><input type="checkbox" value="NIKE"> NIKE</label></div>
+            <div><label><input type="checkbox" value="ADIDAS"> ADIDAS</label></div>
+            <div><label><input type="checkbox" value="PUMA"> PUMA</label></div>
+            <div><label><input type="checkbox" value="ZARA"> ZARA</label></div>
+            <div><label><input type="checkbox" value="SENABELLA"> SENABELLA</label></div>
+          </div>
+        </div>
+
+        <!-- Filtro: Talla -->
+        <div class="filtro">
+          <div class="filtro1">
+            Talla
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+          <div class="opciones-filtro-lateral" style="display:none; padding: 8px 0; font-size: 13px;">
+            <div><label><input type="checkbox" value="XS"> XS</label></div>
+            <div><label><input type="checkbox" value="S"> S</label></div>
+            <div><label><input type="checkbox" value="M"> M</label></div>
+            <div><label><input type="checkbox" value="L"> L</label></div>
+            <div><label><input type="checkbox" value="XL"> XL</label></div>
+          </div>
+        </div>
+
+        <!-- Filtro: Precio -->
+        <div class="filtro">
+          <div class="filtro1">
+            Precio
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+          <div class="opciones-filtro-lateral" style="display:none; padding: 8px 0; font-size: 13px;">
+            <div><label><input type="checkbox" value="100000"> Menos de $100.000</label></div>
+            <div><label><input type="checkbox" value="200000"> $100.000 - $200.000</label></div>
+            <div><label><input type="checkbox" value="500000"> Más de $200.000</label></div>
+          </div>
+        </div>
+
+        <!-- Filtro: Descuentos -->
+        <div class="filtro">
+          <div class="filtro1">
+            Descuentos
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+          <div class="opciones-filtro-lateral" style="display:none; padding: 8px 0; font-size: 13px;">
+            <div><label><input type="checkbox" value="20"> 20% o más</label></div>
+            <div><label><input type="checkbox" value="30"> 30% o más</label></div>
+            <div><label><input type="checkbox" value="40"> 40% o más</label></div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Productos -->
+    <section class="marca">
+      <!-- Filtro por marca -->
+      <div class="filtro-marca">
+        <span class="titulo-marca">Filtrar por <strong>Marca</strong></span>
+        <div class="botones">
+          <button>NIKE</button>
+          <button>ADIDAS</button>
+          <button>PUMA</button>
+          <button>ZARA</button>
+          <button>SENABELLA</button>
+          <button>MICHAEL KORS</button>
+          <button>LEVI'S</button>
+          <button>CONVERSE</button>
+        </div>
+        <button class="boton-flecha">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+
+      <!-- Recomendacion -->
+      <div class="recomendacion">
+        <div class="recomendacion1">
+          <p>Ordenar por: <strong>Más relevantes</strong></p>
+        </div>
+      </div>
+
+      <!-- Grid de Productos -->
+      <div class="productos-contenedor">
+
+        <!-- Producto 1 - Vestido Mujer -->
+        <div class="tar-producto">
+          <a href="detalle_producto.html">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4j0PMoypc__UeVq6nD4bIh6qFQ4FaGSnEI4GclFl7iw&s=10" alt="Vestido Mujer" />
+          </a>
+          <div class="etiqueta"><span>MODA</span></div>
+          <div class="nom-producto">SENABELLA</div>
+          <div class="descripcion">Vestido Elegante Mujer Fiesta Estampado Floral Moda Femenina Tallas S-XL</div>
+          <div class="referencia">Por SENABELLA MODA</div>
+          <i class="fa-regular fa-heart favorite-btn"></i>
+          <div>
+            <div class="metodo"><span class="unica">ÚNICA</span><span class="cmr">CMR</span><span class="debito">Débito</span></div>
+            <div class="precio">$ 129.900 <span class="descuento">-35%</span></div>
+            <div class="precio-secundario">$ 149.900</div>
+            <div class="precio-secundario1">$ 199.900</div>
+          </div>
+        </div>
+
+        <!-- Producto 2 - Chaqueta Hombre -->
+        <div class="tar-producto">
+          <a href="detalle_producto.html">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWwkq93t5FnksulxA2YfZpSKAUiaqGZ7sNWSgR0wOtoQ&s=10" alt="Chaqueta Hombre" />
+          </a>
+          <div class="etiqueta"><span>MODA</span></div>
+          <div class="nom-producto">SENABELLA</div>
+          <div class="descripcion">Chaqueta de Cuero Sintético Hombre Slim Fit Moda Masculina Color Negro</div>
+          <div class="referencia">Por SENABELLA MODA</div>
+          <i class="fa-regular fa-heart favorite-btn"></i>
+          <div>
+            <div class="metodo"><span class="unica">ÚNICA</span><span class="cmr">CMR</span><span class="debito">Débito</span></div>
+            <div class="precio">$ 189.900 <span class="descuento">-30%</span></div>
+            <div class="precio-secundario">$ 209.900</div>
+            <div class="precio-secundario1">$ 269.900</div>
+          </div>
+        </div>
+
+        <!-- Producto 3 - Nike Air Max -->
+        <div class="tar-producto">
+          <a href="detalle_producto.html">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREmL4kn7HnCXVri8EmYY9FT-MtzgKWj5fhj7F1MvHkRQ&s=10" alt="Tenis NIKE" />
+          </a>
+          <div class="etiqueta"><span>CALZADO</span></div>
+          <div class="nom-producto">NIKE</div>
+          <div class="descripcion">Tenis Deportivos Hombre Nike Air Max Excee Blancos Calzado Urbano</div>
+          <div class="referencia">Por SENABELLA SPORT</div>
+          <i class="fa-regular fa-heart favorite-btn"></i>
+          <div>
+            <div class="metodo"><span class="unica">ÚNICA</span><span class="cmr">CMR</span><span class="debito">Débito</span></div>
+            <div class="precio">$ 349.900 <span class="descuento">-25%</span></div>
+            <div class="precio-secundario">$ 379.900</div>
+            <div class="precio-secundario1">$ 469.900</div>
+          </div>
+        </div>
+
+        <!-- Producto 4 - Adidas Grand Court -->
+        <div class="tar-producto">
+          <a href="detalle_producto.html">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREmL4kn7HnCXVri8EmYY9FT-MtzgKWj5fhj7F1MvHkRQ&s=10" alt="Tenis ADIDAS" />
+          </a>
+          <div class="etiqueta"><span>CALZADO</span></div>
+          <div class="nom-producto">ADIDAS</div>
+          <div class="descripcion">Tenis Urbano Mujer Adidas Grand Court 2.0 Negros Calzado Deportivo</div>
+          <div class="referencia">Por SENABELLA SPORT</div>
+          <i class="fa-regular fa-heart favorite-btn"></i>
+          <div>
+            <div class="metodo"><span class="unica">ÚNICA</span><span class="cmr">CMR</span><span class="debito">Débito</span></div>
+            <div class="precio">$ 279.900 <span class="descuento">-20%</span></div>
+            <div class="precio-secundario">$ 299.900</div>
+            <div class="precio-secundario1">$ 349.900</div>
+          </div>
+        </div>
+
+        <!-- Producto 5 - Hub JALTECH -->
+        <div class="tar-producto">
+          <a href="detalle_producto.html">
+            <img src="https://media.falabella.com/falabellaCO/155656024_01/w=1200,h=1200,fit=pad" alt="Hub JALTECH" />
+          </a>
+          <div class="etiqueta"><span>CYBER</span></div>
+          <div class="nom-producto">JALTECH</div>
+          <div class="descripcion">Adaptador Hub USB Type-C 7 en 1 HDMI 4K USB 3.0 Lector de Tarjetas SD</div>
+          <div class="referencia">Por SENABELLA</div>
+          <i class="fa-regular fa-heart favorite-btn"></i>
+          <div>
+            <div class="metodo"><span class="unica">ÚNICA</span><span class="cmr">CMR</span><span class="debito">Débito</span></div>
+            <div class="precio">$ 89.900 <span class="descuento">-35%</span></div>
+            <div class="precio-secundario">$ 99.900</div>
+            <div class="precio-secundario1">$ 139.900</div>
+          </div>
+        </div>
+
+        <!-- Producto 6 - Blusa Mujer -->
+        <div class="tar-producto">
+          <a href="detalle_producto.html">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4j0PMoypc__UeVq6nD4bIh6qFQ4FaGSnEI4GclFl7iw&s=10" alt="Blusa Mujer" />
+          </a>
+          <div class="etiqueta"><span>MODA</span></div>
+          <div class="nom-producto">ZARA</div>
+          <div class="descripcion">Blusa Casual Mujer Manga Larga Estampado Moderno Talla S-L</div>
+          <div class="referencia">Por SENABELLA MODA</div>
+          <i class="fa-regular fa-heart favorite-btn"></i>
+          <div>
+            <div class="metodo"><span class="unica">ÚNICA</span><span class="cmr">CMR</span><span class="debito">Débito</span></div>
+            <div class="precio">$ 89.900 <span class="descuento">-40%</span></div>
+            <div class="precio-secundario">$ 109.900</div>
+            <div class="precio-secundario1">$ 149.900</div>
+          </div>
+        </div>
+
+        <!-- Producto 7 - Pantalón Hombre -->
+        <div class="tar-producto">
+          <a href="detalle_producto.html">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWwkq93t5FnksulxA2YfZpSKAUiaqGZ7sNWSgR0wOtoQ&s=10" alt="Pantalón Hombre" />
+          </a>
+          <div class="etiqueta"><span>MODA</span></div>
+          <div class="nom-producto">LEVI'S</div>
+          <div class="descripcion">Jean Slim Fit Hombre Levi's 511 Azul Oscuro Algodón Premium</div>
+          <div class="referencia">Por SENABELLA MODA</div>
+          <i class="fa-regular fa-heart favorite-btn"></i>
+          <div>
+            <div class="metodo"><span class="unica">ÚNICA</span><span class="cmr">CMR</span><span class="debito">Débito</span></div>
+            <div class="precio">$ 159.900 <span class="descuento">-25%</span></div>
+            <div class="precio-secundario">$ 179.900</div>
+            <div class="precio-secundario1">$ 219.900</div>
+          </div>
+        </div>
+
+        <!-- Producto 8 - Puma Carina -->
+        <div class="tar-producto">
+          <a href="detalle_producto.html">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREmL4kn7HnCXVri8EmYY9FT-MtzgKWj5fhj7F1MvHkRQ&s=10" alt="Tenis PUMA" />
+          </a>
+          <div class="etiqueta"><span>CALZADO</span></div>
+          <div class="nom-producto">PUMA</div>
+          <div class="descripcion">Tenis Mujer Puma Carina 2.0 Rosados Plataforma Calzado Urbano</div>
+          <div class="referencia">Por SENABELLA SPORT</div>
+          <i class="fa-regular fa-heart favorite-btn"></i>
+          <div>
+            <div class="metodo"><span class="unica">ÚNICA</span><span class="cmr">CMR</span><span class="debito">Débito</span></div>
+            <div class="precio">$ 249.900 <span class="descuento">-30%</span></div>
+            <div class="precio-secundario">$ 279.900</div>
+            <div class="precio-secundario1">$ 359.900</div>
+          </div>
+        </div>
+
+        <!-- Producto 9 - Converse -->
+        <div class="tar-producto">
+          <a href="detalle_producto.html">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREmL4kn7HnCXVri8EmYY9FT-MtzgKWj5fhj7F1MvHkRQ&s=10" alt="Tenis CONVERSE" />
+          </a>
+          <div class="etiqueta"><span>CALZADO</span></div>
+          <div class="nom-producto">CONVERSE</div>
+          <div class="descripcion">Tenis Converse Chuck Taylor All Star Classic Unisex Canvas Blanco</div>
+          <div class="referencia">Por SENABELLA SPORT</div>
+          <i class="fa-regular fa-heart favorite-btn"></i>
+          <div>
+            <div class="metodo"><span class="unica">ÚNICA</span><span class="cmr">CMR</span><span class="debito">Débito</span></div>
+            <div class="precio">$ 219.900 <span class="descuento">-20%</span></div>
+            <div class="precio-secundario">$ 239.900</div>
+            <div class="precio-secundario1">$ 279.900</div>
+          </div>
+        </div>
+
+        <!-- Producto 10 - Falda Mujer -->
+        <div class="tar-producto">
+          <a href="detalle_producto.html">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4j0PMoypc__UeVq6nD4bIh6qFQ4FaGSnEI4GclFl7iw&s=10" alt="Falda Mujer" />
+          </a>
+          <div class="etiqueta"><span>MODA</span></div>
+          <div class="nom-producto">SENABELLA</div>
+          <div class="descripcion">Falda Plisada Midi Mujer Elegante Cintura Alta Color Rosa Blush</div>
+          <div class="referencia">Por SENABELLA MODA</div>
+          <i class="fa-regular fa-heart favorite-btn"></i>
+          <div>
+            <div class="metodo"><span class="unica">ÚNICA</span><span class="cmr">CMR</span><span class="debito">Débito</span></div>
+            <div class="precio">$ 99.900 <span class="descuento">-30%</span></div>
+            <div class="precio-secundario">$ 119.900</div>
+            <div class="precio-secundario1">$ 139.900</div>
+          </div>
+        </div>
+
+        <!-- Producto 11 - Camisa Hombre -->
+        <div class="tar-producto">
+          <a href="detalle_producto.html">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWwkq93t5FnksulxA2YfZpSKAUiaqGZ7sNWSgR0wOtoQ&s=10" alt="Camisa Hombre" />
+          </a>
+          <div class="etiqueta"><span>MODA</span></div>
+          <div class="nom-producto">SENABELLA</div>
+          <div class="descripcion">Camisa Formal Hombre Manga Larga Algodón Slim Fit Azul Cielo</div>
+          <div class="referencia">Por SENABELLA MODA</div>
+          <i class="fa-regular fa-heart favorite-btn"></i>
+          <div>
+            <div class="metodo"><span class="unica">ÚNICA</span><span class="cmr">CMR</span><span class="debito">Débito</span></div>
+            <div class="precio">$ 79.900 <span class="descuento">-25%</span></div>
+            <div class="precio-secundario">$ 89.900</div>
+            <div class="precio-secundario1">$ 109.900</div>
+          </div>
+        </div>
+
+        <!-- Producto 12 - Reloj Michael Kors -->
+        <div class="tar-producto">
+          <a href="detalle_producto.html">
+            <img src="https://images.falabella.com/v3/assets/blt088e6fffbba20f16/blt5da4c0580b8c656d/6a59c7bf15befe0a433a8a5a/powercard7_home_relojes_desk.jpg?auto=webp&disable=upscale&quality=70&width=1280" alt="Reloj MICHAEL KORS" />
+          </a>
+          <div class="etiqueta"><span>ACCESORIOS</span></div>
+          <div class="nom-producto">MICHAEL KORS</div>
+          <div class="descripcion">Reloj Mujer Michael Kors MK5774 Dorado Acero Inoxidable Elegante</div>
+          <div class="referencia">Por SENABELLA MODA</div>
+          <i class="fa-regular fa-heart favorite-btn"></i>
+          <div>
+            <div class="metodo"><span class="unica">ÚNICA</span><span class="cmr">CMR</span><span class="debito">Débito</span></div>
+            <div class="precio">$ 599.900 <span class="descuento">-35%</span></div>
+            <div class="precio-secundario">$ 699.900</div>
+            <div class="precio-secundario1">$ 929.900</div>
+          </div>
+        </div>
+
+        <!-- Producto 13 - Mochila Antirrobo -->
+        <div class="tar-producto">
+          <a href="detalle_producto.html">
+            <img src="https://media.falabella.com/falabellaCO/155656024_01/w=1200,h=1200,fit=pad" alt="Mochila Antirrobo" />
+          </a>
+          <div class="etiqueta"><span>ACCESORIOS</span></div>
+          <div class="nom-producto">SENABELLA</div>
+          <div class="descripcion">Mochila Antirrobo USB Impermeable Laptop 15.6" Viaje Urbano Negra</div>
+          <div class="referencia">Por SENABELLA</div>
+          <i class="fa-regular fa-heart favorite-btn"></i>
+          <div>
+            <div class="metodo"><span class="unica">ÚNICA</span><span class="cmr">CMR</span><span class="debito">Débito</span></div>
+            <div class="precio">$ 119.900 <span class="descuento">-40%</span></div>
+            <div class="precio-secundario">$ 139.900</div>
+            <div class="precio-secundario1">$ 199.900</div>
+          </div>
+        </div>
+
+        <!-- Producto 14 - Sudadera Adidas -->
+        <div class="tar-producto">
+          <a href="detalle_producto.html">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWwkq93t5FnksulxA2YfZpSKAUiaqGZ7sNWSgR0wOtoQ&s=10" alt="Sudadera Adidas" />
+          </a>
+          <div class="etiqueta"><span>MODA</span></div>
+          <div class="nom-producto">ADIDAS</div>
+          <div class="descripcion">Sudadera con Capucha Hombre Adidas Essentials 3 Franjas Algodón Gris</div>
+          <div class="referencia">Por SENABELLA SPORT</div>
+          <i class="fa-regular fa-heart favorite-btn"></i>
+          <div>
+            <div class="metodo"><span class="unica">ÚNICA</span><span class="cmr">CMR</span><span class="debito">Débito</span></div>
+            <div class="precio">$ 169.900 <span class="descuento">-30%</span></div>
+            <div class="precio-secundario">$ 189.900</div>
+            <div class="precio-secundario1">$ 239.900</div>
+          </div>
+        </div>
+
+        <!-- Producto 15 - Vestido Casual -->
+        <div class="tar-producto">
+          <a href="detalle_producto.html">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4j0PMoypc__UeVq6nD4bIh6qFQ4FaGSnEI4GclFl7iw&s=10" alt="Vestido Casual" />
+          </a>
+          <div class="etiqueta"><span>MODA</span></div>
+          <div class="nom-producto">ZARA</div>
+          <div class="descripcion">Vestido Casual Mujer Verano Algodón Fresco Estampado Tropical</div>
+          <div class="referencia">Por SENABELLA MODA</div>
+          <i class="fa-regular fa-heart favorite-btn"></i>
+          <div>
+            <div class="metodo"><span class="unica">ÚNICA</span><span class="cmr">CMR</span><span class="debito">Débito</span></div>
+            <div class="precio">$ 109.900 <span class="descuento">-25%</span></div>
+            <div class="precio-secundario">$ 129.900</div>
+            <div class="precio-secundario1">$ 149.900</div>
+          </div>
+        </div>
+
+        <!-- Producto 16 - Nike Running -->
+        <div class="tar-producto">
+          <a href="detalle_producto.html">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREmL4kn7HnCXVri8EmYY9FT-MtzgKWj5fhj7F1MvHkRQ&s=10" alt="Tenis Nike Running" />
+          </a>
+          <div class="etiqueta"><span>CALZADO</span></div>
+          <div class="nom-producto">NIKE</div>
+          <div class="descripcion">Tenis Running Mujer Nike Revolution 6 Rosados Ligeros Amortiguación</div>
+          <div class="referencia">Por SENABELLA SPORT</div>
+          <i class="fa-regular fa-heart favorite-btn"></i>
+          <div>
+            <div class="metodo"><span class="unica">ÚNICA</span><span class="cmr">CMR</span><span class="debito">Débito</span></div>
+            <div class="precio">$ 299.900 <span class="descuento">-20%</span></div>
+            <div class="precio-secundario">$ 329.900</div>
+            <div class="precio-secundario1">$ 379.900</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div>
+        <h3>Servicio al Cliente</h3>
+        <a href="#">Centro de ayuda</a>
+        <a href="#">Estado de tu pedido</a>
+        <a href="#">Devoluciones y Cambios</a>
+      </div>
+      <div>
+        <h3>Mi cuenta</h3>
+        <a href="#">Iniciar sesión</a>
+        <a href="#">Mis pedidos</a>
+        <a href="#">Mis compras</a>
+      </div>
+      <div>
+        <h3>Acerca de Senabella</h3>
+        <a href="#">Nuestra historia</a>
+        <a href="#">Sostenibilidad</a>
+        <a href="#">Trabaja con nosotros</a>
+      </div>
+      <div>
+        <h3>Síguenos</h3>
+        <a href="#">Facebook</a>
+        <a href="#">Instagram</a>
+        <a href="#">Twitter</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Senabella. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="../js/encabezado.js"></script>
+  <script src="../js/catalogo.js"></script>
+</body>
+
+</html>

@@ -55,12 +55,37 @@ const headerHTML = `
 
     <div class="sub-navegacion">
 
-        <div class="boton-ubicacion">
-            <i class="fa-solid fa-location-dot"></i>
-            Ingresa tu ubicación
+        <div class="menu-desplegable">
+            <button class="boton-ubicacion boton-desplegable" id="boton-ubicacion">
+                <i class="fa-solid fa-location-dot"></i>
+                <span id="texto-ubicacion">Ingresa tu ubicación</span>
+                <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="contenido-desplegable" id="menu-ubicacion" style="min-width:220px;">
+                <a href="#" class="opcion-ciudad" data-ciudad="Bogotá">Bogotá</a>
+                <a href="#" class="opcion-ciudad" data-ciudad="Medellín">Medellín</a>
+                <a href="#" class="opcion-ciudad" data-ciudad="Cali">Cali</a>
+                <a href="#" class="opcion-ciudad" data-ciudad="Barranquilla">Barranquilla</a>
+                <a href="#" class="opcion-ciudad" data-ciudad="Cartagena">Cartagena</a>
+                <a href="#" class="opcion-ciudad" data-ciudad="Bucaramanga">Bucaramanga</a>
+                <a href="#" class="opcion-ciudad" data-ciudad="Pereira">Pereira</a>
+                <a href="#" class="opcion-ciudad" data-ciudad="Manizales">Manizales</a>
+                <a href="#" class="opcion-ciudad" data-ciudad="Santa Marta">Santa Marta</a>
+                <a href="#" class="opcion-ciudad" data-ciudad="Cúcuta">Cúcuta</a>
+                <a href="#" class="opcion-ciudad" data-ciudad="Villavicencio">Villavicencio</a>
+                <a href="#" class="opcion-ciudad" data-ciudad="Ibagué">Ibagué</a>
+            </div>
         </div>
 
         <div class="enlaces-navegacion">
+
+            <a href="catalogo.html">
+                Productos
+            </a>
+
+            <a href="catalogo_ropa_accesorios.html">
+                Ropa y Accesorios
+            </a>
 
             <a href="vender.html">
                 Vende en Senabella.com
@@ -198,44 +223,46 @@ botonModo.addEventListener("click", function () {
 
 
 // ==========================================
-// UBICACIÓN
+// UBICACIÓN (DROPDOWN DE CIUDADES)
 // ==========================================
 
-const botonUbicacion =
-    document.querySelector(".boton-ubicacion");
+const botonUbicacion = document.querySelector("#boton-ubicacion");
+const menuUbicacion = document.querySelector("#menu-ubicacion");
+const textoUbicacion = document.querySelector("#texto-ubicacion");
 
 // Revisar si existe una ubicación guardada
-const ubicacionGuardada =
-    localStorage.getItem("ubicacion");
+const ubicacionGuardada = localStorage.getItem("ubicacion");
 
-if (ubicacionGuardada) {
-
-    botonUbicacion.innerHTML =
-        '<i class="fa-solid fa-location-dot"></i> ' +
-        ubicacionGuardada;
+if (ubicacionGuardada && textoUbicacion) {
+    textoUbicacion.textContent = ubicacionGuardada;
 }
 
+// Abrir / cerrar dropdown
+if (botonUbicacion && menuUbicacion) {
+    botonUbicacion.addEventListener("click", function (e) {
+        e.stopPropagation();
+        menuUbicacion.classList.toggle("mostrar");
+    });
 
-// Cambiar ubicación
-botonUbicacion.addEventListener("click", function () {
-
-    const ciudad = prompt("¿Cuál es tu ciudad?");
-
-    if (ciudad !== null && ciudad.trim() !== "") {
-
-        const ciudadLimpia = ciudad.trim();
-
-        botonUbicacion.innerHTML =
-            '<i class="fa-solid fa-location-dot"></i> ' +
-            ciudadLimpia;
-
-        localStorage.setItem(
-            "ubicacion",
-            ciudadLimpia
-        );
+    // Seleccionar ciudad
+    const opcionesCiudad = menuUbicacion.querySelectorAll(".opcion-ciudad");
+    for (let i = 0; i < opcionesCiudad.length; i++) {
+        opcionesCiudad[i].addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const ciudad = opcionesCiudad[i].getAttribute("data-ciudad");
+            textoUbicacion.textContent = ciudad;
+            localStorage.setItem("ubicacion", ciudad);
+            menuUbicacion.classList.remove("mostrar");
+        });
     }
 
-});
+    // Cerrar al hacer click fuera
+    document.addEventListener("click", function () {
+        menuUbicacion.classList.remove("mostrar");
+    });
+}
+
 
 // ==========================================
 // MENÚ TARJETAS Y CUENTAS
@@ -340,7 +367,50 @@ window.SenabellaCart = {
     }
 };
 
-// Sincronizar badge al cargar cualquier página
+// Sincronizar badge y preparar buscador al cargar cualquier página
 document.addEventListener("DOMContentLoaded", function () {
     window.SenabellaCart.actualizarBadge();
+
+    const entradaBusqueda = document.querySelector(".entrada-busqueda");
+    const botonBusqueda = document.querySelector(".boton-busqueda");
+
+    // Pre-llenar campo de búsqueda si hay parámetro en la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const terminoUrl = urlParams.get("busqueda") || urlParams.get("q");
+    if (terminoUrl && entradaBusqueda) {
+        entradaBusqueda.value = terminoUrl;
+    }
+
+    function ejecutarBusquedaHeader() {
+        if (!entradaBusqueda) return;
+        const termino = entradaBusqueda.value.trim();
+        const esPaginaCatalogo = window.location.pathname.toLowerCase().endsWith("catalogo.html");
+
+        if (!esPaginaCatalogo) {
+            if (termino !== "") {
+                window.location.href = `catalogo.html?busqueda=${encodeURIComponent(termino)}`;
+            } else {
+                window.location.href = "catalogo.html";
+            }
+        } else {
+            const url = new URL(window.location.href);
+            if (termino !== "") {
+                url.searchParams.set("busqueda", termino);
+            } else {
+                url.searchParams.delete("busqueda");
+            }
+            window.history.pushState({}, "", url);
+            document.dispatchEvent(new CustomEvent("busquedaEjecutada", { detail: termino }));
+        }
+    }
+
+    if (botonBusqueda && entradaBusqueda) {
+        botonBusqueda.addEventListener("click", ejecutarBusquedaHeader);
+        entradaBusqueda.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                ejecutarBusquedaHeader();
+            }
+        });
+    }
 });
