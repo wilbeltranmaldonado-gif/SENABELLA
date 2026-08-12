@@ -36,7 +36,7 @@ const headerHTML = `
 
             <div class="cuenta-usuario">
                 <div class="texto-usuario texto-usuario-bold">
-                    <a href="usuario.html">Mi cuenta</a>
+                    <a href="registro.html">Mi cuenta</a>
                 </div>
             </div>
 
