@@ -701,32 +701,41 @@
      ACCIONES: Pedidos
      ===================================================================== */
   function verDetallePedido(id) {
-    const pedido = PEDIDOS_RECIENTES.find((p) => p.id === id);
+    const { ordenes, pedido } = obtenerPedidoAdmin(id);
     if (!pedido) return;
 
+    const clienteNombre = (pedido.cliente && pedido.cliente.direccion) ? pedido.cliente.direccion : (pedido.cliente || "Cliente");
+    const correo = pedido.correo || "sin-correo@senabella.com";
+    const productoText = (pedido.productos && pedido.productos.length > 0) ? pedido.productos.map(p => p.nombre).join(", ") : (pedido.producto || "-");
+    const totalNum = typeof pedido.total === "string" ? parseFloat(pedido.total.replace(/[^\d]/g, "")) : pedido.total;
+    const idPedido = pedido.numero || pedido.id;
+
     abrirModal({
-      titulo: `Pedido ${pedido.id}`,
+      titulo: `Pedido ${idPedido}`,
       textoConfirmar: "Actualizar estado",
       cuerpoHTML: `
-        <div class="admin-modal-detalle-fila"><span>Cliente</span><span>${pedido.cliente}</span></div>
-        <div class="admin-modal-detalle-fila"><span>Correo</span><span>${pedido.correo}</span></div>
-        <div class="admin-modal-detalle-fila"><span>Producto</span><span>${pedido.producto}</span></div>
-        <div class="admin-modal-detalle-fila"><span>Total</span><span>${formatoCOP(pedido.total)}</span></div>
+        <div class="admin-modal-detalle-fila"><span>Cliente</span><span>${clienteNombre}</span></div>
+        <div class="admin-modal-detalle-fila"><span>Correo</span><span>${correo}</span></div>
+        <div class="admin-modal-detalle-fila"><span>Producto</span><span>${productoText}</span></div>
+        <div class="admin-modal-detalle-fila"><span>Total</span><span>${formatoCOP(totalNum)}</span></div>
         <div class="admin-form-grupo" style="margin-top:16px;">
           <label for="campoEstadoPedido">Estado del pedido</label>
           <select id="campoEstadoPedido" name="estado">
             ${Object.entries(ESTADOS_INFO).map(([clave, info]) =>
-        `<option value="${clave}" ${clave === pedido.estado ? "selected" : ""}>${info.texto}</option>`
-      ).join("")}
+              `<option value="${clave}" ${clave === pedido.estado ? "selected" : ""}>${info.texto}</option>`
+            ).join("")}
           </select>
         </div>
       `,
       alConfirmar: (datos) => {
         pedido.estado = datos.get("estado");
+        if (ordenes && ordenes.length > 0) {
+          localStorage.setItem("senabella_admin_orders", JSON.stringify(ordenes));
+        }
         const buscadorInput = $("#adminBuscadorInput");
         renderPedidos(buscadorInput ? buscadorInput.value : "");
         cerrarModal();
-        mostrarToast(`Estado del pedido ${pedido.id} actualizado a "${ESTADOS_INFO[pedido.estado].texto}".`);
+        mostrarToast(`Estado del pedido ${idPedido} actualizado a "${ESTADOS_INFO[pedido.estado].texto}".`);
       },
     });
   }
@@ -782,7 +791,7 @@
   }
 
   function verComprobantePago(id) {
-    const { pedido } = obtenerPedidoAdmin(id);
+    const { ordenes, pedido } = obtenerPedidoAdmin(id);
     if (!pedido || !pedido.comprobante) {
       mostrarToast("No se encontró comprobante para este pedido.", "error");
       return;
@@ -790,12 +799,29 @@
 
     abrirModal({
       titulo: `Comprobante - Pedido ${id}`,
-      ocultarFooter: true,
+      textoConfirmar: "Actualizar estado",
       cuerpoHTML: `
-        <div style="text-align: center;">
-          <img src="${pedido.comprobante}" alt="Comprobante de pago" style="max-width: 100%; max-height: 70vh; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        <div style="text-align: center; margin-bottom: 16px;">
+          <img src="${pedido.comprobante}" alt="Comprobante de pago" style="max-width: 100%; max-height: 50vh; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
         </div>
-      `
+        <div class="admin-form-grupo">
+          <label for="campoEstadoComprobante">Estado del pedido (Modificar aquí mismo)</label>
+          <select id="campoEstadoComprobante" name="estado">
+            ${Object.entries(ESTADOS_INFO).map(([clave, info]) =>
+              `<option value="${clave}" ${clave === pedido.estado ? "selected" : ""}>${info.texto}</option>`
+            ).join("")}
+          </select>
+        </div>
+      `,
+      alConfirmar: (datos) => {
+        pedido.estado = datos.get("estado");
+        if (ordenes && ordenes.length > 0) {
+          localStorage.setItem("senabella_admin_orders", JSON.stringify(ordenes));
+        }
+        renderPedidos();
+        cerrarModal();
+        mostrarToast(`Estado actualizado a "${ESTADOS_INFO[pedido.estado].texto}".`);
+      }
     });
   }
 
