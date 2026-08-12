@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -16,21 +17,22 @@
   <link rel="stylesheet" href="../css/encabezado.css" />
   <link rel="stylesheet" href="../css/checkout.css" />
 </head>
+
 <body>
 
   <!-- Contenedor Principal del Checkout -->
   <main class="contenedor-checkout">
-    
+
     <!-- Columna Izquierda: Formularios de Envío y Pago -->
     <section class="seccion-formulario">
       <h2 class="titulo-seccion-checkout">Finalizar Compra</h2>
 
       <form id="form-checkout">
-        
+
         <!-- Paso 1: Datos de Envío -->
         <div class="paso-checkout">
           <h3><i class="fa-solid fa-truck"></i> 1. Datos de Envío</h3>
-          
+
           <div class="grupo-inputs full">
             <div class="campo-checkout">
               <label for="direccion">Dirección completa</label>
@@ -38,7 +40,7 @@
               <span class="mensaje-error">Por favor, ingresa tu dirección.</span>
             </div>
           </div>
-          
+
           <div class="grupo-inputs">
             <div class="campo-checkout">
               <label for="ciudad">Ciudad</label>
@@ -53,7 +55,7 @@
               </select>
               <span class="mensaje-error">Por favor, selecciona tu ciudad.</span>
             </div>
-            
+
             <div class="campo-checkout">
               <label for="telefono">Teléfono de contacto</label>
               <input type="tel" id="telefono" placeholder="Ej. 300 123 4567" required>
@@ -65,7 +67,7 @@
         <!-- Paso 2: Método de Pago -->
         <div class="paso-checkout">
           <h3><i class="fa-solid fa-credit-card"></i> 2. Método de Pago</h3>
-          
+
           <div class="metodos-pago">
             <!-- Opción: Banco -->
             <div class="opcion-pago">
@@ -79,7 +81,7 @@
                 <i class="fa-solid fa-building-columns"></i>
               </label>
             </div>
-            
+
             <!-- Opción: Nequi -->
             <div class="opcion-pago">
               <input type="radio" name="metodo_pago" id="pago-nequi" value="nequi">
@@ -111,7 +113,8 @@
           <div id="contenedor-comprobante" class="contenedor-comprobante">
             <h4 id="titulo-comprobante">Sube tu comprobante de pago</h4>
             <p id="instrucciones-pago" class="instrucciones-pago">
-              Realiza la transferencia a la cuenta <strong>Bancolombia Ahorros #123-456789-00</strong> a nombre de Senabella SAS.
+              Realiza la transferencia a la cuenta <strong>Bancolombia Ahorros #123-456789-00</strong> a nombre de
+              Senabella SAS.
             </p>
             <div class="campo-checkout mt-3">
               <label for="archivo-comprobante">Imagen del comprobante (Requerido)</label>
@@ -167,4 +170,5 @@
   <script src="../js/encabezado.js"></script>
   <script src="../js/checkout.js"></script>
 </body>
+
 </html>

@@ -80,6 +80,7 @@
     "en-camino": { texto: "En camino", clase: "admin-badge-info" },
     "pendiente": { texto: "Pendiente", clase: "admin-badge-warning" },
     "cancelado": { texto: "Cancelado", clase: "admin-badge-danger" },
+    "pendiente-verificacion": { texto: "Por Verificar", clase: "admin-badge-warning" }
   };
 
   let contadorPedido = 10482;
@@ -183,14 +184,13 @@
           <div class="admin-modal-body">
             <form id="adminModalForm">${cuerpoHTML}</form>
           </div>
-          ${
-            ocultarFooter
-              ? ""
-              : `<div class="admin-modal-footer">
+          ${ocultarFooter
+        ? ""
+        : `<div class="admin-modal-footer">
                   <button type="button" class="admin-boton admin-boton-secundario" id="adminModalCancelar">Cancelar</button>
                   <button type="submit" form="adminModalForm" class="admin-boton ${claseConfirmar}">${textoConfirmar}</button>
                 </div>`
-          }
+      }
         </div>
       </div>
     `;
@@ -283,7 +283,27 @@
     if (!tbody) return;
 
     const texto = filtro.trim().toLowerCase();
-    const lista = PEDIDOS_RECIENTES.filter((p) =>
+
+    // Combinamos pedidos simulados con los reales guardados en localStorage
+    let ordenesReales = [];
+    try {
+      ordenesReales = JSON.parse(localStorage.getItem("senabella_admin_orders")) || [];
+    } catch (e) { }
+
+    // Adaptamos las reales al formato esperado o simplemente las juntamos
+    let listaReal = ordenesReales.map(o => ({
+      id: o.numero,
+      cliente: (o.cliente && o.cliente.direccion) ? o.cliente.direccion : "Cliente Local",
+      correo: "sin-correo@senabella.com",
+      producto: (o.productos && o.productos.length > 0) ? o.productos.map(p => p.nombre).join(", ") : "Productos",
+      estado: o.estado || "pendiente",
+      total: typeof o.total === "string" ? parseFloat(o.total.replace(/[^\d]/g, "")) : o.total,
+      comprobante: o.comprobante || null
+    }));
+
+    let listaCombinada = [...listaReal, ...PEDIDOS_RECIENTES];
+
+    const lista = listaCombinada.filter((p) =>
       !texto ||
       p.id.toLowerCase().includes(texto) ||
       p.cliente.toLowerCase().includes(texto) ||
@@ -292,7 +312,7 @@
 
     if (!lista.length) {
       tbody.innerHTML = `
-        <tr><td colspan="6">
+        <tr><td colspan="7">
           <div class="admin-estado-vacio">
             <i class="fa-solid fa-magnifying-glass"></i>
             <p>No encontramos pedidos que coincidan con "${filtro}".</p>
@@ -302,7 +322,32 @@
     }
 
     tbody.innerHTML = lista.map((pedido) => {
-      const estado = ESTADOS_INFO[pedido.estado];
+      const estado = ESTADOS_INFO[pedido.estado] || ESTADOS_INFO["pendiente"];
+      let acciones = `
+        <button class="admin-tabla-boton" title="Ver detalle del pedido" data-accion="ver-pedido" data-id="${pedido.id}">
+          <i class="fa-regular fa-eye"></i>
+        </button>
+      `;
+
+      if (pedido.comprobante) {
+        acciones += `
+          <button class="admin-tabla-boton" title="Ver Comprobante" data-accion="ver-comprobante" data-id="${pedido.id}">
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+          </button>
+        `;
+      }
+
+      if (pedido.estado === "pendiente-verificacion") {
+        acciones += `
+          <button class="admin-tabla-boton" style="color:var(--success-color);" title="Aprobar Pago" data-accion="aprobar-pago" data-id="${pedido.id}">
+            <i class="fa-solid fa-check"></i>
+          </button>
+          <button class="admin-tabla-boton peligro" title="Rechazar Pago" data-accion="rechazar-pago" data-id="${pedido.id}">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        `;
+      }
+
       return `
         <tr>
           <td><strong>${pedido.id}</strong></td>
@@ -316,9 +361,9 @@
           <td><span class="admin-badge ${estado.clase}">${estado.texto}</span></td>
           <td>${formatoCOP(pedido.total)}</td>
           <td>
-            <button class="admin-tabla-boton" title="Ver detalle del pedido" data-accion="ver-pedido" data-id="${pedido.id}">
-              <i class="fa-regular fa-eye"></i>
-            </button>
+            <div class="admin-tabla-acciones">
+              ${acciones}
+            </div>
           </td>
         </tr>
       `;
@@ -671,8 +716,8 @@
           <label for="campoEstadoPedido">Estado del pedido</label>
           <select id="campoEstadoPedido" name="estado">
             ${Object.entries(ESTADOS_INFO).map(([clave, info]) =>
-              `<option value="${clave}" ${clave === pedido.estado ? "selected" : ""}>${info.texto}</option>`
-            ).join("")}
+        `<option value="${clave}" ${clave === pedido.estado ? "selected" : ""}>${info.texto}</option>`
+      ).join("")}
           </select>
         </div>
       `,
@@ -726,6 +771,69 @@
         cerrarModal();
         mostrarToast("Pedido creado correctamente.");
       },
+    });
+  }
+
+  function obtenerPedidoAdmin(id) {
+    try {
+      let ordenes = JSON.parse(localStorage.getItem("senabella_admin_orders")) || [];
+      return { ordenes, pedido: ordenes.find(o => o.numero === id) || PEDIDOS_RECIENTES.find((p) => p.id === id) };
+    } catch (e) { return { ordenes: [], pedido: null }; }
+  }
+
+  function verComprobantePago(id) {
+    const { pedido } = obtenerPedidoAdmin(id);
+    if (!pedido || !pedido.comprobante) {
+      mostrarToast("No se encontró comprobante para este pedido.", "error");
+      return;
+    }
+
+    abrirModal({
+      titulo: `Comprobante - Pedido ${id}`,
+      ocultarFooter: true,
+      cuerpoHTML: `
+        <div style="text-align: center;">
+          <img src="${pedido.comprobante}" alt="Comprobante de pago" style="max-width: 100%; max-height: 70vh; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        </div>
+      `
+    });
+  }
+
+  function aprobarPago(id) {
+    const { ordenes, pedido } = obtenerPedidoAdmin(id);
+    if (!pedido) return;
+
+    abrirModalConfirmacion({
+      titulo: "Aprobar Pago",
+      mensaje: `¿Estás seguro de que deseas aprobar el pago y procesar el pedido ${id}?`,
+      textoConfirmar: "Aprobar",
+      alConfirmar: () => {
+        pedido.estado = "pendiente";
+        if (ordenes.length > 0) {
+          localStorage.setItem("senabella_admin_orders", JSON.stringify(ordenes));
+        }
+        renderPedidos();
+        mostrarToast(`Pago aprobado. El pedido ${id} ahora está pendiente.`, "exito");
+      }
+    });
+  }
+
+  function rechazarPago(id) {
+    const { ordenes, pedido } = obtenerPedidoAdmin(id);
+    if (!pedido) return;
+
+    abrirModalConfirmacion({
+      titulo: "Rechazar Pago",
+      mensaje: `¿Estás seguro de que deseas rechazar este pago? El pedido ${id} será marcado como cancelado.`,
+      textoConfirmar: "Rechazar",
+      alConfirmar: () => {
+        pedido.estado = "cancelado";
+        if (ordenes.length > 0) {
+          localStorage.setItem("senabella_admin_orders", JSON.stringify(ordenes));
+        }
+        renderPedidos();
+        mostrarToast(`Pago rechazado. El pedido ${id} fue cancelado.`, "info");
+      }
     });
   }
 
@@ -1459,6 +1567,9 @@
 
         case "nuevo-pedido": nuevoPedido(); break;
         case "ver-pedido": verDetallePedido(id); break;
+        case "ver-comprobante": verComprobantePago(id); break;
+        case "aprobar-pago": aprobarPago(id); break;
+        case "rechazar-pago": rechazarPago(id); break;
 
         case "nuevo-cliente": nuevoCliente(); break;
         case "ver-cliente": verCliente(Number(id)); break;
