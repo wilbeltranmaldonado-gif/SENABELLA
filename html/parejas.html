@@ -74,7 +74,7 @@
 
       <div class="galeria-grid">
         <!-- Producto 1 -->
-        <article class="galeria-card">
+        <article class="galeria-card" style="cursor:pointer" onclick="verProductoParejas('Look de pareja','SENABELLA MODA','Propuesta elegante y romántica para celebraciones con estilo y coordinación.','$ 359.900','$ 399.900','../recursos/pareja.jpeg')">
           <div class="galeria-card-imagen">
             <img src="../recursos/pareja.jpeg" alt="Look de pareja elegante" loading="lazy" />
             <div class="galeria-card-badge">Nuevo</div>
@@ -82,14 +82,11 @@
           <div class="galeria-card-info">
             <h3>Look de pareja</h3>
             <p>Propuesta elegante y romántica pensada para celebraciones con estilo y coordinación.</p>
-            <a href="catalogo.html" class="galeria-card-enlace">
-              Ver detalles <i class="fa-solid fa-arrow-right"></i>
-            </a>
           </div>
         </article>
 
         <!-- Producto 2 -->
-        <article class="galeria-card">
+        <article class="galeria-card" style="cursor:pointer" onclick="verProductoParejas('Conjunto coordinado','SENABELLA MODA','Propuesta moderna con tonos neutros y detalles sofisticados para coordinar el estilo.','$ 289.900','$ 329.900','../recursos/images.jpeg')">
           <div class="galeria-card-imagen">
             <img src="../recursos/images.jpeg" alt="Conjunto para pareja" loading="lazy" />
             <div class="galeria-card-badge badge-oferta">-20%</div>
@@ -97,14 +94,11 @@
           <div class="galeria-card-info">
             <h3>Conjunto coordinado</h3>
             <p>Propuesta moderna con tonos neutros y detalles sofisticados para coordinar el estilo.</p>
-            <a href="catalogo.html" class="galeria-card-enlace">
-              Ver detalles <i class="fa-solid fa-arrow-right"></i>
-            </a>
           </div>
         </article>
 
         <!-- Producto 3 -->
-        <article class="galeria-card">
+        <article class="galeria-card" style="cursor:pointer" onclick="verProductoParejas('Detalle romántico','SENABELLA BOUTIQUE','Texturas suaves, cortes delicados y acabados inspirados en una boutique elegante para novios.','$ 199.900','$ 239.900','https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=900&q=80')">
           <div class="galeria-card-imagen">
             <img
               src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=900&q=80"
@@ -114,9 +108,6 @@
           <div class="galeria-card-info">
             <h3>Detalle romántico</h3>
             <p>Texturas suaves, cortes delicados y acabados inspirados en una boutique elegante para novios.</p>
-            <a href="catalogo.html" class="galeria-card-enlace">
-              Ver detalles <i class="fa-solid fa-arrow-right"></i>
-            </a>
           </div>
         </article>
       </div>
@@ -126,13 +117,13 @@
     <section class="productos-parejas">
       <div class="productos-encabezado">
         <h2>Productos para parejas</h2>
-        <a href="catalogo.html" class="btn btn-outline-primary btn-sm">Ver todo</a>
+        <a href="catalogo_ropa_accesorios.html" class="btn btn-outline-primary btn-sm">Ver todo</a>
       </div>
 
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 productos-parejas-grid">
 
         <div class="col">
-          <div class="card h-100 shadow-sm border-0">
+          <div class="card h-100 shadow-sm border-0" style="cursor:pointer" onclick="verProductoParejas('Chaqueta coordinada - Él','SENABELLA MODA','Chaqueta coordinada para él - Diseño moderno y cómodo para salidas y celebraciones.','$ 189.900','$ 209.900','https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=400&q=80')">
             <div class="card-badge badge-nuevo">Nuevo</div>
             <img
               src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=400&q=80"
@@ -140,7 +131,7 @@
             <div class="card-body d-flex flex-column justify-content-between">
               <h3 class="card-title h6 text-truncate">Chaqueta coordinada - Él</h3>
               <p class="card-text fw-bold text-success">$189.900</p>
-              <button class="btn-agregar-carrito" data-producto="chaqueta-el">
+              <button class="btn-agregar-carrito" data-producto="chaqueta-el" onclick="event.stopPropagation()">
                 <i class="fa-solid fa-cart-plus"></i> Agregar
               </button>
             </div>
@@ -148,7 +139,7 @@
         </div>
 
         <div class="col">
-          <div class="card h-100 shadow-sm border-0">
+          <div class="card h-100 shadow-sm border-0" style="cursor:pointer" onclick="verProductoParejas('Chaqueta coordinada - Ella','SENABELLA MODA','Chaqueta coordinada para ella - Diseño romántico y ligero para celebraciones en pareja.','$ 179.900','$ 199.900','https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=400&q=80')">
             <div class="card-badge badge-nuevo">Nuevo</div>
             <img
               src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=400&q=80"
@@ -156,7 +147,7 @@
             <div class="card-body d-flex flex-column justify-content-between">
               <h3 class="card-title h6 text-truncate">Chaqueta coordinada - Ella</h3>
               <p class="card-text fw-bold text-success">$179.900</p>
-              <button class="btn-agregar-carrito" data-producto="chaqueta-ella">
+              <button class="btn-agregar-carrito" data-producto="chaqueta-ella" onclick="event.stopPropagation()">
                 <i class="fa-solid fa-cart-plus"></i> Agregar
               </button>
             </div>
@@ -164,7 +155,7 @@
         </div>
 
         <div class="col">
-          <div class="card h-100 shadow-sm border-0">
+          <div class="card h-100 shadow-sm border-0" style="cursor:pointer" onclick="verProductoParejas('Set camisetas pareja','SENABELLA MODA','Set de camisetas coordinadas para pareja, diseño casual ideal para el día a día.','$ 129.900','$ 149.900','https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=400&q=80')">
             <div class="card-badge">-15%</div>
             <img
               src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=400&q=80"
@@ -172,7 +163,7 @@
             <div class="card-body d-flex flex-column justify-content-between">
               <h3 class="card-title h6 text-truncate">Set camisetas pareja</h3>
               <p class="card-text fw-bold text-success">$129.900</p>
-              <button class="btn-agregar-carrito" data-producto="set-camisetas">
+              <button class="btn-agregar-carrito" data-producto="set-camisetas" onclick="event.stopPropagation()">
                 <i class="fa-solid fa-cart-plus"></i> Agregar
               </button>
             </div>
@@ -180,7 +171,7 @@
         </div>
 
         <div class="col">
-          <div class="card h-100 shadow-sm border-0">
+          <div class="card h-100 shadow-sm border-0" style="cursor:pointer" onclick="verProductoParejas('Bufandas coordinadas','SENABELLA MODA','Bufandas coordinadas para pareja, ideales para el frío. Tejido suave y abrigado.','$ 89.900','$ 109.900','https://images.unsplash.com/photo-1611312449408-fcece27cdbb7?auto=format&fit=crop&w=400&q=80')">
             <div class="card-badge">-25%</div>
             <img
               src="https://images.unsplash.com/photo-1611312449408-fcece27cdbb7?auto=format&fit=crop&w=400&q=80"
@@ -188,7 +179,7 @@
             <div class="card-body d-flex flex-column justify-content-between">
               <h3 class="card-title h6 text-truncate">Bufandas coordinadas</h3>
               <p class="card-text fw-bold text-success">$89.900</p>
-              <button class="btn-agregar-carrito" data-producto="bufandas">
+              <button class="btn-agregar-carrito" data-producto="bufandas" onclick="event.stopPropagation()">
                 <i class="fa-solid fa-cart-plus"></i> Agregar
               </button>
             </div>
@@ -227,30 +218,23 @@
   <div class="pie-pagina-superior">
     <div>
       <h3>Servicio al cliente</h3>
-      <a href="#">Ayuda</a>
-      <a href="#">Cambio y devoluciones</a>
-      <a href="#">Garantías</a>
+      <a href="soporte.html">Ayuda</a>
+      <a href="contacto.html">Cambio y devoluciones</a>
+      <a href="contacto.html">Garantías</a>
     </div>
 
     <div>
       <h3>Compra segura</h3>
-      <a href="#">Formas de pago</a>
-      <a href="#">Envíos</a>
-      <a href="#">Promociones</a>
+      <a href="carrito.html">Formas de pago</a>
+      <a href="catalogo.html">Envíos</a>
+      <a href="catalogo.html">Promociones</a>
     </div>
 
     <div>
       <h3>Acerca de Senabella</h3>
-      <a href="#">Nuestra empresa</a>
-      <a href="#">Trabaja con nosotros</a>
-      <a href="#">Tiendas</a>
-    </div>
-
-    <div>
-      <h3>Síguenos</h3>
-      <a href="#">Instagram</a>
-      <a href="#">Facebook</a>
-      <a href="#">TikTok</a>
+      <a href="contacto.html">Nuestra empresa</a>
+      <a href="contacto.html">Trabaja con nosotros</a>
+      <a href="catalogo.html">Tiendas</a>
     </div>
   </div>
 

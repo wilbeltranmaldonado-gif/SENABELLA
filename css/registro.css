@@ -40,6 +40,45 @@ body {
   flex-direction: column;
 }
 
+/* Botón Regresar al Inicio */
+.boton-regresar {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--color-blanco);
+  color: var(--color-texto-secundario);
+  padding: 10px 16px;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  border: 1px solid var(--color-borde);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+  z-index: 100; /* Asegura que esté por encima de otros elementos */
+}
+
+.boton-regresar:hover {
+  color: var(--color-primario);
+  border-color: var(--color-primario);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.modo-oscuro .boton-regresar {
+  background-color: var(--color-blanco); /* en modo oscuro esto es #1e1e24 según root */
+  color: var(--color-texto);
+  border-color: var(--color-borde);
+}
+
+.modo-oscuro .boton-regresar:hover {
+  color: var(--color-primario);
+  border-color: var(--color-primario);
+}
+
 /* Encabezado */
 .encabezado-principal {
   background-color: var(--color-blanco);

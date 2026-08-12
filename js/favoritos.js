@@ -25,6 +25,20 @@ window.SenabellaFavoritos = {
   },
 
   agregar: function (producto) {
+    // Solo permite favoritos si hay sesión activa
+    const sesionActiva = localStorage.getItem("senabella_sesion") === "activa";
+    if (!sesionActiva) {
+      if (window.SenabellaToast) {
+        window.SenabellaToast("Inicia sesión para guardar favoritos", "fa-user-lock", "advertencia");
+      } else {
+        alert("Debes iniciar sesión para agregar favoritos.");
+      }
+      setTimeout(function() {
+        window.location.href = "login.html";
+      }, 1500);
+      return false;
+    }
+
     let items = this.obtenerTodos();
     
     // Verificar si ya existe (por ID o por nombre)
@@ -66,8 +80,75 @@ window.SenabellaFavoritos = {
 
   limpiarTodos: function() {
     this.guardar([]);
+  },
+
+  sincronizarBotones: function() {
+    // 1. Catálogos (.favorite-btn)
+    document.querySelectorAll(".favorite-btn").forEach(function(btn) {
+      let tarjeta = btn.closest(".tar-producto");
+      if(tarjeta) {
+        let marca = tarjeta.querySelector(".nom-producto") ? tarjeta.querySelector(".nom-producto").textContent.trim() : "";
+        let descripcion = tarjeta.querySelector(".descripcion") ? tarjeta.querySelector(".descripcion").textContent.trim() : "";
+        let nombreProd = marca + " - " + descripcion;
+        let esFav = window.SenabellaFavoritos.esFavorito(nombreProd);
+        
+        if (esFav) {
+          btn.classList.remove("fa-regular");
+          btn.classList.add("fa-solid");
+          btn.style.color = "#e63946";
+        } else {
+          btn.classList.add("fa-regular");
+          btn.classList.remove("fa-solid");
+          btn.style.color = "";
+        }
+      }
+    });
+
+    // 2. Inicio y Parejas (.btn-favorito)
+    document.querySelectorAll(".btn-favorito").forEach(function(btn) {
+      let card = btn.closest(".card");
+      if (card) {
+        let nombreProd = card.querySelector(".card-title") ? card.querySelector(".card-title").textContent.trim() : "";
+        let esFav = window.SenabellaFavoritos.esFavorito(nombreProd);
+        let ic = btn.querySelector("i");
+        if (ic) {
+          if (esFav) {
+            ic.classList.remove("fa-regular");
+            ic.classList.add("fa-solid");
+            ic.style.color = "#e63946";
+            btn.classList.add("favorito-activo");
+          } else {
+            ic.classList.add("fa-regular");
+            ic.classList.remove("fa-solid");
+            ic.style.color = "#767676";
+            btn.classList.remove("favorito-activo");
+          }
+        }
+      }
+    });
+
+    // 3. Detalle Producto (#btn-favorito-detalle)
+    let btnDetalle = document.getElementById("btn-favorito-detalle");
+    if (btnDetalle) {
+      let titulo = document.querySelector(".info-producto h1") ? document.querySelector(".info-producto h1").textContent.trim() : "";
+      let esFav = window.SenabellaFavoritos.esFavorito(titulo);
+      let ic = btnDetalle.querySelector("i");
+      if (ic) {
+        ic.className = esFav ? "fa-solid fa-heart" : "fa-regular fa-heart";
+      }
+      btnDetalle.classList.toggle("activo", esFav);
+    }
   }
 };
+
+window.addEventListener('favoritosActualizados', function() {
+  window.SenabellaFavoritos.sincronizarBotones();
+});
+window.addEventListener('storage', function(e) {
+  if (e.key === window.SenabellaFavoritos.KEY) {
+    window.SenabellaFavoritos.sincronizarBotones();
+  }
+});
 
 // ==========================================
 // LÓGICA DE LA PÁGINA DE FAVORITOS
