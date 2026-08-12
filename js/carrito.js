@@ -370,28 +370,12 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       botonPagar.disabled = true;
-      let textoOriginal = botonPagar.textContent;
-      botonPagar.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Procesando compra...';
+      botonPagar.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Redirigiendo al checkout...';
 
+      // Redirigir a la página de checkout
       setTimeout(function () {
-        botonPagar.innerHTML = '<i class="fa-solid fa-circle-check"></i> ¡Compra Exitosa!';
-        botonPagar.style.backgroundColor = "#aad100";
-        botonPagar.style.color = "#222";
-
-        window.SenabellaToast("¡Tu pedido se ha procesado con éxito!", "fa-circle-check", "exito");
-
-        setTimeout(function () {
-          if (window.SenabellaCart) {
-            window.SenabellaCart.limpiarComprados();
-          }
-
-          cargarProductosDesdeDB();
-          botonPagar.disabled = false;
-          botonPagar.textContent = textoOriginal;
-          botonPagar.style.backgroundColor = "";
-          botonPagar.style.color = "";
-        }, 2000);
-      }, 1200);
+        window.location.href = "checkout.html";
+      }, 500);
     });
   }
 
