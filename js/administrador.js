@@ -80,7 +80,6 @@
     "en-camino": { texto: "En camino", clase: "admin-badge-info" },
     "pendiente": { texto: "Pendiente", clase: "admin-badge-warning" },
     "cancelado": { texto: "Cancelado", clase: "admin-badge-danger" },
-    "pendiente-verificacion": { texto: "Por Verificar", clase: "admin-badge-warning" }
   };
 
   let contadorPedido = 10482;
@@ -122,6 +121,15 @@
     { id: contadorCategoria++, nombre: "Tecnología", icono: "fa-laptop", productos: 92 },
     { id: contadorCategoria++, nombre: "Hogar", icono: "fa-couch", productos: 145 },
     { id: contadorCategoria++, nombre: "Accesorios", icono: "fa-bag-shopping", productos: 93 },
+  ];
+
+  let contadorProveedor = 1;
+  const PROVEEDORES = [
+    { id: contadorProveedor++, nombre: "Textiles del Valle S.A.S.", contacto: "María Fernanda León", correo: "ventas@textilesdelvalle.com", telefono: "+57 310 555 1122", categoria: "Ropa", estado: "activo" },
+    { id: contadorProveedor++, nombre: "Calzado Andino Ltda.", contacto: "Jorge Iván Salazar", correo: "contacto@calzadoandino.com", telefono: "+57 315 442 8890", categoria: "Calzado", estado: "activo" },
+    { id: contadorProveedor++, nombre: "TecnoImport Colombia", contacto: "Sandra Milena Ortiz", correo: "compras@tecnoimport.co", telefono: "+57 300 987 4321", categoria: "Tecnología", estado: "pendiente" },
+    { id: contadorProveedor++, nombre: "Hogar & Estilo SAS", contacto: "Camilo Herrera", correo: "pedidos@hogarestilo.com", telefono: "+57 320 118 7765", categoria: "Hogar", estado: "activo" },
+    { id: contadorProveedor++, nombre: "Accesorios Bogotá E.U.", contacto: "Diana Marcela Ríos", correo: "info@accesoriosbogota.com", telefono: "+57 301 776 5544", categoria: "Accesorios", estado: "inactivo" },
   ];
 
   let contadorCupon = 1;
@@ -184,13 +192,14 @@
           <div class="admin-modal-body">
             <form id="adminModalForm">${cuerpoHTML}</form>
           </div>
-          ${ocultarFooter
-        ? ""
-        : `<div class="admin-modal-footer">
+          ${
+            ocultarFooter
+              ? ""
+              : `<div class="admin-modal-footer">
                   <button type="button" class="admin-boton admin-boton-secundario" id="adminModalCancelar">Cancelar</button>
                   <button type="submit" form="adminModalForm" class="admin-boton ${claseConfirmar}">${textoConfirmar}</button>
                 </div>`
-      }
+          }
         </div>
       </div>
     `;
@@ -283,27 +292,7 @@
     if (!tbody) return;
 
     const texto = filtro.trim().toLowerCase();
-
-    // Combinamos pedidos simulados con los reales guardados en localStorage
-    let ordenesReales = [];
-    try {
-      ordenesReales = JSON.parse(localStorage.getItem("senabella_admin_orders")) || [];
-    } catch (e) { }
-
-    // Adaptamos las reales al formato esperado o simplemente las juntamos
-    let listaReal = ordenesReales.map(o => ({
-      id: o.numero,
-      cliente: (o.cliente && o.cliente.direccion) ? o.cliente.direccion : "Cliente Local",
-      correo: "sin-correo@senabella.com",
-      producto: (o.productos && o.productos.length > 0) ? o.productos.map(p => p.nombre).join(", ") : "Productos",
-      estado: o.estado || "pendiente",
-      total: typeof o.total === "string" ? parseFloat(o.total.replace(/[^\d]/g, "")) : o.total,
-      comprobante: o.comprobante || null
-    }));
-
-    let listaCombinada = [...listaReal, ...PEDIDOS_RECIENTES];
-
-    const lista = listaCombinada.filter((p) =>
+    const lista = PEDIDOS_RECIENTES.filter((p) =>
       !texto ||
       p.id.toLowerCase().includes(texto) ||
       p.cliente.toLowerCase().includes(texto) ||
@@ -312,7 +301,7 @@
 
     if (!lista.length) {
       tbody.innerHTML = `
-        <tr><td colspan="7">
+        <tr><td colspan="6">
           <div class="admin-estado-vacio">
             <i class="fa-solid fa-magnifying-glass"></i>
             <p>No encontramos pedidos que coincidan con "${filtro}".</p>
@@ -322,32 +311,7 @@
     }
 
     tbody.innerHTML = lista.map((pedido) => {
-      const estado = ESTADOS_INFO[pedido.estado] || ESTADOS_INFO["pendiente"];
-      let acciones = `
-        <button class="admin-tabla-boton" title="Ver detalle del pedido" data-accion="ver-pedido" data-id="${pedido.id}">
-          <i class="fa-regular fa-eye"></i>
-        </button>
-      `;
-
-      if (pedido.comprobante) {
-        acciones += `
-          <button class="admin-tabla-boton" title="Ver Comprobante" data-accion="ver-comprobante" data-id="${pedido.id}">
-            <i class="fa-solid fa-file-invoice-dollar"></i>
-          </button>
-        `;
-      }
-
-      if (pedido.estado === "pendiente-verificacion") {
-        acciones += `
-          <button class="admin-tabla-boton" style="color:var(--success-color);" title="Aprobar Pago" data-accion="aprobar-pago" data-id="${pedido.id}">
-            <i class="fa-solid fa-check"></i>
-          </button>
-          <button class="admin-tabla-boton peligro" title="Rechazar Pago" data-accion="rechazar-pago" data-id="${pedido.id}">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        `;
-      }
-
+      const estado = ESTADOS_INFO[pedido.estado];
       return `
         <tr>
           <td><strong>${pedido.id}</strong></td>
@@ -361,9 +325,9 @@
           <td><span class="admin-badge ${estado.clase}">${estado.texto}</span></td>
           <td>${formatoCOP(pedido.total)}</td>
           <td>
-            <div class="admin-tabla-acciones">
-              ${acciones}
-            </div>
+            <button class="admin-tabla-boton" title="Ver detalle del pedido" data-accion="ver-pedido" data-id="${pedido.id}">
+              <i class="fa-regular fa-eye"></i>
+            </button>
           </td>
         </tr>
       `;
@@ -506,6 +470,69 @@
                 <i class="fa-regular fa-eye"></i>
               </button>
               <button class="admin-tabla-boton peligro" title="Eliminar cliente" data-accion="eliminar-cliente" data-id="${c.id}">
+                <i class="fa-regular fa-trash-can"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join("");
+  }
+
+  /* =====================================================================
+     RENDER: Proveedores
+     ===================================================================== */
+  const ESTADOS_PROVEEDOR = {
+    activo: { texto: "Activo", clase: "admin-badge-success" },
+    pendiente: { texto: "Pendiente", clase: "admin-badge-warning" },
+    inactivo: { texto: "Inactivo", clase: "admin-badge-danger" },
+  };
+
+  function renderProveedores(filtro = "") {
+    const tbody = $("#adminTablaProveedores");
+    if (!tbody) return;
+
+    const texto = filtro.trim().toLowerCase();
+    const lista = PROVEEDORES.filter((p) =>
+      !texto ||
+      p.nombre.toLowerCase().includes(texto) ||
+      p.contacto.toLowerCase().includes(texto) ||
+      p.categoria.toLowerCase().includes(texto)
+    );
+
+    if ($("#adminConteoProveedores")) $("#adminConteoProveedores").textContent = PROVEEDORES.length.toLocaleString("es-CO");
+
+    if (!lista.length) {
+      tbody.innerHTML = `
+        <tr><td colspan="6">
+          <div class="admin-estado-vacio">
+            <i class="fa-solid fa-truck-field"></i>
+            <p>No hay proveedores que coincidan con tu búsqueda.</p>
+          </div>
+        </td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = lista.map((p) => {
+      const estado = ESTADOS_PROVEEDOR[p.estado] || ESTADOS_PROVEEDOR.pendiente;
+      return `
+        <tr>
+          <td>
+            <div class="admin-celda-cliente">
+              ${p.nombre}
+              <small>${p.contacto}</small>
+            </div>
+          </td>
+          <td>${p.categoria}</td>
+          <td>${p.correo}</td>
+          <td>${p.telefono}</td>
+          <td><span class="admin-badge ${estado.clase}">${estado.texto}</span></td>
+          <td>
+            <div class="admin-tabla-acciones">
+              <button class="admin-tabla-boton" title="Editar proveedor" data-accion="editar-proveedor" data-id="${p.id}">
+                <i class="fa-regular fa-pen-to-square"></i>
+              </button>
+              <button class="admin-tabla-boton peligro" title="Eliminar proveedor" data-accion="eliminar-proveedor" data-id="${p.id}">
                 <i class="fa-regular fa-trash-can"></i>
               </button>
             </div>
@@ -701,23 +728,17 @@
      ACCIONES: Pedidos
      ===================================================================== */
   function verDetallePedido(id) {
-    const { ordenes, pedido } = obtenerPedidoAdmin(id);
+    const pedido = PEDIDOS_RECIENTES.find((p) => p.id === id);
     if (!pedido) return;
 
-    const clienteNombre = (pedido.cliente && pedido.cliente.direccion) ? pedido.cliente.direccion : (pedido.cliente || "Cliente");
-    const correo = pedido.correo || "sin-correo@senabella.com";
-    const productoText = (pedido.productos && pedido.productos.length > 0) ? pedido.productos.map(p => p.nombre).join(", ") : (pedido.producto || "-");
-    const totalNum = typeof pedido.total === "string" ? parseFloat(pedido.total.replace(/[^\d]/g, "")) : pedido.total;
-    const idPedido = pedido.numero || pedido.id;
-
     abrirModal({
-      titulo: `Pedido ${idPedido}`,
+      titulo: `Pedido ${pedido.id}`,
       textoConfirmar: "Actualizar estado",
       cuerpoHTML: `
-        <div class="admin-modal-detalle-fila"><span>Cliente</span><span>${clienteNombre}</span></div>
-        <div class="admin-modal-detalle-fila"><span>Correo</span><span>${correo}</span></div>
-        <div class="admin-modal-detalle-fila"><span>Producto</span><span>${productoText}</span></div>
-        <div class="admin-modal-detalle-fila"><span>Total</span><span>${formatoCOP(totalNum)}</span></div>
+        <div class="admin-modal-detalle-fila"><span>Cliente</span><span>${pedido.cliente}</span></div>
+        <div class="admin-modal-detalle-fila"><span>Correo</span><span>${pedido.correo}</span></div>
+        <div class="admin-modal-detalle-fila"><span>Producto</span><span>${pedido.producto}</span></div>
+        <div class="admin-modal-detalle-fila"><span>Total</span><span>${formatoCOP(pedido.total)}</span></div>
         <div class="admin-form-grupo" style="margin-top:16px;">
           <label for="campoEstadoPedido">Estado del pedido</label>
           <select id="campoEstadoPedido" name="estado">
@@ -729,13 +750,10 @@
       `,
       alConfirmar: (datos) => {
         pedido.estado = datos.get("estado");
-        if (ordenes && ordenes.length > 0) {
-          localStorage.setItem("senabella_admin_orders", JSON.stringify(ordenes));
-        }
         const buscadorInput = $("#adminBuscadorInput");
         renderPedidos(buscadorInput ? buscadorInput.value : "");
         cerrarModal();
-        mostrarToast(`Estado del pedido ${idPedido} actualizado a "${ESTADOS_INFO[pedido.estado].texto}".`);
+        mostrarToast(`Estado del pedido ${pedido.id} actualizado a "${ESTADOS_INFO[pedido.estado].texto}".`);
       },
     });
   }
@@ -780,86 +798,6 @@
         cerrarModal();
         mostrarToast("Pedido creado correctamente.");
       },
-    });
-  }
-
-  function obtenerPedidoAdmin(id) {
-    try {
-      let ordenes = JSON.parse(localStorage.getItem("senabella_admin_orders")) || [];
-      return { ordenes, pedido: ordenes.find(o => o.numero === id) || PEDIDOS_RECIENTES.find((p) => p.id === id) };
-    } catch (e) { return { ordenes: [], pedido: null }; }
-  }
-
-  function verComprobantePago(id) {
-    const { ordenes, pedido } = obtenerPedidoAdmin(id);
-    if (!pedido || !pedido.comprobante) {
-      mostrarToast("No se encontró comprobante para este pedido.", "error");
-      return;
-    }
-
-    abrirModal({
-      titulo: `Comprobante - Pedido ${id}`,
-      textoConfirmar: "Actualizar estado",
-      cuerpoHTML: `
-        <div style="text-align: center; margin-bottom: 16px;">
-          <img src="${pedido.comprobante}" alt="Comprobante de pago" style="max-width: 100%; max-height: 50vh; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-        </div>
-        <div class="admin-form-grupo">
-          <label for="campoEstadoComprobante">Estado del pedido (Modificar aquí mismo)</label>
-          <select id="campoEstadoComprobante" name="estado">
-            ${Object.entries(ESTADOS_INFO).map(([clave, info]) =>
-              `<option value="${clave}" ${clave === pedido.estado ? "selected" : ""}>${info.texto}</option>`
-            ).join("")}
-          </select>
-        </div>
-      `,
-      alConfirmar: (datos) => {
-        pedido.estado = datos.get("estado");
-        if (ordenes && ordenes.length > 0) {
-          localStorage.setItem("senabella_admin_orders", JSON.stringify(ordenes));
-        }
-        renderPedidos();
-        cerrarModal();
-        mostrarToast(`Estado actualizado a "${ESTADOS_INFO[pedido.estado].texto}".`);
-      }
-    });
-  }
-
-  function aprobarPago(id) {
-    const { ordenes, pedido } = obtenerPedidoAdmin(id);
-    if (!pedido) return;
-
-    abrirModalConfirmacion({
-      titulo: "Aprobar Pago",
-      mensaje: `¿Estás seguro de que deseas aprobar el pago y procesar el pedido ${id}?`,
-      textoConfirmar: "Aprobar",
-      alConfirmar: () => {
-        pedido.estado = "pendiente";
-        if (ordenes.length > 0) {
-          localStorage.setItem("senabella_admin_orders", JSON.stringify(ordenes));
-        }
-        renderPedidos();
-        mostrarToast(`Pago aprobado. El pedido ${id} ahora está pendiente.`, "exito");
-      }
-    });
-  }
-
-  function rechazarPago(id) {
-    const { ordenes, pedido } = obtenerPedidoAdmin(id);
-    if (!pedido) return;
-
-    abrirModalConfirmacion({
-      titulo: "Rechazar Pago",
-      mensaje: `¿Estás seguro de que deseas rechazar este pago? El pedido ${id} será marcado como cancelado.`,
-      textoConfirmar: "Rechazar",
-      alConfirmar: () => {
-        pedido.estado = "cancelado";
-        if (ordenes.length > 0) {
-          localStorage.setItem("senabella_admin_orders", JSON.stringify(ordenes));
-        }
-        renderPedidos();
-        mostrarToast(`Pago rechazado. El pedido ${id} fue cancelado.`, "info");
-      }
     });
   }
 
@@ -1047,6 +985,127 @@
         if (indice > -1) CLIENTES.splice(indice, 1);
         renderClientes();
         mostrarToast("Cliente eliminado.", "info");
+      },
+    });
+  }
+
+  /* =====================================================================
+     ACCIONES: Proveedores
+     ===================================================================== */
+  function nuevoProveedor() {
+    abrirModal({
+      titulo: "Nuevo proveedor",
+      textoConfirmar: "Crear proveedor",
+      cuerpoHTML: `
+        <div class="admin-form-grupo">
+          <label for="campoNombreProveedor">Nombre de la empresa</label>
+          <input type="text" id="campoNombreProveedor" name="nombre" placeholder="Ej. Textiles del Valle S.A.S." required>
+        </div>
+        <div class="admin-form-grupo">
+          <label for="campoContactoProveedor">Persona de contacto</label>
+          <input type="text" id="campoContactoProveedor" name="contacto" placeholder="Ej. María Fernanda León" required>
+        </div>
+        <div class="admin-form-grupo">
+          <label for="campoCorreoProveedor">Correo</label>
+          <input type="email" id="campoCorreoProveedor" name="correo" placeholder="correo@proveedor.com" required>
+        </div>
+        <div class="admin-form-grupo">
+          <label for="campoTelefonoProveedor">Teléfono</label>
+          <input type="text" id="campoTelefonoProveedor" name="telefono" placeholder="+57 300 000 0000" required>
+        </div>
+        <div class="admin-form-grupo">
+          <label for="campoCategoriaProveedor">Categoría que abastece</label>
+          <input type="text" id="campoCategoriaProveedor" name="categoria" placeholder="Ej. Tecnología" required>
+        </div>
+        <div class="admin-form-grupo">
+          <label for="campoEstadoProveedor">Estado</label>
+          <select id="campoEstadoProveedor" name="estado">
+            <option value="activo">Activo</option>
+            <option value="pendiente">Pendiente</option>
+            <option value="inactivo">Inactivo</option>
+          </select>
+        </div>
+      `,
+      alConfirmar: (datos) => {
+        PROVEEDORES.unshift({
+          id: contadorProveedor++,
+          nombre: datos.get("nombre").trim(),
+          contacto: datos.get("contacto").trim(),
+          correo: datos.get("correo").trim(),
+          telefono: datos.get("telefono").trim(),
+          categoria: datos.get("categoria").trim(),
+          estado: datos.get("estado"),
+        });
+        renderProveedores();
+        cerrarModal();
+        mostrarToast("Proveedor creado correctamente.");
+      },
+    });
+  }
+
+  function editarProveedor(id) {
+    const proveedor = PROVEEDORES.find((p) => p.id === id);
+    if (!proveedor) return;
+
+    abrirModal({
+      titulo: "Editar proveedor",
+      textoConfirmar: "Guardar cambios",
+      cuerpoHTML: `
+        <div class="admin-form-grupo">
+          <label for="campoNombreProveedor">Nombre de la empresa</label>
+          <input type="text" id="campoNombreProveedor" name="nombre" value="${proveedor.nombre}" required>
+        </div>
+        <div class="admin-form-grupo">
+          <label for="campoContactoProveedor">Persona de contacto</label>
+          <input type="text" id="campoContactoProveedor" name="contacto" value="${proveedor.contacto}" required>
+        </div>
+        <div class="admin-form-grupo">
+          <label for="campoCorreoProveedor">Correo</label>
+          <input type="email" id="campoCorreoProveedor" name="correo" value="${proveedor.correo}" required>
+        </div>
+        <div class="admin-form-grupo">
+          <label for="campoTelefonoProveedor">Teléfono</label>
+          <input type="text" id="campoTelefonoProveedor" name="telefono" value="${proveedor.telefono}" required>
+        </div>
+        <div class="admin-form-grupo">
+          <label for="campoCategoriaProveedor">Categoría que abastece</label>
+          <input type="text" id="campoCategoriaProveedor" name="categoria" value="${proveedor.categoria}" required>
+        </div>
+        <div class="admin-form-grupo">
+          <label for="campoEstadoProveedor">Estado</label>
+          <select id="campoEstadoProveedor" name="estado">
+            <option value="activo" ${proveedor.estado === "activo" ? "selected" : ""}>Activo</option>
+            <option value="pendiente" ${proveedor.estado === "pendiente" ? "selected" : ""}>Pendiente</option>
+            <option value="inactivo" ${proveedor.estado === "inactivo" ? "selected" : ""}>Inactivo</option>
+          </select>
+        </div>
+      `,
+      alConfirmar: (datos) => {
+        proveedor.nombre = datos.get("nombre").trim();
+        proveedor.contacto = datos.get("contacto").trim();
+        proveedor.correo = datos.get("correo").trim();
+        proveedor.telefono = datos.get("telefono").trim();
+        proveedor.categoria = datos.get("categoria").trim();
+        proveedor.estado = datos.get("estado");
+        renderProveedores();
+        cerrarModal();
+        mostrarToast("Proveedor actualizado correctamente.");
+      },
+    });
+  }
+
+  function eliminarProveedor(id) {
+    const proveedor = PROVEEDORES.find((p) => p.id === id);
+    if (!proveedor) return;
+
+    abrirModalConfirmacion({
+      titulo: "Eliminar proveedor",
+      mensaje: `¿Seguro que quieres eliminar a "${proveedor.nombre}" de tu lista de proveedores?`,
+      alConfirmar: () => {
+        const indice = PROVEEDORES.findIndex((p) => p.id === id);
+        if (indice > -1) PROVEEDORES.splice(indice, 1);
+        renderProveedores();
+        mostrarToast("Proveedor eliminado.", "info");
       },
     });
   }
@@ -1344,6 +1403,44 @@
         </div>
       `,
 
+      proveedores: `
+        <div class="admin-bienvenida">
+          <div>
+            <h2>Proveedores</h2>
+            <p>Gestiona las empresas que abastecen tu inventario.</p>
+          </div>
+          <button class="admin-boton admin-boton-primario" data-accion="nuevo-proveedor">
+            <i class="fa-solid fa-truck-field"></i>
+            Nuevo proveedor
+          </button>
+        </div>
+
+        <div class="admin-grid-kpi" style="grid-template-columns:repeat(2,1fr);">
+          <div class="admin-kpi admin-kpi-simple">
+            <div class="admin-kpi-etiqueta">Proveedores registrados</div>
+            <div class="admin-kpi-valor" id="adminConteoProveedores">${PROVEEDORES.length}</div>
+          </div>
+          <div class="admin-kpi admin-kpi-simple">
+            <div class="admin-kpi-etiqueta">Activos</div>
+            <div class="admin-kpi-valor">${PROVEEDORES.filter((p) => p.estado === "activo").length}</div>
+          </div>
+        </div>
+
+        <div class="admin-tarjeta">
+          <div class="admin-tarjeta-header">
+            <h3>Proveedores</h3>
+          </div>
+          <div class="admin-tabla-scroll">
+            <table class="admin-tabla">
+              <thead>
+                <tr><th>Proveedor</th><th>Categoría</th><th>Correo</th><th>Teléfono</th><th>Estado</th><th></th></tr>
+              </thead>
+              <tbody id="adminTablaProveedores"></tbody>
+            </table>
+          </div>
+        </div>
+      `,
+
       categorias: `
         <div class="admin-bienvenida">
           <div>
@@ -1556,6 +1653,7 @@
     if (vista === "pedidos") renderPedidos();
     if (vista === "productos") renderProductos();
     if (vista === "clientes") renderClientes();
+    if (vista === "proveedores") renderProveedores();
     if (vista === "categorias") renderCategorias();
     if (vista === "cupones") renderCupones();
 
@@ -1593,9 +1691,6 @@
 
         case "nuevo-pedido": nuevoPedido(); break;
         case "ver-pedido": verDetallePedido(id); break;
-        case "ver-comprobante": verComprobantePago(id); break;
-        case "aprobar-pago": aprobarPago(id); break;
-        case "rechazar-pago": rechazarPago(id); break;
 
         case "nuevo-cliente": nuevoCliente(); break;
         case "ver-cliente": verCliente(Number(id)); break;
@@ -1603,6 +1698,10 @@
 
         case "nueva-categoria": nuevaCategoria(); break;
         case "eliminar-categoria": eliminarCategoria(Number(id)); break;
+
+        case "nuevo-proveedor": nuevoProveedor(); break;
+        case "editar-proveedor": editarProveedor(Number(id)); break;
+        case "eliminar-proveedor": eliminarProveedor(Number(id)); break;
 
         case "nuevo-cupon": nuevoCupon(); break;
         case "eliminar-cupon": eliminarCupon(Number(id)); break;
@@ -1638,6 +1737,7 @@
       if ($("#adminTablaProductos")) renderProductos(texto);
       else if ($("#adminTablaClientes")) renderClientes(texto);
       else if ($("#adminTablaPedidos")) renderPedidos(texto);
+      else if ($("#adminTablaProveedores")) renderProveedores(texto);
     }
 
     input.addEventListener("input", filtrar);
@@ -1751,9 +1851,27 @@
       $(selector)?.addEventListener("click", (e) => {
         e.preventDefault();
         const confirmar = window.confirm("¿Seguro que quieres cerrar sesión?");
-        if (confirmar) window.location.href = "inicio.html";
+        if (confirmar) {
+          localStorage.removeItem("senabella_sesion");
+          localStorage.removeItem("senabella_rol");
+          window.location.href = "inicio.html";
+        }
       });
     });
+  }
+
+  /* =====================================================================
+     VALIDACIÓN DE ACCESO (solo administradores)
+     ===================================================================== */
+  function verificarAccesoAdmin() {
+    const sesionActiva = localStorage.getItem("senabella_sesion") === "activa";
+    const rol = localStorage.getItem("senabella_rol");
+
+    if (!sesionActiva || rol !== "administrador") {
+      window.location.href = "login.html";
+      return false;
+    }
+    return true;
   }
 
   /* =====================================================================
@@ -1775,6 +1893,7 @@
      INIT
      ===================================================================== */
   function init() {
+    if (!verificarAccesoAdmin()) return;
     setupNavegacion();
     setupDelegacionAcciones();
     setupBuscador();

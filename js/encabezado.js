@@ -36,11 +36,11 @@ const headerHTML = `
 
             <div class="cuenta-usuario">
                 <div class="texto-usuario texto-usuario-bold">
-                    <a href="login.html">Mi cuenta</a>
+                    <a href="usuario.html" id="enlace-cuenta">Mi cuenta</a>
                 </div>
             </div>
 
-            <a href="favoritos.html">
+            <a href="#">
                 <i class="fa-regular fa-heart icono-corazon"></i>
             </a>
 
@@ -120,6 +120,34 @@ const headerHTML = `
 
 // Agregar el header a la página
 document.body.insertAdjacentHTML("afterbegin", headerHTML);
+
+
+// ==========================================
+// ENLACE DE CUENTA (Iniciar sesión / Mi cuenta / Panel Admin)
+// ==========================================
+// Según si hay una sesión activa y el rol guardado (cliente o administrador),
+// el enlace del encabezado cambia de texto y de destino.
+
+(function actualizarEnlaceCuenta() {
+
+    const enlaceCuenta = document.querySelector("#enlace-cuenta");
+    if (!enlaceCuenta) return;
+
+    const sesionActiva = localStorage.getItem("senabella_sesion") === "activa";
+    const rolUsuario = localStorage.getItem("senabella_rol");
+
+    if (!sesionActiva) {
+        enlaceCuenta.textContent = "Iniciar sesión";
+        enlaceCuenta.setAttribute("href", "login.html");
+    } else if (rolUsuario === "administrador") {
+        enlaceCuenta.textContent = "Panel Admin";
+        enlaceCuenta.setAttribute("href", "administrador.html");
+    } else {
+        enlaceCuenta.textContent = "Mi cuenta";
+        enlaceCuenta.setAttribute("href", "usuario.html");
+    }
+
+})();
 
 
 // ==========================================
