@@ -1518,3 +1518,49 @@ body.cuerpo-admin.modo-oscuro .admin-stock-barra {
 body.cuerpo-admin.modo-oscuro .admin-modal-overlay {
   background: rgba(0, 0, 0, 0.65) !important;
 }
+
+/* -------------------------------------------------------------------------
+   Corrección: encabezado.css aplica "body.modo-oscuro span { color:white }"
+   de forma global, lo que le quitaba su color propio a los íconos y
+   distintivos del panel (KPIs, categorías, avatar, badges) por estar
+   contenidos en elementos <span>. Se restauran aquí con mayor especificidad.
+   ------------------------------------------------------------------------- */
+body.cuerpo-admin.modo-oscuro .admin-kpi-icono {
+  color: var(--kpi-color, var(--primary-color)) !important;
+}
+
+body.cuerpo-admin.modo-oscuro .admin-kpi-tendencia.positiva {
+  color: var(--admin-success) !important;
+}
+
+body.cuerpo-admin.modo-oscuro .admin-kpi-tendencia.negativa {
+  color: var(--admin-danger) !important;
+}
+
+body.cuerpo-admin.modo-oscuro .admin-categoria-icono {
+  color: var(--admin-success) !important;
+}
+
+body.cuerpo-admin.modo-oscuro .admin-mini-avatar {
+  color: var(--admin-info) !important;
+}
+
+body.cuerpo-admin.modo-oscuro .admin-badge-success {
+  color: var(--admin-success) !important;
+}
+
+body.cuerpo-admin.modo-oscuro .admin-badge-warning {
+  color: var(--admin-warning) !important;
+}
+
+body.cuerpo-admin.modo-oscuro .admin-badge-danger {
+  color: var(--admin-danger) !important;
+}
+
+body.cuerpo-admin.modo-oscuro .admin-badge-info {
+  color: var(--admin-info) !important;
+}
+
+body.cuerpo-admin.modo-oscuro .admin-sidebar-logo .admin-badge-pro {
+  color: #16311a !important;
+}
