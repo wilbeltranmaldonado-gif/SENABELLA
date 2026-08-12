@@ -67,29 +67,29 @@
           <h3><i class="fa-solid fa-credit-card"></i> 2. Método de Pago</h3>
           
           <div class="metodos-pago">
-            <!-- Opción: Tarjeta -->
+            <!-- Opción: Banco -->
             <div class="opcion-pago">
-              <input type="radio" name="metodo_pago" id="pago-tarjeta" value="tarjeta" checked>
-              <label for="pago-tarjeta">
+              <input type="radio" name="metodo_pago" id="pago-banco" value="banco" checked>
+              <label for="pago-banco">
                 <div class="radio-custom"></div>
                 <div class="info-pago">
-                  <span>Tarjeta de Crédito / Débito</span>
-                  <small>Visa, MasterCard, Amex</small>
+                  <span>Transferencia Bancaria</span>
+                  <small>Bancolombia, Davivienda, etc.</small>
                 </div>
-                <i class="fa-brands fa-cc-visa"></i>
+                <i class="fa-solid fa-building-columns"></i>
               </label>
             </div>
             
-            <!-- Opción: PSE -->
+            <!-- Opción: Nequi -->
             <div class="opcion-pago">
-              <input type="radio" name="metodo_pago" id="pago-pse" value="pse">
-              <label for="pago-pse">
+              <input type="radio" name="metodo_pago" id="pago-nequi" value="nequi">
+              <label for="pago-nequi">
                 <div class="radio-custom"></div>
                 <div class="info-pago">
-                  <span>Transferencia PSE</span>
-                  <small>Débito bancario</small>
+                  <span>Nequi</span>
+                  <small>Transfiere desde tu celular</small>
                 </div>
-                <i class="fa-solid fa-building-columns"></i>
+                <i class="fa-solid fa-mobile-screen-button"></i>
               </label>
             </div>
 
@@ -104,6 +104,19 @@
                 </div>
                 <i class="fa-solid fa-money-bill-1-wave"></i>
               </label>
+            </div>
+          </div>
+
+          <!-- Comprobante de pago -->
+          <div id="contenedor-comprobante" class="contenedor-comprobante">
+            <h4 id="titulo-comprobante">Sube tu comprobante de pago</h4>
+            <p id="instrucciones-pago" class="instrucciones-pago">
+              Realiza la transferencia a la cuenta <strong>Bancolombia Ahorros #123-456789-00</strong> a nombre de Senabella SAS.
+            </p>
+            <div class="campo-checkout mt-3">
+              <label for="archivo-comprobante">Imagen del comprobante (Requerido)</label>
+              <input type="file" id="archivo-comprobante" accept="image/*">
+              <span class="mensaje-error">Por favor, sube la imagen de tu comprobante de pago.</span>
             </div>
           </div>
         </div>

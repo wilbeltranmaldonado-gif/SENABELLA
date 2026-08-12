@@ -83,6 +83,25 @@ document.addEventListener("DOMContentLoaded", function () {
   // Inicializar resumen
   let datosOrden = cargarResumenOrden();
 
+  // Lógica para mostrar/ocultar carga de comprobante según método de pago
+  const radiosPago = document.querySelectorAll('input[name="metodo_pago"]');
+  const contenedorComprobante = document.getElementById("contenedor-comprobante");
+  const instruccionesPago = document.getElementById("instrucciones-pago");
+
+  radiosPago.forEach(radio => {
+    radio.addEventListener("change", function() {
+      if (this.value === "banco") {
+        contenedorComprobante.style.display = "block";
+        instruccionesPago.innerHTML = "Realiza la transferencia a la cuenta <strong>Bancolombia Ahorros #123-456789-00</strong> a nombre de Senabella SAS.";
+      } else if (this.value === "nequi") {
+        contenedorComprobante.style.display = "block";
+        instruccionesPago.innerHTML = "Transfiere a nuestra cuenta <strong>Nequi #300-123-4567</strong> a nombre de Senabella SAS.";
+      } else {
+        contenedorComprobante.style.display = "none";
+      }
+    });
+  });
+
   // Validación y Envío del Formulario
   if (formCheckout) {
     formCheckout.addEventListener("submit", function (e) {
@@ -120,6 +139,18 @@ document.addEventListener("DOMContentLoaded", function () {
         window.SenabellaToast("Por favor completa correctamente los datos de envío.", "fa-triangle-exclamation", "advertencia");
         return;
       }
+      
+      // Obtener método de pago
+      const metodoPago = document.querySelector('input[name="metodo_pago"]:checked').value;
+      const archivoComprobante = document.getElementById("archivo-comprobante");
+
+      // Validar comprobante si aplica
+      if ((metodoPago === "banco" || metodoPago === "nequi") && archivoComprobante.files.length === 0) {
+        archivoComprobante.classList.add("error");
+        archivoComprobante.nextElementSibling.style.display = "block";
+        window.SenabellaToast("Debes adjuntar el comprobante de pago.", "fa-file-image", "advertencia");
+        return;
+      }
 
       // Si todo está bien, procesar orden
       if (btnFinalizar) {
@@ -127,18 +158,16 @@ document.addEventListener("DOMContentLoaded", function () {
         btnFinalizar.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Procesando tu orden...';
       }
 
-      // Simular tiempo de carga de API de pagos
-      setTimeout(() => {
+      // Función para procesar finalmente la orden
+      const procesarOrdenFinal = (imagenBase64) => {
         // Generar un número de orden aleatorio
         const numeroOrden = "SENA-" + Math.floor(100000 + Math.random() * 900000);
-        
-        // Obtener método de pago
-        const metodoPago = document.querySelector('input[name="metodo_pago"]:checked').value;
+        const fechaActual = new Date().toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
-        // Guardar detalles de la orden para la página de confirmación
+        // Objeto para la confirmación del usuario
         const detalleOrden = {
           numero: numeroOrden,
-          fecha: new Date().toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' }),
+          fecha: fechaActual,
           total: formatearPrecio(datosOrden.totalPrecio),
           metodoPago: metodoPago,
           direccion: direccion.value,
@@ -146,6 +175,31 @@ document.addEventListener("DOMContentLoaded", function () {
         };
 
         localStorage.setItem("ultima_orden_senabella", JSON.stringify(detalleOrden));
+
+        // Objeto para el Administrador
+        const ordenAdmin = {
+          numero: numeroOrden,
+          fecha: fechaActual,
+          total: formatearPrecio(datosOrden.totalPrecio),
+          metodoPago: metodoPago,
+          cliente: {
+            direccion: direccion.value,
+            ciudad: ciudad.value,
+            telefono: document.getElementById("telefono").value
+          },
+          productos: datosOrden.itemsComprar,
+          comprobante: imagenBase64,
+          estado: (metodoPago === "contraentrega") ? "Pendiente" : "Pendiente de Verificación"
+        };
+
+        // Guardar en la base de datos simulada del administrador
+        try {
+          let ordenesAdmin = JSON.parse(localStorage.getItem("senabella_admin_orders")) || [];
+          ordenesAdmin.unshift(ordenAdmin); // Agregar al principio
+          localStorage.setItem("senabella_admin_orders", JSON.stringify(ordenesAdmin));
+        } catch(e) {
+          console.error("Error guardando orden de admin", e);
+        }
 
         // Limpiar productos comprados del carrito
         try {
@@ -156,8 +210,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Redirigir a confirmación
         window.location.href = "confirmacion.html";
-        
-      }, 1500);
+      };
+
+      // Si requiere comprobante, leer la imagen. Si no, procesar directo tras un delay.
+      if (archivoComprobante && archivoComprobante.files.length > 0) {
+        const lector = new FileReader();
+        lector.onload = function(e) {
+          const imagenBase64 = e.target.result;
+          setTimeout(() => procesarOrdenFinal(imagenBase64), 1000);
+        };
+        lector.readAsDataURL(archivoComprobante.files[0]);
+      } else {
+        setTimeout(() => procesarOrdenFinal(null), 1500);
+      }
 
     });
   }
