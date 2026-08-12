@@ -1,4 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // Correo autorizado como administrador. Cualquier otro correo válido
+  // ingresa como cliente normal.
+  const CORREO_ADMIN = 'admin@senabella.com';
+
   // --- Elementos del Formulario de Login ---
   const formulario = document.getElementById('formularioLogin');
   const correoInput = document.getElementById('correoLogin');
@@ -101,10 +105,13 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error al obtener usuario guardado:', e);
       }
 
+      // Validar según el correo si quien ingresa es administrador o cliente
+      const rol = correo.toLowerCase() === CORREO_ADMIN ? 'administrador' : 'cliente';
+
       // Si hay un usuario previamente registrado
       if (usuarioGuardado && usuarioGuardado.correo) {
         if (usuarioGuardado.correo.toLowerCase() === correo.toLowerCase()) {
-          iniciarSesionExitoso(usuarioGuardado.nombre || 'Usuario');
+          iniciarSesionExitoso(usuarioGuardado.nombre || 'Usuario', rol);
         } else {
           // Si ingresa un correo distinto, se actualiza la cuenta activa
           const nuevoUsuario = {
@@ -112,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
             correo: correo
           };
           localStorage.setItem('senabella_usuario', JSON.stringify(nuevoUsuario));
-          iniciarSesionExitoso(nuevoUsuario.nombre);
+          iniciarSesionExitoso(nuevoUsuario.nombre, rol);
         }
       } else {
         // Si no se ha registrado previamente, crea sesión directa con ese correo
@@ -121,18 +128,26 @@ document.addEventListener('DOMContentLoaded', () => {
           correo: correo
         };
         localStorage.setItem('senabella_usuario', JSON.stringify(nuevoUsuario));
-        iniciarSesionExitoso(nuevoUsuario.nombre);
+        iniciarSesionExitoso(nuevoUsuario.nombre, rol);
       }
     });
   }
 
-  function iniciarSesionExitoso(nombre) {
+  function iniciarSesionExitoso(nombre, rol) {
     localStorage.setItem('senabella_sesion', 'activa');
-    mostrarExito(`¡Bienvenido de nuevo, ${nombre}! Redirigiendo a tu perfil...`);
-    
-    setTimeout(() => {
-      window.location.href = 'usuario.html';
-    }, 1200);
+    localStorage.setItem('senabella_rol', rol);
+
+    if (rol === 'administrador') {
+      mostrarExito(`¡Bienvenido, ${nombre}! Redirigiendo al panel de administración...`);
+      setTimeout(() => {
+        window.location.href = 'administrador.html';
+      }, 1200);
+    } else {
+      mostrarExito(`¡Bienvenido de nuevo, ${nombre}! Redirigiendo a tu perfil...`);
+      setTimeout(() => {
+        window.location.href = 'usuario.html';
+      }, 1200);
+    }
   }
 
   // ==========================================
