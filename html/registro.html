@@ -25,7 +25,7 @@
         <div class="grupo-campo">
           <label for="nombreCompleto">Nombre completo</label>
           <div class="campo-wrapper">
-            <input type="text" id="nombreCompleto" placeholder="Ej. Ana García" required>
+            <input type="text" id="nombreCompleto" placeholder="Ej. Ana García" maxlength="32" required>
             <i class="fa-solid fa-user icono-campo"></i>
           </div>
         </div>
@@ -34,7 +34,7 @@
         <div class="grupo-campo">
           <label for="correoElectronico">Correo electrónico</label>
           <div class="campo-wrapper">
-            <input type="email" id="correoElectronico" placeholder="nombre@ejemplo.com" required>
+            <input type="email" id="correoElectronico" placeholder="nombre@ejemplo.com" maxlength="32" required>
             <i class="fa-solid fa-envelope icono-campo"></i>
           </div>
         </div>
@@ -43,7 +43,7 @@
         <div class="grupo-campo">
           <label for="celular">Número de celular</label>
           <div class="campo-wrapper">
-            <input type="tel" id="celular" placeholder="Ej. 300 123 4567" required>
+            <input type="tel" id="celular" placeholder="Ej. 300 123 4567" maxlength="12" required>
             <i class="fa-solid fa-phone icono-campo"></i>
           </div>
         </div>
@@ -52,7 +52,7 @@
         <div class="grupo-campo">
           <label for="contrasena">Contraseña</label>
           <div class="campo-wrapper">
-            <input type="password" id="contrasena" class="has-toggle" placeholder="Mínimo 8 caracteres" required>
+            <input type="password" id="contrasena" class="has-toggle" placeholder="Mínimo 8 caracteres" maxlength="32" required>
             <i class="fa-solid fa-lock icono-campo"></i>
             <button type="button" class="btn-toggle-pass" data-target="contrasena" title="Ver / Ocultar contraseña">
               <i class="fa-solid fa-eye"></i>
@@ -71,8 +71,7 @@
         <div class="grupo-campo">
           <label for="confirmarContrasena">Confirmar contraseña</label>
           <div class="campo-wrapper">
-            <input type="password" id="confirmarContrasena" class="has-toggle" placeholder="Repite tu contraseña"
-              required>
+            <input type="password" id="confirmarContrasena" class="has-toggle" placeholder="Repite tu contraseña" maxlength="32" required>
             <i class="fa-solid fa-shield-halved icono-campo"></i>
             <button type="button" class="btn-toggle-pass" data-target="confirmarContrasena"
               title="Ver / Ocultar contraseña">
