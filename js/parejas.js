@@ -163,30 +163,33 @@ document.addEventListener("DOMContentLoaded", function () {
         if (window.SenabellaFavoritos) {
           window.SenabellaFavoritos.eliminar(nombreProd);
         }
+        if (window.SenabellaToast) {
+          window.SenabellaToast("Eliminado de favoritos", "fa-heart-crack");
+        }
       } else {
-        ic.classList.remove("fa-regular");
-        ic.classList.add("fa-solid");
-        ic.style.color = "#e63946";
-        btnFav.classList.add("favorito-activo");
-        
         let precioActual = card.querySelector(".card-text").textContent.trim();
         let img = card.querySelector("img") ? card.querySelector("img").src : "";
         
         if (window.SenabellaFavoritos) {
-          window.SenabellaFavoritos.agregar({
+          let resultado = window.SenabellaFavoritos.agregar({
             nombre: nombreProd,
             marca: "COLECCIÓN PAREJAS",
             imagen: img,
             precioTexto: precioActual,
             referencia: "SENABELLA"
           });
+          // Solo actualizar icono y toast si se agregó (sesión activa)
+          if (resultado !== false) {
+            ic.classList.remove("fa-regular");
+            ic.classList.add("fa-solid");
+            ic.style.color = "#e63946";
+            btnFav.classList.add("favorito-activo");
+            if (window.SenabellaToast) {
+              window.SenabellaToast("Agregado a favoritos", "fa-heart");
+            }
+          }
+          // Si resultado === false: favoritos.js ya mostró aviso de login
         }
-      }
-      
-      if (window.SenabellaToast) {
-        window.SenabellaToast(!esFav ? "Agregado a favoritos" : "Eliminado de favoritos", !esFav ? "fa-heart" : "fa-heart-crack");
-      } else {
-        alert(!esFav ? "Agregado a favoritos" : "Eliminado de favoritos");
       }
     });
   });

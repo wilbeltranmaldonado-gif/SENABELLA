@@ -140,27 +140,30 @@ document.addEventListener("DOMContentLoaded", function () {
         if (window.SenabellaFavoritos) {
           window.SenabellaFavoritos.eliminar(nombreProd);
         }
+        mostrarToast("Eliminado de favoritos", "fa-heart-crack", "info");
       } else {
-        ic.classList.remove("fa-regular");
-        ic.classList.add("fa-solid");
-        ic.style.color = "#e63946";
-        btnFav.classList.add("favorito-activo");
-        
         let precioActual = card.querySelector(".card-text").textContent.trim();
         let img = card.querySelector("img") ? card.querySelector("img").src : "";
         
         if (window.SenabellaFavoritos) {
-          window.SenabellaFavoritos.agregar({
+          let resultado = window.SenabellaFavoritos.agregar({
             nombre: nombreProd,
             marca: "SENABELLA",
             imagen: img,
             precioTexto: precioActual,
             referencia: "SENABELLA"
           });
+          // Solo actualizar icono y mostrar toast si se agregó correctamente
+          if (resultado !== false) {
+            ic.classList.remove("fa-regular");
+            ic.classList.add("fa-solid");
+            ic.style.color = "#e63946";
+            btnFav.classList.add("favorito-activo");
+            mostrarToast("Agregado a favoritos", "fa-heart", "exito");
+          }
+          // Si resultado === false: favoritos.js ya mostró el aviso de login
         }
       }
-      
-      mostrarToast(!esFav ? "Agregado a favoritos" : "Eliminado de favoritos", !esFav ? "fa-heart" : "fa-heart-crack", !esFav ? "exito" : "info");
     });
 
     acciones.appendChild(btnCarrito);

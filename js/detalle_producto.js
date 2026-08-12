@@ -136,13 +136,16 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (window.SenabellaToast) {
                         window.SenabellaToast("Producto eliminado de favoritos", "fa-heart-crack");
                     }
+                    actualizarEstadoFavorito();
                 } else {
-                    window.SenabellaFavoritos.agregar(prodFav);
-                    if (window.SenabellaToast) {
-                        window.SenabellaToast("¡Producto guardado en favoritos!", "fa-heart");
+                    let resultado = window.SenabellaFavoritos.agregar(prodFav);
+                    if (resultado !== false) {
+                        if (window.SenabellaToast) {
+                            window.SenabellaToast("¡Producto guardado en favoritos!", "fa-heart");
+                        }
+                        actualizarEstadoFavorito();
                     }
                 }
-                actualizarEstadoFavorito();
             }
         });
     }

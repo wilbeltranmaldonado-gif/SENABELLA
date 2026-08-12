@@ -482,25 +482,28 @@ document.addEventListener("DOMContentLoaded", function () {
         if (window.SenabellaFavoritos) {
           window.SenabellaFavoritos.eliminar(nombreProd);
         }
+        if (window.SenabellaToast) {
+          window.SenabellaToast("Eliminado de favoritos", "fa-heart-crack");
+        }
       } else {
-        // Agregar a favoritos
-        btn.classList.remove("fa-regular");
-        btn.classList.add("fa-solid");
-        btn.style.color = "#e63946";
-        
         if (window.SenabellaFavoritos) {
-          window.SenabellaFavoritos.agregar({
+          let resultado = window.SenabellaFavoritos.agregar({
             nombre: nombreProd,
             marca: marca,
             imagen: imagen,
             precioTexto: precioActual,
             referencia: referencia
           });
+          
+          if (resultado !== false) {
+            btn.classList.remove("fa-regular");
+            btn.classList.add("fa-solid");
+            btn.style.color = "#e63946";
+            if (window.SenabellaToast) {
+              window.SenabellaToast("Agregado a tus favoritos", "fa-heart");
+            }
+          }
         }
-      }
-
-      if (window.SenabellaToast) {
-        window.SenabellaToast(!esFav ? "Agregado a tus favoritos" : "Eliminado de favoritos", !esFav ? "fa-heart" : "fa-heart-crack");
       }
     });
   });
