@@ -152,6 +152,8 @@
         if (item.dataset.logout === "true") {
           const confirmar = window.confirm("¿Seguro que quieres cerrar sesión?");
           if (confirmar) {
+            localStorage.removeItem("senabella_sesion");
+            localStorage.removeItem("senabella_rol");
             window.location.href = "inicio.html";
           }
           return;

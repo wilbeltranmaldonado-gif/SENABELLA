@@ -161,7 +161,16 @@ a {
 /* Enlaces secundarios de navegación */
 .enlaces-navegacion {
   display: flex;
+  align-items: center;
   gap: 20px;
+}
+
+.enlaces-navegacion a {
+  transition: var(--transition-fast);
+}
+
+.enlaces-navegacion a:hover {
+  color: var(--primary-color);
 }
 /* Clases de utilidad personalizadas */
 .fs-7 {

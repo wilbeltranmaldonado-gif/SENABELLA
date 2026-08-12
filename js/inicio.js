@@ -62,42 +62,19 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   window.SenabellaToast = mostrarToast;
 
-  // 3. Categorías Clickeables
+  // 3. Categorías Clickeables (Redirección al Catálogo)
   let categorias = document.querySelectorAll(".categorias-inicio .col > div");
+  let categoriasRopa = ["mujer", "hombre", "calzado"];
   for (let i = 0; i < categorias.length; i++) {
+    categorias[i].style.cursor = "pointer";
     categorias[i].addEventListener("click", function () {
       let nombre = categorias[i].getAttribute("data-categoria");
-      let yaActiva = categorias[i].classList.contains("categoria-activa");
-
-      for (let j = 0; j < categorias.length; j++) {
-        categorias[j].classList.remove("categoria-activa");
-      }
-
-      if (!yaActiva) {
-        categorias[i].classList.add("categoria-activa");
-        filtrarPorCategoria(nombre);
-        mostrarToast("Filtrando por: " + nombre.toUpperCase(), "fa-filter", "info");
+      if (categoriasRopa.indexOf(nombre) !== -1) {
+        window.location.href = "catalogo_ropa_accesorios.html?categoria=" + encodeURIComponent(nombre);
       } else {
-        filtrarPorCategoria("");
+        window.location.href = "catalogo.html?categoria=" + encodeURIComponent(nombre);
       }
     });
-  }
-
-  function filtrarPorCategoria(cat) {
-    let cols = document.querySelectorAll(".productos-grid .col");
-    for (let i = 0; i < cols.length; i++) {
-      let card = cols[i].querySelector(".card");
-      let catData = cols[i].getAttribute("data-categoria") || "";
-
-      if (!cat || catData.indexOf(cat) !== -1) {
-        cols[i].style.display = "";
-        card.style.opacity = "1";
-        card.style.transform = "scale(1)";
-      } else {
-        card.style.opacity = "0.3";
-        card.style.transform = "scale(0.95)";
-      }
-    }
   }
 
   // 4. Botones de Acción en Tarjetas (Carrito y Favorito)
@@ -190,8 +167,26 @@ document.addEventListener("DOMContentLoaded", function () {
     acciones.appendChild(btnFav);
     card.querySelector(".card-body").appendChild(acciones);
 
-    card.addEventListener("click", function () {
-      abrirVistaRapida(card);
+    card.style.cursor = "pointer";
+    card.addEventListener("click", function (e) {
+      if (e.target.closest(".btn-agregar-carrito") || e.target.closest(".btn-favorito")) return;
+
+      let titulo = card.querySelector(".card-title") ? card.querySelector(".card-title").textContent.trim() : "Producto";
+      let precioActual = card.querySelector(".card-text") ? card.querySelector(".card-text").textContent.trim() : "$ 0";
+      let img = card.querySelector("img") ? card.querySelector("img").src : "";
+
+      let productoSeleccionado = {
+        marca: "TECNOLOGÍA",
+        titulo: titulo,
+        descripcion: titulo + " - Excelente opción con garantía oficial Senabella.",
+        imagen: img,
+        precioActual: precioActual,
+        precioAntiguo: "$ 0",
+        referencia: "Por SENABELLA"
+      };
+
+      localStorage.setItem("productoSeleccionado", JSON.stringify(productoSeleccionado));
+      window.location.href = "detalle_producto.html";
     });
   }
 
@@ -356,28 +351,38 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // 8. Lightbox para Promociones
-  let lightbox = document.createElement("div");
-  lightbox.className = "lightbox-overlay";
-  lightbox.innerHTML = `
-    <div class="lightbox-contenido">
-      <button class="lightbox-cerrar"><i class="fa-solid fa-xmark"></i></button>
-      <img src="" alt="" class="lightbox-img">
-    </div>
-  `;
-  document.body.appendChild(lightbox);
-
-  lightbox.addEventListener("click", function (e) {
-    if (e.target === lightbox || e.target.closest(".lightbox-cerrar")) {
-      lightbox.classList.remove("lightbox-visible");
-    }
-  });
-
+  // 8. Imágenes de Promociones y Carrusel Funcionales
   let promoImgs = document.querySelectorAll(".promos-grid img");
+  let busquedasPromo = [
+    "suplementos",
+    "belleza",
+    "reloj",
+    "mujer",
+    "cama",
+    "tablets",
+    "lenovo",
+    "samsung"
+  ];
+  let categoriasModaPromo = ["mujer"];
   for (let i = 0; i < promoImgs.length; i++) {
+    promoImgs[i].style.cursor = "pointer";
     promoImgs[i].addEventListener("click", function () {
-      lightbox.querySelector(".lightbox-img").src = promoImgs[i].src;
-      lightbox.classList.add("lightbox-visible");
+      let termino = busquedasPromo[i] || "ofertas";
+      if (categoriasModaPromo.indexOf(termino) !== -1) {
+        window.location.href = "catalogo_ropa_accesorios.html?categoria=" + encodeURIComponent(termino);
+      } else if (termino === "tablets") {
+        window.location.href = "catalogo.html?categoria=" + encodeURIComponent(termino);
+      } else {
+        window.location.href = "catalogo.html?busqueda=" + encodeURIComponent(termino);
+      }
+    });
+  }
+
+  let carouselImgs = document.querySelectorAll("#bannerCarousel img");
+  for (let i = 0; i < carouselImgs.length; i++) {
+    carouselImgs[i].style.cursor = "pointer";
+    carouselImgs[i].addEventListener("click", function () {
+      window.location.href = "catalogo.html?categoria=ofertas";
     });
   }
 

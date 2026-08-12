@@ -76,37 +76,52 @@
   background: linear-gradient(135deg, #f0ffd0, #ffffff) !important;
 }
 
+main.container {
+  max-width: 1540px !important;
+  width: 96% !important;
+}
+
+.categorias-inicio img {
+  height: 120px !important;
+  max-height: 120px !important;
+  width: 100% !important;
+  object-fit: contain !important;
+}
+
 /* ==========================================
    CARRUSEL DE BANNERS
    ========================================== */
 .carousel-inner {
-  border-radius: 12px;
+  border-radius: 20px;
   overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
 
 .carousel-item img {
-  max-height: 400px;
+  max-height: 560px;
+  height: 560px;
+  width: 100%;
   object-fit: cover;
 }
 
 .carousel-indicators [data-bs-target] {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  margin: 0 4px;
+  margin: 0 5px;
 }
 
 .carousel-indicators .active {
   background-color: var(--primary-color);
-  width: 24px;
-  border-radius: 5px;
+  width: 30px;
+  border-radius: 6px;
 }
 
 /* ==========================================
    TARJETAS DE PRODUCTOS
    ========================================== */
 .card {
-  border-radius: 12px;
+  border-radius: 16px;
   transition: var(--transition-fast);
   overflow: hidden;
   position: relative;
@@ -114,18 +129,19 @@
 }
 
 .card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--hover-shadow) !important;
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15) !important;
 }
 
 .card-img-top {
-  height: 180px;
+  height: 280px;
   object-fit: contain;
-  transition: transform 0.3s ease;
+  padding: 18px;
+  transition: transform 0.35s ease;
 }
 
 .card:hover .card-img-top {
-  transform: scale(1.05);
+  transform: scale(1.08);
 }
 
 .card-badge {
@@ -647,20 +663,29 @@
   transform: translateY(0);
 }
 
+.promos-grid .col {
+  overflow: hidden;
+  border-radius: 18px;
+}
+
 .containersg img,
 .promo-img {
   width: 100%;
-  height: 180px;
+  height: 100%;
+  min-height: 280px;
+  max-height: 360px;
   object-fit: cover;
-  border-radius: 10px;
-  transition: var(--transition-fast);
+  border-radius: 18px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
   cursor: pointer;
+  display: block;
 }
 
 .containersg img:hover,
 .promo-img:hover {
-  transform: scale(1.02);
-  filter: brightness(0.95);
+  transform: scale(1.03);
+  filter: brightness(0.92);
 }
 
 /* ==========================================

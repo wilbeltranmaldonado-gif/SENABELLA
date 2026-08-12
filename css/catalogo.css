@@ -280,10 +280,20 @@
   justify-content: space-between;
 }
 
+.categorias-circulares,
+.main {
+  max-width: 1440px;
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .tar-producto img {
   width: 100%;
-  height: 150px;
+  height: 210px;
+  object-fit: contain;
   margin: 10px 0;
+  padding: 8px;
 }
 
 .promocion {

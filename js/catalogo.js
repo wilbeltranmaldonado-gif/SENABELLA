@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let estadoFiltro = {
     marcas: [],
     categoria: "",
+    busqueda: "",
     procesadores: [],
     rams: [],
     pantallas: [],
@@ -56,8 +57,51 @@ document.addEventListener("DOMContentLoaded", function () {
       // Filtro de Marca (lista múltiple o individual)
       let cumpleMarca = estadoFiltro.marcas.length === 0 || estadoFiltro.marcas.includes(marcaTexto);
 
-      // Filtro de Categoría
-      let cumpleCategoria = !estadoFiltro.categoria || descTexto.includes(estadoFiltro.categoria.toLowerCase());
+      // Filtro de Categoría Inteligente
+      let cumpleCategoria = true;
+      if (estadoFiltro.categoria && estadoFiltro.categoria.trim() !== "") {
+        let catFiltro = estadoFiltro.categoria.toLowerCase().trim();
+        if (catFiltro === "portátil" || catFiltro === "portátiles") {
+          cumpleCategoria = descTexto.includes("portátil") || descTexto.includes("laptop") || descTexto.includes("kindle");
+        } else if (catFiltro === "impresora" || catFiltro === "impresoras") {
+          cumpleCategoria = descTexto.includes("impresora") || descTexto.includes("tinta") || descTexto.includes("smart tank");
+        } else if (catFiltro === "tablet" || catFiltro === "tablets") {
+          cumpleCategoria = descTexto.includes("tablet") || descTexto.includes("tableta") || descTexto.includes("pad");
+        } else if (catFiltro === "disco" || catFiltro === "almacenamiento") {
+          cumpleCategoria = descTexto.includes("disco") || descTexto.includes("ssd") || descTexto.includes("tb");
+        } else if (catFiltro === "monitor" || catFiltro === "monitores") {
+          cumpleCategoria = descTexto.includes("monitor") || descTexto.includes("pantalla");
+        } else if (catFiltro === "software") {
+          cumpleCategoria = descTexto.includes("software") || descTexto.includes("licencia") || descTexto.includes("365") || descTexto.includes("windows");
+        } else if (catFiltro === "desktop" || catFiltro === "desktops" || catFiltro === "escritorio" || catFiltro === "todo en uno") {
+          cumpleCategoria = descTexto.includes("desktop") || descTexto.includes("escritorio") || descTexto.includes("all in one") || descTexto.includes("todo en uno");
+        } else if (catFiltro === "accesorio" || catFiltro === "accesorios") {
+          cumpleCategoria = descTexto.includes("mouse") || descTexto.includes("teclado") || descTexto.includes("soporte") || descTexto.includes("hub") || descTexto.includes("adaptador") || descTexto.includes("estuche") || descTexto.includes("audifonos") || descTexto.includes("audífonos") || descTexto.includes("kit");
+        } else if (catFiltro === "mujer") {
+          cumpleCategoria = descTexto.includes("mujer") || descTexto.includes("femenina") || descTexto.includes("vestido") || descTexto.includes("rosa");
+        } else if (catFiltro === "hombre") {
+          cumpleCategoria = descTexto.includes("hombre") || descTexto.includes("masculina") || descTexto.includes("camisa") || descTexto.includes("chaqueta");
+        } else if (catFiltro === "calzado") {
+          cumpleCategoria = descTexto.includes("tenis") || descTexto.includes("calzado") || descTexto.includes("zapatos");
+        } else if (catFiltro === "tecno") {
+          cumpleCategoria = !descTexto.includes("vestido") && !descTexto.includes("chaqueta") && !descTexto.includes("tenis");
+        } else if (catFiltro === "ofertas") {
+          cumpleCategoria = descuentoValor > 0;
+        } else {
+          cumpleCategoria = descTexto.includes(catFiltro);
+        }
+      }
+
+      // Filtro de Búsqueda por texto (Marca, Descripción, Referencia)
+      let cumpleBusqueda = true;
+      if (estadoFiltro.busqueda && estadoFiltro.busqueda.trim() !== "") {
+        let busqLimpia = estadoFiltro.busqueda.trim().toLowerCase();
+        let refEl = tarjeta.querySelector(".referencia");
+        let refTexto = refEl ? refEl.textContent.trim().toLowerCase() : "";
+        cumpleBusqueda = marcaTexto.toLowerCase().includes(busqLimpia) ||
+                         descTexto.includes(busqLimpia) ||
+                         refTexto.includes(busqLimpia);
+      }
 
       // Filtro de Procesador
       let cumpleProcesador = estadoFiltro.procesadores.length === 0 || estadoFiltro.procesadores.some(p => descTexto.includes(p.toLowerCase()));
@@ -82,7 +126,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // Filtro de Descuento
       let cumpleDescuento = estadoFiltro.descuentoMin === null || descuentoValor >= estadoFiltro.descuentoMin;
 
-      if (cumpleMarca && cumpleCategoria && cumpleProcesador && cumpleRAM && cumplePantalla && cumpleResolucion && cumplePrecio && cumpleDescuento) {
+      if (cumpleMarca && cumpleCategoria && cumpleProcesador && cumpleRAM && cumplePantalla && cumpleResolucion && cumplePrecio && cumpleDescuento && cumpleBusqueda) {
         tarjeta.style.display = "block";
         productosVisibles++;
       } else {
@@ -94,8 +138,8 @@ document.addEventListener("DOMContentLoaded", function () {
       numResultados.textContent = "Resultados (" + productosVisibles + ")";
     }
 
-    if (window.SenabellaToast && (estadoFiltro.marcas.length > 0 || estadoFiltro.categoria)) {
-      let textoToast = "Filtrando por: " + (estadoFiltro.marcas.join(", ") || estadoFiltro.categoria);
+    if (window.SenabellaToast && (estadoFiltro.marcas.length > 0 || estadoFiltro.categoria || estadoFiltro.busqueda)) {
+      let textoToast = "Filtrando por: " + (estadoFiltro.busqueda || estadoFiltro.marcas.join(", ") || estadoFiltro.categoria);
       window.SenabellaToast(textoToast, "fa-filter");
     }
   }
@@ -191,6 +235,10 @@ document.addEventListener("DOMContentLoaded", function () {
         if (textoCat.toLowerCase().includes("portátiles")) estadoFiltro.categoria = "portátil";
         else if (textoCat.toLowerCase().includes("impresoras")) estadoFiltro.categoria = "impresora";
         else if (textoCat.toLowerCase().includes("tablets")) estadoFiltro.categoria = "tablet";
+        else if (textoCat.toLowerCase().includes("accesorios")) estadoFiltro.categoria = "accesorio";
+        else if (textoCat.toLowerCase().includes("desktops") || textoCat.toLowerCase().includes("todo en uno")) estadoFiltro.categoria = "desktop";
+        else if (textoCat.toLowerCase().includes("monitores")) estadoFiltro.categoria = "monitor";
+        else if (textoCat.toLowerCase().includes("software")) estadoFiltro.categoria = "software";
         else estadoFiltro.categoria = textoCat.split(" ")[0];
       } else {
         estadoFiltro.categoria = "";
@@ -472,6 +520,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
       localStorage.setItem("productoSeleccionado", JSON.stringify(datosProducto));
     });
+  });
+
+  // 11. Escuchar parámetros de búsqueda en la URL y eventos desde el buscador del header
+  let urlParamsBusqueda = new URLSearchParams(window.location.search);
+  let terminoInicial = urlParamsBusqueda.get("busqueda") || urlParamsBusqueda.get("q");
+  if (terminoInicial) {
+    estadoFiltro.busqueda = terminoInicial;
+    aplicarFiltros();
+  }
+
+  document.addEventListener("busquedaEjecutada", function (e) {
+    estadoFiltro.busqueda = e.detail || "";
+    aplicarFiltros();
   });
 
 });
