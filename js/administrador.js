@@ -79,6 +79,7 @@
     "entregado": { texto: "Entregado", clase: "admin-badge-success" },
     "en-camino": { texto: "En camino", clase: "admin-badge-info" },
     "pendiente": { texto: "Pendiente", clase: "admin-badge-warning" },
+    "pendiente-verificacion": { texto: "Verificar Pago", clase: "admin-badge-warning" },
     "cancelado": { texto: "Cancelado", clase: "admin-badge-danger" },
   };
 
@@ -286,13 +287,41 @@
 
   /* =====================================================================
      RENDER: Tabla de pedidos (dashboard y vista de pedidos)
+     Lee pedidos reales desde localStorage (senabella_admin_orders)
+     y los combina con los datos de demostración.
      ===================================================================== */
+  function obtenerPedidosCombinados() {
+    // Pedidos reales del checkout guardados en localStorage
+    let pedidosReales = [];
+    try {
+      pedidosReales = JSON.parse(localStorage.getItem("senabella_admin_orders")) || [];
+    } catch (e) { pedidosReales = []; }
+
+    // Convertir pedidos reales al formato de la tabla
+    const realesNormalizados = pedidosReales.map((o) => ({
+      id: o.numero,
+      cliente: o.cliente?.telefono ? `Cliente - ${o.cliente.ciudad}` : "Cliente Online",
+      correo: `${o.metodoPago}`,
+      producto: o.productos && o.productos.length > 0
+        ? o.productos.map(p => p.nombre).join(", ")
+        : "Producto(s) de la tienda",
+      estado: o.estado || "pendiente",
+      total: parseFloat((o.total || "0").replace(/[^\d]/g, "")) || 0,
+      _esReal: true,
+      _datosCompletos: o // referencia completa incluyendo comprobante
+    }));
+
+    // Pedidos reales primero, luego los de demostración
+    return [...realesNormalizados, ...PEDIDOS_RECIENTES.map(p => ({ ...p, _esReal: false }))];
+  }
+
   function renderPedidos(filtro = "") {
     const tbody = $("#adminTablaPedidos");
     if (!tbody) return;
 
     const texto = filtro.trim().toLowerCase();
-    const lista = PEDIDOS_RECIENTES.filter((p) =>
+    const todosPedidos = obtenerPedidosCombinados();
+    const lista = todosPedidos.filter((p) =>
       !texto ||
       p.id.toLowerCase().includes(texto) ||
       p.cliente.toLowerCase().includes(texto) ||
@@ -311,19 +340,23 @@
     }
 
     tbody.innerHTML = lista.map((pedido) => {
-      const estado = ESTADOS_INFO[pedido.estado];
+      const estadoInfo = ESTADOS_INFO[pedido.estado] || ESTADOS_INFO["pendiente"];
+      const tieneComprobante = pedido._datosCompletos?.comprobante ? ' title="Tiene comprobante adjunto" style="position:relative"' : '';
+      const iconoComprobante = pedido._datosCompletos?.comprobante
+        ? `<i class="fa-solid fa-file-image" style="color:#7ca82b;font-size:11px;margin-left:4px;" title="Comprobante adjunto"></i>`
+        : '';
       return `
         <tr>
-          <td><strong>${pedido.id}</strong></td>
+          <td><strong>${pedido.id}</strong>${pedido._esReal ? ' <span class="admin-badge admin-badge-info" style="font-size:10px;padding:2px 6px;">Real</span>' : ''}</td>
           <td>
             <div class="admin-celda-cliente">
               ${pedido.cliente}
-              <small>${pedido.correo}</small>
+              <small>${pedido.correo}${iconoComprobante}</small>
             </div>
           </td>
-          <td>${pedido.producto}</td>
-          <td><span class="admin-badge ${estado.clase}">${estado.texto}</span></td>
-          <td>${formatoCOP(pedido.total)}</td>
+          <td>${pedido.producto.length > 50 ? pedido.producto.substring(0, 50) + '...' : pedido.producto}</td>
+          <td><span class="admin-badge ${estadoInfo.clase}">${estadoInfo.texto}</span></td>
+          <td>${pedido.total > 0 ? formatoCOP(pedido.total) : pedido._datosCompletos?.total || '-'}</td>
           <td>
             <button class="admin-tabla-boton" title="Ver detalle del pedido" data-accion="ver-pedido" data-id="${pedido.id}">
               <i class="fa-regular fa-eye"></i>
@@ -728,32 +761,110 @@
      ACCIONES: Pedidos
      ===================================================================== */
   function verDetallePedido(id) {
-    const pedido = PEDIDOS_RECIENTES.find((p) => p.id === id);
-    if (!pedido) return;
+    // Buscar primero en pedidos reales del localStorage
+    let pedidoReal = null;
+    let pedidoSimulado = null;
+    let indiceReal = -1;
+
+    try {
+      const ordenesAdmin = JSON.parse(localStorage.getItem("senabella_admin_orders")) || [];
+      indiceReal = ordenesAdmin.findIndex((o) => o.numero === id);
+      if (indiceReal > -1) {
+        pedidoReal = ordenesAdmin[indiceReal];
+      }
+    } catch (e) {}
+
+    if (!pedidoReal) {
+      pedidoSimulado = PEDIDOS_RECIENTES.find((p) => p.id === id);
+      if (!pedidoSimulado) return;
+    }
+
+    const esReal = !!pedidoReal;
+    const estadoActual = esReal ? pedidoReal.estado : pedidoSimulado.estado;
+
+    // Construir HTML del comprobante
+    let htmlComprobante = "";
+    if (esReal && pedidoReal.comprobante) {
+      htmlComprobante = `
+        <div style="margin-top:16px;">
+          <p style="font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:8px;">Comprobante de Pago</p>
+          <div style="border:2px solid #e5e7eb;border-radius:10px;overflow:hidden;text-align:center;background:#f9fafb;">
+            <img src="${pedidoReal.comprobante}" alt="Comprobante de pago"
+              style="max-width:100%;max-height:320px;object-fit:contain;cursor:pointer;"
+              onclick="window.open(this.src,'_blank')" title="Clic para ver en tamaño completo"
+            />
+          </div>
+          <p style="font-size:11px;color:#9ca3af;margin-top:6px;text-align:center;">Clic en la imagen para verla en tamaño completo</p>
+        </div>
+      `;
+    } else if (esReal) {
+      htmlComprobante = `
+        <div style="margin-top:16px;padding:14px;background:#fef9ec;border:1px solid #f0ad4e;border-radius:8px;">
+          <p style="margin:0;font-size:13px;color:#92400e;">
+            <i class="fa-solid fa-triangle-exclamation" style="margin-right:6px;"></i>
+            Este pedido no tiene comprobante adjunto (puede ser contra entrega).
+          </p>
+        </div>
+      `;
+    }
+
+    // Info del cliente
+    let htmlCliente = "";
+    if (esReal) {
+      htmlCliente = `
+        <div class="admin-modal-detalle-fila"><span>Dirección</span><span>${pedidoReal.cliente?.direccion || '-'}</span></div>
+        <div class="admin-modal-detalle-fila"><span>Ciudad</span><span>${pedidoReal.cliente?.ciudad || '-'}</span></div>
+        <div class="admin-modal-detalle-fila"><span>Teléfono</span><span>${pedidoReal.cliente?.telefono || '-'}</span></div>
+        <div class="admin-modal-detalle-fila"><span>Método de pago</span><span>${pedidoReal.metodoPago || '-'}</span></div>
+        <div class="admin-modal-detalle-fila"><span>Fecha</span><span>${pedidoReal.fecha || '-'}</span></div>
+      `;
+    } else {
+      htmlCliente = `
+        <div class="admin-modal-detalle-fila"><span>Cliente</span><span>${pedidoSimulado.cliente}</span></div>
+        <div class="admin-modal-detalle-fila"><span>Correo</span><span>${pedidoSimulado.correo}</span></div>
+        <div class="admin-modal-detalle-fila"><span>Producto</span><span>${pedidoSimulado.producto}</span></div>
+      `;
+    }
+
+    const totalTexto = esReal ? (pedidoReal.total || '-') : formatoCOP(pedidoSimulado.total);
 
     abrirModal({
-      titulo: `Pedido ${pedido.id}`,
-      textoConfirmar: "Actualizar estado",
+      titulo: `Pedido ${id}`,
+      textoConfirmar: "Guardar estado",
       cuerpoHTML: `
-        <div class="admin-modal-detalle-fila"><span>Cliente</span><span>${pedido.cliente}</span></div>
-        <div class="admin-modal-detalle-fila"><span>Correo</span><span>${pedido.correo}</span></div>
-        <div class="admin-modal-detalle-fila"><span>Producto</span><span>${pedido.producto}</span></div>
-        <div class="admin-modal-detalle-fila"><span>Total</span><span>${formatoCOP(pedido.total)}</span></div>
+        ${htmlCliente}
+        <div class="admin-modal-detalle-fila"><span>Total</span><span><strong>${totalTexto}</strong></span></div>
+        ${htmlComprobante}
         <div class="admin-form-grupo" style="margin-top:16px;">
           <label for="campoEstadoPedido">Estado del pedido</label>
           <select id="campoEstadoPedido" name="estado">
             ${Object.entries(ESTADOS_INFO).map(([clave, info]) =>
-              `<option value="${clave}" ${clave === pedido.estado ? "selected" : ""}>${info.texto}</option>`
+              `<option value="${clave}" ${clave === estadoActual ? "selected" : ""}>${info.texto}</option>`
             ).join("")}
           </select>
         </div>
       `,
       alConfirmar: (datos) => {
-        pedido.estado = datos.get("estado");
+        const nuevoEstado = datos.get("estado");
+
+        if (esReal) {
+          // Guardar cambio de estado en localStorage
+          try {
+            const ordenesAdmin = JSON.parse(localStorage.getItem("senabella_admin_orders")) || [];
+            const idx = ordenesAdmin.findIndex((o) => o.numero === id);
+            if (idx > -1) {
+              ordenesAdmin[idx].estado = nuevoEstado;
+              localStorage.setItem("senabella_admin_orders", JSON.stringify(ordenesAdmin));
+            }
+          } catch (e) {}
+        } else {
+          pedidoSimulado.estado = nuevoEstado;
+        }
+
         const buscadorInput = $("#adminBuscadorInput");
         renderPedidos(buscadorInput ? buscadorInput.value : "");
         cerrarModal();
-        mostrarToast(`Estado del pedido ${pedido.id} actualizado a "${ESTADOS_INFO[pedido.estado].texto}".`);
+        mostrarToast(`Estado del pedido ${id} actualizado a "${ESTADOS_INFO[nuevoEstado]?.texto || nuevoEstado}".`);
       },
     });
   }
