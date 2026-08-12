@@ -180,4 +180,68 @@ document.addEventListener("DOMContentLoaded", function () {
             window.location.href = "carrito.html";
         });
     }
+
+    // Funcionalidad interactiva para la sección "También te puede interesar"
+    let tarjetasRecomendaciones = document.querySelectorAll(".reco-card");
+    tarjetasRecomendaciones.forEach(function (card) {
+        card.addEventListener("click", function () {
+            let titulo = card.querySelector("h3")?.textContent.trim() || "Producto recomendado";
+            let descripcion = card.querySelector("p")?.textContent.trim() || "Excelente producto de tecnología con garantía oficial Senabella.";
+            let precio = card.querySelector("span")?.textContent.trim() || "$ 0";
+            let img = card.querySelector("img")?.src || "";
+            
+            // Extraer marca desde la primera palabra del título
+            let marca = titulo.split(" ")[0] || "SENABELLA";
+
+            // Calcular un precio antiguo de referencia (+20%)
+            let precioNum = parseFloat(precio.replace(/[^\d]/g, "")) || 0;
+            let precioAntiguoNum = Math.round(precioNum * 1.25);
+            let precioAntiguoText = precioAntiguoNum > 0 ? "$ " + precioAntiguoNum.toLocaleString("es-CO") : "$ 0";
+
+            let nuevoProducto = {
+                titulo: titulo,
+                marca: marca.toUpperCase(),
+                descripcion: descripcion,
+                precioActual: precio,
+                precioAntiguo: precioAntiguoText,
+                imagen: img
+            };
+
+            // Guardar el nuevo producto seleccionado en localStorage y actualizar la vista
+            localStorage.setItem("productoSeleccionado", JSON.stringify(nuevoProducto));
+            actualizarDetalleProducto();
+
+            // Desplazar suavemente a la parte superior para mostrar el producto cargado
+            window.scrollTo({ top: 0, behavior: "smooth" });
+
+            // Mostrar notificación toast de confirmación
+            let contenedorToast = document.getElementById("contenedor-toast");
+            if (!contenedorToast) {
+                contenedorToast = document.createElement("div");
+                contenedorToast.id = "contenedor-toast";
+                document.body.appendChild(contenedorToast);
+            }
+
+            let toast = document.createElement("div");
+            toast.className = "toast-senabella toast-exito";
+            toast.innerHTML =
+                '<i class="fa-solid fa-eye"></i>' +
+                '<span>Cargado: <strong>' + titulo + '</strong></span>' +
+                '<button class="toast-cerrar"><i class="fa-solid fa-xmark"></i></button>';
+
+            contenedorToast.appendChild(toast);
+            setTimeout(function () { toast.classList.add("toast-visible"); }, 10);
+            
+            toast.querySelector(".toast-cerrar").addEventListener("click", function () {
+                toast.classList.remove("toast-visible");
+                setTimeout(function () { toast.remove(); }, 300);
+            });
+
+            setTimeout(function () {
+                toast.classList.remove("toast-visible");
+                setTimeout(function () { toast.remove(); }, 300);
+            }, 3000);
+        });
+    });
 });
+
