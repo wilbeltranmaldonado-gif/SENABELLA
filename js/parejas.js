@@ -94,4 +94,83 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
+
+  // Agregar botones de favoritos dinámicamente a las tarjetas
+  const tarjetasParejas = document.querySelectorAll(".productos-parejas-grid .card");
+  tarjetasParejas.forEach(function (card) {
+    let cardBody = card.querySelector(".card-body");
+    
+    // Crear el botón de favoritos
+    let btnFav = document.createElement("button");
+    btnFav.className = "btn-favorito";
+    btnFav.style.position = "absolute";
+    btnFav.style.top = "10px";
+    btnFav.style.right = "10px";
+    btnFav.style.background = "rgba(255, 255, 255, 0.9)";
+    btnFav.style.border = "none";
+    btnFav.style.borderRadius = "50%";
+    btnFav.style.width = "35px";
+    btnFav.style.height = "35px";
+    btnFav.style.display = "flex";
+    btnFav.style.alignItems = "center";
+    btnFav.style.justifyContent = "center";
+    btnFav.style.boxShadow = "0 2px 5px rgba(0,0,0,0.1)";
+    btnFav.style.cursor = "pointer";
+    btnFav.style.zIndex = "10";
+    
+    let nombreProd = card.querySelector(".card-title").textContent.trim();
+    let esFavGlobal = window.SenabellaFavoritos && window.SenabellaFavoritos.esFavorito(nombreProd);
+    
+    if (esFavGlobal) {
+      btnFav.innerHTML = '<i class="fa-solid fa-heart" style="color: #e63946; font-size: 18px;"></i>';
+      btnFav.classList.add("favorito-activo");
+    } else {
+      btnFav.innerHTML = '<i class="fa-regular fa-heart" style="font-size: 18px; color: #767676;"></i>';
+    }
+
+    // Insertar en la tarjeta (relativo al card que tiene position relative por defecto de bootstrap)
+    card.style.position = "relative";
+    card.appendChild(btnFav);
+
+    btnFav.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      let ic = btnFav.querySelector("i");
+      let esFav = ic.classList.contains("fa-solid");
+
+      if (esFav) {
+        ic.classList.add("fa-regular");
+        ic.classList.remove("fa-solid");
+        ic.style.color = "#767676";
+        btnFav.classList.remove("favorito-activo");
+        if (window.SenabellaFavoritos) {
+          window.SenabellaFavoritos.eliminar(nombreProd);
+        }
+      } else {
+        ic.classList.remove("fa-regular");
+        ic.classList.add("fa-solid");
+        ic.style.color = "#e63946";
+        btnFav.classList.add("favorito-activo");
+        
+        let precioActual = card.querySelector(".card-text").textContent.trim();
+        let img = card.querySelector("img") ? card.querySelector("img").src : "";
+        
+        if (window.SenabellaFavoritos) {
+          window.SenabellaFavoritos.agregar({
+            nombre: nombreProd,
+            marca: "COLECCIÓN PAREJAS",
+            imagen: img,
+            precioTexto: precioActual,
+            referencia: "SENABELLA"
+          });
+        }
+      }
+      
+      if (window.SenabellaToast) {
+        window.SenabellaToast(!esFav ? "Agregado a favoritos" : "Eliminado de favoritos", !esFav ? "fa-heart" : "fa-heart-crack");
+      } else {
+        alert(!esFav ? "Agregado a favoritos" : "Eliminado de favoritos");
+      }
+    });
+  });
 });

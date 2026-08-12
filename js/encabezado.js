@@ -40,7 +40,7 @@ const headerHTML = `
                 </div>
             </div>
 
-            <a href="#">
+            <a href="favoritos.html">
                 <i class="fa-regular fa-heart icono-corazon"></i>
             </a>
 

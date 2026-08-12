@@ -391,16 +391,58 @@ document.addEventListener("DOMContentLoaded", function () {
   let favButtons = document.querySelectorAll(".favorite-btn");
   favButtons.forEach(function (btn) {
     btn.style.cursor = "pointer";
+    
+    // Obtener información del producto
+    let tarjeta = btn.closest(".tar-producto");
+    let marca = tarjeta.querySelector(".nom-producto") ? tarjeta.querySelector(".nom-producto").textContent.trim() : "";
+    let descripcion = tarjeta.querySelector(".descripcion") ? tarjeta.querySelector(".descripcion").textContent.trim() : "";
+    let nombreProd = marca + " - " + descripcion;
+    let imagen = tarjeta.querySelector("img") ? tarjeta.querySelector("img").src : "";
+    let precioEl = tarjeta.querySelector(".precio");
+    let precioActual = precioEl ? (precioEl.childNodes[0] ? precioEl.childNodes[0].textContent.trim() : precioEl.textContent.trim()) : "";
+    let referencia = tarjeta.querySelector(".referencia") ? tarjeta.querySelector(".referencia").textContent.trim() : "";
+    
+    // Inicializar estado del corazón si ya es favorito
+    let esFavGlobal = window.SenabellaFavoritos && window.SenabellaFavoritos.esFavorito(nombreProd);
+    if (esFavGlobal) {
+      btn.classList.remove("fa-regular");
+      btn.classList.add("fa-solid");
+      btn.style.color = "#e63946";
+    }
+    
     btn.addEventListener("click", function (e) {
       e.preventDefault();
       e.stopPropagation();
-      let esFav = this.classList.contains("fa-regular");
-      this.classList.toggle("fa-regular", !esFav);
-      this.classList.toggle("fa-solid", esFav);
-      this.style.color = esFav ? "#e63946" : "";
+      
+      let esFav = btn.classList.contains("fa-solid");
+      
+      if (esFav) {
+        // Eliminar de favoritos
+        btn.classList.add("fa-regular");
+        btn.classList.remove("fa-solid");
+        btn.style.color = "";
+        if (window.SenabellaFavoritos) {
+          window.SenabellaFavoritos.eliminar(nombreProd);
+        }
+      } else {
+        // Agregar a favoritos
+        btn.classList.remove("fa-regular");
+        btn.classList.add("fa-solid");
+        btn.style.color = "#e63946";
+        
+        if (window.SenabellaFavoritos) {
+          window.SenabellaFavoritos.agregar({
+            nombre: nombreProd,
+            marca: marca,
+            imagen: imagen,
+            precioTexto: precioActual,
+            referencia: referencia
+          });
+        }
+      }
 
       if (window.SenabellaToast) {
-        window.SenabellaToast(esFav ? "Agregado a tus favoritos" : "Eliminado de favoritos", esFav ? "fa-heart" : "fa-heart-crack");
+        window.SenabellaToast(!esFav ? "Agregado a tus favoritos" : "Eliminado de favoritos", !esFav ? "fa-heart" : "fa-heart-crack");
       }
     });
   });

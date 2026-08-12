@@ -566,6 +566,7 @@ body.modo-oscuro .boton-pestana.active {
 
 /* RESPONSIVE */
 @media (max-width: 992px) {
+
   .vender-hero-cuadricula,
   .tarjeta-simulador,
   .tarjeta-formulario {

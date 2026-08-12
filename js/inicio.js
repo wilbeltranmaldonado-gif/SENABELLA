@@ -139,16 +139,51 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let btnFav = document.createElement("button");
     btnFav.className = "btn-favorito";
-    btnFav.innerHTML = '<i class="fa-regular fa-heart"></i>';
+    
+    let nombreProd = card.querySelector(".card-title").textContent.trim();
+    let esFavGlobal = window.SenabellaFavoritos && window.SenabellaFavoritos.esFavorito(nombreProd);
+    
+    if (esFavGlobal) {
+      btnFav.innerHTML = '<i class="fa-solid fa-heart" style="color: #e63946;"></i>';
+      btnFav.classList.add("favorito-activo");
+    } else {
+      btnFav.innerHTML = '<i class="fa-regular fa-heart"></i>';
+    }
+
     btnFav.addEventListener("click", function (e) {
       e.stopPropagation();
       let ic = btnFav.querySelector("i");
-      let esFav = ic.classList.contains("fa-regular");
+      let esFav = ic.classList.contains("fa-solid");
 
-      ic.classList.toggle("fa-regular", !esFav);
-      ic.classList.toggle("fa-solid", esFav);
-      btnFav.classList.toggle("favorito-activo", esFav);
-      mostrarToast(esFav ? "Agregado a favoritos" : "Eliminado de favoritos", esFav ? "fa-heart" : "fa-heart-crack", esFav ? "exito" : "info");
+      if (esFav) {
+        ic.classList.add("fa-regular");
+        ic.classList.remove("fa-solid");
+        ic.style.color = "";
+        btnFav.classList.remove("favorito-activo");
+        if (window.SenabellaFavoritos) {
+          window.SenabellaFavoritos.eliminar(nombreProd);
+        }
+      } else {
+        ic.classList.remove("fa-regular");
+        ic.classList.add("fa-solid");
+        ic.style.color = "#e63946";
+        btnFav.classList.add("favorito-activo");
+        
+        let precioActual = card.querySelector(".card-text").textContent.trim();
+        let img = card.querySelector("img") ? card.querySelector("img").src : "";
+        
+        if (window.SenabellaFavoritos) {
+          window.SenabellaFavoritos.agregar({
+            nombre: nombreProd,
+            marca: "SENABELLA",
+            imagen: img,
+            precioTexto: precioActual,
+            referencia: "SENABELLA"
+          });
+        }
+      }
+      
+      mostrarToast(!esFav ? "Agregado a favoritos" : "Eliminado de favoritos", !esFav ? "fa-heart" : "fa-heart-crack", !esFav ? "exito" : "info");
     });
 
     acciones.appendChild(btnCarrito);
