@@ -86,6 +86,22 @@ function actualizarDetalleProducto() {
             listaEspec.appendChild(li);
         });
     }
+
+    actualizarEstadoFavorito();
+}
+
+function actualizarEstadoFavorito() {
+    let btnFav = document.getElementById("btn-favorito-detalle");
+    if (!btnFav) return;
+
+    let titulo = document.querySelector(".info-producto h1")?.textContent.trim() || "";
+    let esFav = window.SenabellaFavoritos ? window.SenabellaFavoritos.esFavorito(titulo) : false;
+
+    let icono = btnFav.querySelector("i");
+    if (icono) {
+        icono.className = esFav ? "fa-solid fa-heart" : "fa-regular fa-heart";
+    }
+    btnFav.classList.toggle("activo", esFav);
 }
 
 // Intentar actualizar inmediatamente por si los elementos DOM ya existen
@@ -94,6 +110,42 @@ actualizarDetalleProducto();
 document.addEventListener("DOMContentLoaded", function () {
     // Asegurar actualización completa al estar listo el DOM
     actualizarDetalleProducto();
+
+    // Gestión del botón de favoritos (Corazón)
+    let btnFav = document.getElementById("btn-favorito-detalle");
+    if (btnFav) {
+        btnFav.addEventListener("click", function () {
+            let titulo = document.querySelector(".info-producto h1")?.textContent.trim() || "Producto Senabella";
+            let marca = document.querySelector(".info-producto .categoria")?.textContent.trim() || "SENABELLA";
+            let precioText = document.querySelector(".precio-actual")?.textContent.trim() || "$ 0";
+            let img = document.querySelector(".imagen-producto > img")?.src || "";
+
+            let prodFav = {
+                id: titulo,
+                nombre: titulo,
+                marca: marca,
+                precioTexto: precioText,
+                imagen: img,
+                referencia: marca
+            };
+
+            if (window.SenabellaFavoritos) {
+                let esFav = window.SenabellaFavoritos.esFavorito(titulo);
+                if (esFav) {
+                    window.SenabellaFavoritos.eliminar(titulo);
+                    if (window.SenabellaToast) {
+                        window.SenabellaToast("Producto eliminado de favoritos", "fa-heart-crack");
+                    }
+                } else {
+                    window.SenabellaFavoritos.agregar(prodFav);
+                    if (window.SenabellaToast) {
+                        window.SenabellaToast("¡Producto guardado en favoritos!", "fa-heart");
+                    }
+                }
+                actualizarEstadoFavorito();
+            }
+        });
+    }
 
     let imagenPrincipal = document.querySelector(".imagen-producto > img");
     let miniaturas = document.querySelectorAll(".mini-miniaturas img");

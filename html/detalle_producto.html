@@ -30,17 +30,13 @@
     
     <!-- CONTENIDO PRINCIPAL -->
     <main class="pagina-producto">
-      <!-- Botón para volver al catálogo -->
-      <div class="contenedor-volver">
-        <a href="catalogo.html" class="btn-volver">
-          <i class="fa-solid fa-arrow-left"></i> Volver al catálogo
-        </a>
-      </div>
-
       <!-- Sección principal del detalle del producto -->
       <section class="tarjeta-producto">
         <!-- Galería de imágenes  -->
         <div class="imagen-producto">
+          <button class="btn-favorito-detalle" id="btn-favorito-detalle" title="Guardar en favoritos">
+            <i class="fa-regular fa-heart"></i>
+          </button>
           <img
             src=""
             alt="Producto"
@@ -228,6 +224,7 @@
 
 
     <script src="../js/encabezado.js"></script>
+    <script src="../js/favoritos.js"></script>
     <script src="../js/detalle_producto.js"></script>
 
   </body>

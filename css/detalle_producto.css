@@ -56,6 +56,38 @@
   gap: 16px;
 }
 
+.btn-favorito-detalle {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: #ffffff;
+  border: 1px solid #e4e7eb;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  color: #64748b;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10;
+}
+
+.btn-favorito-detalle:hover {
+  transform: scale(1.12);
+  box-shadow: 0 6px 18px rgba(230, 57, 70, 0.2);
+  color: #e63946;
+}
+
+.btn-favorito-detalle.activo {
+  background: #fff0f1;
+  border-color: #fecdd3;
+  color: #e63946;
+}
+
 .imagen-producto > img {
   width: auto;
   max-width: 100%;
