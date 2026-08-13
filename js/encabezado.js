@@ -175,6 +175,45 @@ const headerHTML = `
 // Agregar el header a la página
 document.body.insertAdjacentHTML("afterbegin", headerHTML);
 
+// Asegurar que exista un sistema global de toasts (igual que en carrito.js / inicio.js)
+if (!window.SenabellaToast) {
+  (function initGlobalToast() {
+    let contenedorToast = document.getElementById("contenedor-toast");
+    if (!contenedorToast) {
+      contenedorToast = document.createElement("div");
+      contenedorToast.id = "contenedor-toast";
+      document.body.appendChild(contenedorToast);
+    }
+
+    window.SenabellaToast = function (mensaje, icono, tipo) {
+      try {
+        let toast = document.createElement("div");
+        toast.className = "toast-senabella toast-" + (tipo || "exito");
+        toast.innerHTML =
+          '<i class="fa-solid ' + (icono || "fa-circle-check") + '"></i>' +
+          '<span>' + mensaje + '</span>' +
+          '<button class="toast-cerrar"><i class="fa-solid fa-xmark"></i></button>';
+
+        contenedorToast.appendChild(toast);
+        setTimeout(function () { toast.classList.add("toast-visible"); }, 10);
+
+        toast.querySelector(".toast-cerrar").addEventListener("click", function () {
+          toast.classList.remove("toast-visible");
+          setTimeout(function () { toast.remove(); }, 300);
+        });
+
+        setTimeout(function () {
+          toast.classList.remove("toast-visible");
+          setTimeout(function () { toast.remove(); }, 300);
+        }, 3500);
+      } catch (e) {
+        // Silenciar errores de toast para no romper otras interacciones
+        console.error('SenabellaToast error:', e);
+      }
+    };
+  })();
+}
+
 
 // ==========================================
 // ENLACE DE CUENTA (Iniciar sesión / Mi cuenta / Panel Admin)
