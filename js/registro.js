@@ -246,14 +246,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
 
-      // Guardar sesión activa
-      const datosUsuario = { nombre: nombreTexto, correo: correoFinal, celular: celularTexto };
-      localStorage.setItem('senabella_usuario', JSON.stringify(datosUsuario));
-      localStorage.setItem('senabella_sesion', 'activa');
-      localStorage.setItem('senabella_rol', 'cliente');
-
       // Si todo es válido
-      mostrarExito('¡Cuenta creada con éxito! Redirigiendo a tu perfil...');
+      mostrarExito('¡Cuenta creada con éxito! Redirigiendo al inicio de sesión...');
       formulario.reset();
       
       // Reiniciar medidores dinámicos
@@ -269,9 +263,9 @@ document.addEventListener('DOMContentLoaded', () => {
         coincidenciaTexto.innerHTML = '';
       }
 
-      // Redirigir a Mi Cuenta (usuario.html) tras 1.2 segundos
+      // Redirigir a Login (login.html) tras 1.2 segundos para que inicie sesión manualmente
       setTimeout(() => {
-        window.location.href = 'usuario.html';
+        window.location.href = 'login.html';
       }, 1200);
     });
   }
