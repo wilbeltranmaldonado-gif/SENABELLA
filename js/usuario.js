@@ -22,6 +22,10 @@
      cuando no hay datos que listar (ej. Mis listas).
      ------------------------------------------------------------------- */
   const SECCIONES = {
+    "mi-perfil": {
+      titulo: "Mi Perfil",
+      especial: "mi-perfil"
+    },
     "mis-compras": {
       titulo: "Mis compras",
       especial: "mis-compras"
@@ -62,6 +66,97 @@
     const contenedorCampos = $(".lista-campos", tarjeta);
 
     titulo.textContent = seccion.titulo;
+
+    if (seccion.especial === "mi-perfil") {
+      let usuario = {};
+      try {
+        usuario = JSON.parse(localStorage.getItem("senabella_usuario")) || {};
+      } catch (e) { }
+
+      contenedorCampos.innerHTML = `
+        <form id="form-mi-perfil" class="formulario" style="margin-top: 15px;" novalidate>
+
+          <div class="grupo-campo" style="margin-bottom: 15px;">
+            <label for="perfil-nombre" style="display:block; margin-bottom:5px; font-weight:500;">Nombre completo *</label>
+            <input type="text" id="perfil-nombre"
+              value="${usuario.nombre || ''}"
+              placeholder="Ej. María García"
+              required
+              style="width:100%; padding:10px; border:1px solid var(--color-borde); border-radius:8px;">
+          </div>
+
+          <div class="grupo-campo" style="margin-bottom: 15px;">
+            <label for="perfil-email" style="display:block; margin-bottom:5px; font-weight:500;">Correo electrónico *</label>
+            <input type="email" id="perfil-email"
+              value="${usuario.email || ''}"
+              placeholder="Ej. maria@email.com"
+              required
+              style="width:100%; padding:10px; border:1px solid var(--color-borde); border-radius:8px;">
+          </div>
+
+          <div class="grupo-campo" style="margin-bottom: 15px;">
+            <label for="perfil-celular" style="display:block; margin-bottom:5px; font-weight:500;">Celular</label>
+            <input type="tel" id="perfil-celular"
+              value="${usuario.celular || ''}"
+              placeholder="Ej. 300 123 4567"
+              style="width:100%; padding:10px; border:1px solid var(--color-borde); border-radius:8px;">
+          </div>
+
+          <div class="grupo-campo" style="margin-bottom: 20px;">
+            <label for="perfil-password" style="display:block; margin-bottom:5px; font-weight:500;">Nueva contraseña <span style="font-weight:400; color:var(--text-muted); font-size:0.85em;">(dejar en blanco para no cambiarla)</span></label>
+            <input type="password" id="perfil-password"
+              placeholder="Mínimo 6 caracteres"
+              style="width:100%; padding:10px; border:1px solid var(--color-borde); border-radius:8px;">
+          </div>
+
+          <button type="submit" id="btn-guardar-perfil"
+            style="width:100%; padding:13px; border-radius:8px;
+                   background:var(--color-primario, #84b814); color:#fff;
+                   border:none; font-size:1rem; font-weight:700;
+                   cursor:pointer; display:flex; align-items:center;
+                   justify-content:center; gap:8px; transition:opacity .2s;">
+            <i class="fa-solid fa-floppy-disk"></i> Guardar datos
+          </button>
+
+          <div id="perfil-mensaje" style="display:none; margin-top:14px; padding:10px 14px;
+               border-radius:8px; font-size:0.9rem; font-weight:500;"></div>
+        </form>
+      `;
+
+      setTimeout(() => {
+        const formPerfil = document.getElementById("form-mi-perfil");
+        if (!formPerfil) return;
+
+        formPerfil.addEventListener("submit", function (e) {
+          e.preventDefault();
+          const nombre   = document.getElementById("perfil-nombre").value.trim();
+          const email    = document.getElementById("perfil-email").value.trim();
+          const celular  = document.getElementById("perfil-celular").value.trim();
+          const password = document.getElementById("perfil-password").value;
+          const msg      = document.getElementById("perfil-mensaje");
+
+          /* Validaciones básicas */
+          if (!nombre) { mostrarMensaje(msg, "Por favor ingresa tu nombre completo.", "error"); return; }
+          if (!email || !/^[^@]+@[^@]+\.[^@]+$/.test(email)) { mostrarMensaje(msg, "Ingresa un correo electrónico válido.", "error"); return; }
+          if (password && password.length < 6) { mostrarMensaje(msg, "La contraseña debe tener mínimo 6 caracteres.", "error"); return; }
+
+          /* Actualizar y guardar */
+          usuario.nombre  = nombre;
+          usuario.email   = email;
+          usuario.celular = celular;
+          if (password) usuario.password = password;
+          localStorage.setItem("senabella_usuario", JSON.stringify(usuario));
+
+          mostrarMensaje(msg, "\u2713 Datos guardados correctamente.", "exito");
+          if (window.SenabellaToast) {
+            window.SenabellaToast("Perfil actualizado", "fa-circle-check", "exito");
+          }
+          document.getElementById("perfil-password").value = "";
+        });
+      }, 50);
+
+      return;
+    }
 
     if (seccion.especial === "mis-compras") {
       try {
@@ -266,16 +361,27 @@
     });
   }
 
+  /* --- Muestra un mensaje de éxito o error dentro del formulario --- */
+  function mostrarMensaje(el, texto, tipo) {
+    if (!el) return;
+    el.textContent = texto;
+    el.style.display = "block";
+    el.style.backgroundColor = tipo === "exito" ? "#eafaf1" : "#fdecea";
+    el.style.color            = tipo === "exito" ? "#1e8449"  : "#c0392b";
+    el.style.border           = tipo === "exito" ? "1px solid #a9dfbf" : "1px solid #f5c6c6";
+    setTimeout(() => { el.style.display = "none"; }, 4000);
+  }
+
   function init() {
     setupMenuLateral();
     setupEdicionInline();
-    renderSeccion("datos-envio"); // sección visible al cargar la página
+    renderSeccion("mi-perfil"); // sección visible al cargar la página
     
     // Activar el item en el menú lateral
     const items = $$(".barra-lateral .elemento-menu");
     items.forEach((i) => i.classList.remove("activo"));
-    const itemEnvio = Array.from(items).find(i => i.dataset.section === "datos-envio");
-    if (itemEnvio) itemEnvio.classList.add("activo");
+    const itemPerfil = Array.from(items).find(i => i.dataset.section === "mi-perfil");
+    if (itemPerfil) itemPerfil.classList.add("activo");
   }
 
   if (document.readyState === "loading") {
