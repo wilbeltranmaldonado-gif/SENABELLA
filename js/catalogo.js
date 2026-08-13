@@ -14,7 +14,18 @@ document.addEventListener("DOMContentLoaded", function () {
     } catch (e) {
       prodsLS = [];
     }
+    
+    // Si no hay productos en localStorage, intentamos usar PRODUCTOS_SEMILLA si está definido globalmente (cargado via script)
+    if (!prodsLS.length && typeof PRODUCTOS_SEMILLA !== "undefined") {
+      prodsLS = [...PRODUCTOS_SEMILLA];
+      localStorage.setItem("senabella_productos", JSON.stringify(prodsLS));
+    }
+    
     if (!prodsLS.length) return;
+
+    // LIMPIAR el contenedor para que solo se muestren los productos dinámicos 
+    // y reflejen las ediciones/eliminaciones del administrador.
+    gridProductos.innerHTML = "";
 
     let esPaginaRopa = window.location.pathname.includes("ropa");
 
@@ -78,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
           </div>
         `;
 
-        gridProductos.prepend(tarjetaEl);
+        gridProductos.appendChild(tarjetaEl);
       }
     });
   }
