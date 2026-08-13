@@ -978,12 +978,19 @@
     if (!tbody) return;
 
     const texto = filtro.trim().toLowerCase();
-    const lista = PRODUCTOS.filter((p) =>
-      !texto ||
-      p.nombre.toLowerCase().includes(texto) ||
-      (p.categoria && p.categoria.toLowerCase().includes(texto)) ||
-      (p.marca && p.marca.toLowerCase().includes(texto))
-    );
+    const selectCat = $("#adminFiltroCategoria");
+    const categoriaFiltro = selectCat ? selectCat.value.toLowerCase() : "";
+
+    const lista = PRODUCTOS.filter((p) => {
+      const matchTexto = !texto ||
+        p.nombre.toLowerCase().includes(texto) ||
+        (p.categoria && p.categoria.toLowerCase().includes(texto)) ||
+        (p.marca && p.marca.toLowerCase().includes(texto));
+      
+      const matchCat = !categoriaFiltro || (p.categoria && p.categoria.toLowerCase() === categoriaFiltro);
+      
+      return matchTexto && matchCat;
+    });
 
     if ($("#adminConteoProductos")) $("#adminConteoProductos").textContent = PRODUCTOS.length;
     if ($("#adminConteoStockBajo")) $("#adminConteoStockBajo").textContent = PRODUCTOS.filter((p) => p.stock <= p.minimo).length;
@@ -2160,8 +2167,16 @@
         </div>
 
         <div class="admin-tarjeta">
-          <div class="admin-tarjeta-header">
+          <div class="admin-tarjeta-header" style="display:flex; justify-content:space-between; align-items:center;">
             <h3>Productos registrados</h3>
+            <select id="adminFiltroCategoria" class="admin-input" style="width: auto; padding: 6px 12px; height: auto; border:1px solid var(--border-color); border-radius:6px; background:var(--bg-main); color:var(--text-main);">
+              <option value="">Todas las categorías</option>
+              <option value="tecnología">Tecnología</option>
+              <option value="ropa">Ropa</option>
+              <option value="calzado">Calzado</option>
+              <option value="accesorios">Accesorios</option>
+              <option value="hogar">Hogar</option>
+            </select>
           </div>
           <div class="admin-tabla-scroll">
             <table class="admin-tabla">
@@ -2460,7 +2475,16 @@
       setTimeout(initGraficas, 60);
     }
     if (vista === "pedidos") renderPedidos();
-    if (vista === "productos") renderProductos();
+    if (vista === "productos") {
+      renderProductos();
+      const selectCat = $("#adminFiltroCategoria");
+      if (selectCat) {
+        selectCat.addEventListener("change", () => {
+          const buscadorInput = $("#adminBuscadorInput");
+          renderProductos(buscadorInput ? buscadorInput.value : "");
+        });
+      }
+    }
     if (vista === "clientes") renderClientes();
     if (vista === "proveedores") renderProveedores();
     if (vista === "categorias") renderCategorias();
