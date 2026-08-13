@@ -604,6 +604,98 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
+  // Ensure each tarjeta has visible action buttons (Agregar + Favorito) positioned correctly
+  document.querySelectorAll('.tar-producto').forEach(function (tarjeta) {
+    // Skip if actions already present
+    if (tarjeta.querySelector('.acciones-producto')) return;
+
+    const acciones = document.createElement('div');
+    acciones.className = 'acciones-producto';
+
+    // Crear botón Agregar al carrito
+    const btnCarrito = document.createElement('button');
+    btnCarrito.type = 'button';
+    btnCarrito.className = 'btn-agregar-carrito';
+    btnCarrito.innerHTML = '<i class="fa-solid fa-cart-plus"></i> Agregar';
+
+    btnCarrito.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const nombre = tarjeta.querySelector('.descripcion')?.textContent.trim() || 'Producto';
+      const precio = tarjeta.querySelector('.precio')?.textContent.trim() || '$ 0';
+      const img = tarjeta.querySelector('img')?.src || '';
+
+      if (window.SenabellaCart) {
+        window.SenabellaCart.agregarProducto({
+          nombre: nombre,
+          marca: tarjeta.querySelector('.nom-producto')?.textContent.trim() || 'SENABELLA',
+          precioText: precio,
+          img: img,
+          cantidad: 1
+        });
+      }
+
+      btnCarrito.innerHTML = '<i class="fa-solid fa-check"></i> Agregado';
+      btnCarrito.classList.add('btn-agregado');
+      setTimeout(function () {
+        btnCarrito.innerHTML = '<i class="fa-solid fa-cart-plus"></i> Agregar';
+        btnCarrito.classList.remove('btn-agregado');
+      }, 1500);
+
+      if (window.SenabellaToast) {
+        window.SenabellaToast(nombre + ' agregado al carrito', 'fa-cart-shopping', 'exito');
+      }
+    });
+
+    // Mover el icono favorite existente dentro de las acciones si existe
+    const favIcon = tarjeta.querySelector('.favorite-btn');
+    if (favIcon) {
+      // Si el icono es un <i>, envolverlo en un botón para replicar la UI de inicio
+      if (favIcon.tagName === 'I') {
+        const wrapper = document.createElement('button');
+        wrapper.type = 'button';
+        wrapper.className = 'btn-favorito';
+        // mover el icono dentro del wrapper (preserva event listeners en el <i>)
+        const parent = favIcon.parentNode;
+        if (parent) parent.removeChild(favIcon);
+        wrapper.appendChild(favIcon);
+        acciones.appendChild(btnCarrito);
+        acciones.appendChild(wrapper);
+
+        // redirigir clics del wrapper al icono para disparar los handlers existentes
+        wrapper.addEventListener('click', function (ev) {
+          ev.preventDefault();
+          ev.stopPropagation();
+          favIcon.click();
+        });
+      } else {
+        // si no es <i> (por ejemplo ya era botón), simplemente mover
+        acciones.appendChild(btnCarrito);
+        acciones.appendChild(favIcon);
+      }
+    } else {
+      // Si no hay icono favorito en la tarjeta, crear uno nuevo (con clase favorite-btn para que la lógica encuentre y sincronice después)
+      acciones.appendChild(btnCarrito);
+      const newFavBtn = document.createElement('button');
+      newFavBtn.type = 'button';
+      newFavBtn.className = 'btn-favorito';
+      newFavBtn.innerHTML = '<i class="fa-regular fa-heart favorite-btn"></i>';
+      acciones.appendChild(newFavBtn);
+
+      // Delegar clic del nuevo wrapper al <i> interno (no hay handlers; sincronizar después)
+      newFavBtn.addEventListener('click', function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        const innerIcon = newFavBtn.querySelector('.favorite-btn');
+        if (innerIcon) innerIcon.click();
+      });
+    }
+
+    // Insertar acciones antes del final de la tarjeta para que queden alineadas con el contenido
+    tarjeta.appendChild(acciones);
+  });
+
   // 10. Guardar datos del producto seleccionado para la vista detalle
   productos.forEach(function (producto) {
     producto.addEventListener("click", function (e) {
