@@ -93,17 +93,147 @@
     { id: "SN-10477", cliente: "Valentina Díaz", correo: "vdiaz@mail.com", producto: "Cafetera espresso", estado: "en-camino", total: 459900 },
   ];
 
-  let contadorProducto = 1;
-  const PRODUCTOS = [
-    { id: contadorProducto++, nombre: "Zapatillas Runner Pro", categoria: "Calzado", precio: 389900, stock: 3, minimo: 15 },
-    { id: contadorProducto++, nombre: "Licuadora Oster 600W", categoria: "Hogar", precio: 219900, stock: 5, minimo: 20 },
-    { id: contadorProducto++, nombre: "Audífonos inalámbricos X200", categoria: "Tecnología", precio: 99900, stock: 2, minimo: 10 },
-    { id: contadorProducto++, nombre: "Set de sábanas Queen", categoria: "Hogar", precio: 149900, stock: 6, minimo: 25 },
-    { id: contadorProducto++, nombre: 'Smart TV 55" 4K', categoria: "Tecnología", precio: 1899900, stock: 18, minimo: 8 },
-    { id: contadorProducto++, nombre: "Cafetera espresso", categoria: "Hogar", precio: 459900, stock: 24, minimo: 10 },
-    { id: contadorProducto++, nombre: "Camiseta deportiva", categoria: "Ropa", precio: 59900, stock: 80, minimo: 20 },
-    { id: contadorProducto++, nombre: "Mochila urbana", categoria: "Accesorios", precio: 129900, stock: 34, minimo: 12 },
+  const PRODUCTOS_SEMILLA = [
+    {
+      id: 1,
+      nombre: "Kindle Paperwhite 2024 32GB Signature",
+      categoria: "Tecnología",
+      marca: "LENOVO",
+      precio: 979900,
+      precioAntiguo: 1399000,
+      descuento: 30,
+      stock: 12,
+      minimo: 5,
+      imagen: "https://media.falabella.com/falabellaCO/142972175_01/w=1200,h=1200,fit=pad",
+      descripcion: "Kindle Paperwhite 2024 32GB 7\" Signature Edition Negra antirreflejos con carga inalámbrica.",
+      referencia: "Por PCTEL CÓMPUTO"
+    },
+    {
+      id: 2,
+      nombre: "Impresora Multifuncional Smart Tank 585",
+      categoria: "Tecnología",
+      marca: "HP",
+      precio: 659900,
+      precioAntiguo: 849900,
+      descuento: 22,
+      stock: 5,
+      minimo: 8,
+      imagen: "https://media.falabella.com.co/falabellaCO/137155110_01/width=480,height=480,quality=70,format=webp,fit=pad",
+      descripcion: "Impresora Multifuncional Smart Tank 585 Wifi + sistema continuo de tintas de alto rendimiento.",
+      referencia: "Por TS ONLINE"
+    },
+    {
+      id: 3,
+      nombre: "Vestido Elegante de Noche Floral",
+      categoria: "Ropa",
+      marca: "SENABELLA",
+      precio: 149900,
+      precioAntiguo: 199900,
+      descuento: 25,
+      stock: 18,
+      minimo: 5,
+      imagen: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=500&auto=format&fit=crop",
+      descripcion: "Vestido largo elegante con estampado floral y corte favorecedor para ocasión especial.",
+      referencia: "Moda Femenina Senabella"
+    },
+    {
+      id: 4,
+      nombre: "Zapatillas Runner Pro Performance",
+      categoria: "Calzado",
+      marca: "NIKE",
+      precio: 389900,
+      precioAntiguo: 450000,
+      descuento: 13,
+      stock: 3,
+      minimo: 15,
+      imagen: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop",
+      descripcion: "Zapatillas deportivas con tecnología de amortiguación responsiva para runners exigentes.",
+      referencia: "Calzado Deportivo Nike"
+    },
+    {
+      id: 5,
+      nombre: "Audífonos Inalámbricos Noise Cancelling X200",
+      categoria: "Tecnología",
+      marca: "ASUS",
+      precio: 99900,
+      precioAntiguo: 159900,
+      descuento: 37,
+      stock: 2,
+      minimo: 10,
+      imagen: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop",
+      descripcion: "Audífonos supraaurales bluetooth con cancelación activa de ruido y autonomía de 30h.",
+      referencia: "Tecnología ASUS Audio"
+    },
+    {
+      id: 6,
+      nombre: "Chaqueta Cuero Sintético Premium",
+      categoria: "Ropa",
+      marca: "ZARA",
+      precio: 229900,
+      precioAntiguo: 299900,
+      descuento: 23,
+      stock: 10,
+      minimo: 4,
+      imagen: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500&auto=format&fit=crop",
+      descripcion: "Chaqueta moderna de cuero ecológico resistente al viento con cremalleras reforzadas.",
+      referencia: "Moda Urbana Zara"
+    },
+    {
+      id: 7,
+      nombre: 'Smart TV 55" 4K UHD Smart ThinQ',
+      categoria: "Tecnología",
+      marca: "DELL",
+      precio: 1899900,
+      precioAntiguo: 2499900,
+      descuento: 24,
+      stock: 18,
+      minimo: 8,
+      imagen: "https://images.unsplash.com/photo-1593784991095-a205069470b6?w=500&auto=format&fit=crop",
+      descripcion: 'Televisor inteligente de 55 pulgadas Ultra HD 4K con asistente de voz y HDR10+.',
+      referencia: "Electrónica Dell Vision"
+    },
+    {
+      id: 8,
+      nombre: "Licuadora Oster 600W Potencia Total",
+      categoria: "Hogar",
+      marca: "OSTER",
+      precio: 219900,
+      precioAntiguo: 279900,
+      descuento: 21,
+      stock: 5,
+      minimo: 20,
+      imagen: "https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=500&auto=format&fit=crop",
+      descripcion: "Licuadora con jarra de vidrio picahielo, motor reversible y 6 velocidades.",
+      referencia: "Electrodomésticos Oster"
+    }
   ];
+
+  function cargarProductosLS() {
+    try {
+      const guardados = localStorage.getItem("senabella_productos");
+      if (guardados) {
+        const parsed = JSON.parse(guardados);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {
+      console.error("Error al leer senabella_productos de localStorage", e);
+    }
+    try {
+      localStorage.setItem("senabella_productos", JSON.stringify(PRODUCTOS_SEMILLA));
+    } catch (e) {}
+    return [...PRODUCTOS_SEMILLA];
+  }
+
+  const PRODUCTOS = cargarProductosLS();
+  let contadorProducto = PRODUCTOS.reduce((max, p) => Math.max(max, Number(p.id) || 0), 0) + 1;
+
+  function guardarProductosLS() {
+    try {
+      localStorage.setItem("senabella_productos", JSON.stringify(PRODUCTOS));
+    } catch (e) {
+      console.error("Error al guardar senabella_productos en localStorage", e);
+    }
+  }
 
   let contadorCliente = 1;
   const CLIENTES = [
@@ -411,7 +541,10 @@
 
     const texto = filtro.trim().toLowerCase();
     const lista = PRODUCTOS.filter((p) =>
-      !texto || p.nombre.toLowerCase().includes(texto) || p.categoria.toLowerCase().includes(texto)
+      !texto ||
+      p.nombre.toLowerCase().includes(texto) ||
+      (p.categoria && p.categoria.toLowerCase().includes(texto)) ||
+      (p.marca && p.marca.toLowerCase().includes(texto))
     );
 
     if ($("#adminConteoProductos")) $("#adminConteoProductos").textContent = PRODUCTOS.length;
@@ -430,12 +563,21 @@
 
     tbody.innerHTML = lista.map((p) => {
       const bajo = p.stock <= p.minimo;
+      const imgUrl = p.imagen || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop";
       return `
         <tr>
-          <td><strong>${p.nombre}</strong></td>
-          <td>${p.categoria}</td>
-          <td>${formatoCOP(p.precio)}</td>
-          <td>${p.stock} u.</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:12px;">
+              <img src="${imgUrl}" alt="${p.nombre}" style="width:42px;height:42px;object-fit:cover;border-radius:8px;border:1px solid #e5e7eb;background:#f9fafb;flex-shrink:0;">
+              <div>
+                <strong style="color:var(--text-main);display:block;line-height:1.2;">${p.nombre}</strong>
+                <small style="color:var(--text-muted);font-size:11px;">Marca: ${p.marca || "SENABELLA"}</small>
+              </div>
+            </div>
+          </td>
+          <td><span class="admin-badge admin-badge-info" style="font-size:11px;font-weight:600;">${p.categoria || 'General'}</span></td>
+          <td><strong>${formatoCOP(p.precio)}</strong>${p.precioAntiguo ? `<br><small style="text-decoration:line-through;color:#9ca3af;">${formatoCOP(p.precioAntiguo)}</small>` : ''}</td>
+          <td><strong>${p.stock}</strong> u.</td>
           <td>
             <span class="admin-badge ${bajo ? "admin-badge-warning" : "admin-badge-success"}">
               ${bajo ? "Stock bajo" : "Disponible"}
@@ -582,25 +724,29 @@
     const contenedor = $("#adminGridCategorias");
     if (!contenedor) return;
 
-    if (!CATEGORIAS.length) {
-      contenedor.innerHTML = `
-        <div class="admin-estado-vacio">
-          <i class="fa-solid fa-tags"></i>
-          <p>Todavía no has creado categorías.</p>
-        </div>`;
-      return;
-    }
+    const conteos = {};
+    PRODUCTOS.forEach((p) => {
+      const cat = p.categoria || "Otros";
+      conteos[cat] = (conteos[cat] || 0) + 1;
+    });
 
-    contenedor.innerHTML = CATEGORIAS.map((cat) => `
+    const categoriasBase = [
+      { id: 1, nombre: "Ropa", icono: "fa-shirt" },
+      { id: 2, nombre: "Calzado", icono: "fa-shoe-prints" },
+      { id: 3, nombre: "Tecnología", icono: "fa-laptop" },
+      { id: 4, nombre: "Hogar", icono: "fa-couch" },
+      { id: 5, nombre: "Accesorios", icono: "fa-bag-shopping" },
+      { id: 6, nombre: "Belleza", icono: "fa-wand-magic-sparkles" },
+      { id: 7, nombre: "Relojes", icono: "fa-clock" }
+    ];
+
+    contenedor.innerHTML = categoriasBase.map((cat) => `
       <div class="admin-categoria-tarjeta">
         <span class="admin-categoria-icono"><i class="fa-solid ${cat.icono}"></i></span>
         <div class="admin-categoria-info">
           <strong>${cat.nombre}</strong>
-          <span>${cat.productos} productos</span>
+          <span>${conteos[cat.nombre] || 0} productos activos</span>
         </div>
-        <button class="admin-tabla-boton peligro" title="Eliminar categoría" data-accion="eliminar-categoria" data-id="${cat.id}">
-          <i class="fa-regular fa-trash-can"></i>
-        </button>
       </div>
     `).join("");
   }
@@ -916,34 +1062,102 @@
      ACCIONES: Productos
      ===================================================================== */
   function formularioProducto(producto) {
+    const categoriasDisponibles = ["Tecnología", "Ropa", "Calzado", "Hogar", "Accesorios", "Belleza", "Relojes"];
+    const catActual = producto ? producto.categoria : "Tecnología";
+
     return `
       <div class="admin-form-grupo">
-        <label for="campoNombreProducto">Nombre del producto</label>
-        <input type="text" id="campoNombreProducto" name="nombre" value="${producto ? producto.nombre : ""}" placeholder="Ej. Zapatillas Runner Pro" required>
+        <label for="campoNombreProducto">Nombre del producto *</label>
+        <input type="text" id="campoNombreProducto" name="nombre" value="${producto ? producto.nombre : ""}" placeholder="Ej. Laptop Gamer ASUS ROG" required>
       </div>
       <div class="admin-form-fila">
         <div class="admin-form-grupo">
-          <label for="campoCategoriaProducto">Categoría</label>
+          <label for="campoCategoriaProducto">Categoría *</label>
           <select id="campoCategoriaProducto" name="categoria">
-            ${CATEGORIAS.map((c) => `<option value="${c.nombre}" ${producto && producto.categoria === c.nombre ? "selected" : ""}>${c.nombre}</option>`).join("")}
+            ${categoriasDisponibles.map((c) => `<option value="${c}" ${catActual === c ? "selected" : ""}>${c}</option>`).join("")}
           </select>
         </div>
         <div class="admin-form-grupo">
-          <label for="campoPrecioProducto">Precio</label>
-          <input type="number" id="campoPrecioProducto" name="precio" min="0" step="100" value="${producto ? producto.precio : ""}" required>
+          <label for="campoMarcaProducto">Marca *</label>
+          <input type="text" id="campoMarcaProducto" name="marca" value="${producto ? (producto.marca || "") : ""}" placeholder="Ej. LENOVO, HP, NIKE, SENABELLA" required>
         </div>
       </div>
       <div class="admin-form-fila">
         <div class="admin-form-grupo">
-          <label for="campoStockProducto">Stock actual</label>
-          <input type="number" id="campoStockProducto" name="stock" min="0" value="${producto ? producto.stock : ""}" required>
+          <label for="campoPrecioProducto">Precio Actual ($) *</label>
+          <input type="number" id="campoPrecioProducto" name="precio" min="0" step="100" value="${producto ? producto.precio : ""}" placeholder="Ej. 389900" required>
         </div>
         <div class="admin-form-grupo">
-          <label for="campoMinimoProducto">Stock mínimo</label>
-          <input type="number" id="campoMinimoProducto" name="minimo" min="0" value="${producto ? producto.minimo : 10}" required>
+          <label for="campoPrecioAntiguoProducto">Precio Anterior / Antes ($)</label>
+          <input type="number" id="campoPrecioAntiguoProducto" name="precioAntiguo" min="0" step="100" value="${producto ? (producto.precioAntiguo || "") : ""}" placeholder="Ej. 450000 (Opcional)">
         </div>
       </div>
+      <div class="admin-form-fila">
+        <div class="admin-form-grupo">
+          <label for="campoStockProducto">Stock actual *</label>
+          <input type="number" id="campoStockProducto" name="stock" min="0" value="${producto ? producto.stock : 10}" required>
+        </div>
+        <div class="admin-form-grupo">
+          <label for="campoMinimoProducto">Stock mínimo *</label>
+          <input type="number" id="campoMinimoProducto" name="minimo" min="0" value="${producto ? producto.minimo : 5}" required>
+        </div>
+      </div>
+      <div class="admin-form-grupo">
+        <label for="campoImagenUrlProducto">URL de la Imagen del Producto</label>
+        <input type="url" id="campoImagenUrlProducto" name="imagenUrl" value="${producto && producto.imagen && !producto.imagen.startsWith('data:') ? producto.imagen : ""}" placeholder="https://ejemplo.com/imagen.jpg">
+      </div>
+      <div class="admin-form-grupo">
+        <label for="campoImagenArchivoProducto">O Subir Imagen desde el equipo</label>
+        <input type="file" id="campoImagenArchivoProducto" accept="image/*">
+        <div id="previsualizacionImagen" style="margin-top: 10px; text-align: center;">
+          ${producto && producto.imagen ? `<img src="${producto.imagen}" style="max-height: 110px; border-radius: 8px; border: 1px solid #e5e7eb; padding: 2px;">` : ""}
+        </div>
+      </div>
+      <div class="admin-form-grupo">
+        <label for="campoDescripcionProducto">Descripción y Detalles del Producto</label>
+        <textarea id="campoDescripcionProducto" name="descripcion" rows="3" placeholder="Detalles, características principales o especificaciones del producto...">${producto ? (producto.descripcion || "") : ""}</textarea>
+      </div>
     `;
+  }
+
+  function obtenerImagenYProcesar(form, imagenUrlDefecto, callback) {
+    const fileInput = form ? form.querySelector('#campoImagenArchivoProducto') : null;
+    const urlInput = form ? form.querySelector('#campoImagenUrlProducto') : null;
+    const urlTexto = urlInput ? urlInput.value.trim() : "";
+
+    if (fileInput && fileInput.files && fileInput.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        callback(e.target.result);
+      };
+      reader.readAsDataURL(fileInput.files[0]);
+    } else if (urlTexto) {
+      callback(urlTexto);
+    } else if (imagenUrlDefecto) {
+      callback(imagenUrlDefecto);
+    } else {
+      callback("https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop");
+    }
+  }
+
+  function enlazarPrevisualizacionImagen() {
+    setTimeout(() => {
+      const fileInput = $("#campoImagenArchivoProducto");
+      if (fileInput) {
+        fileInput.addEventListener("change", (e) => {
+          if (e.target.files && e.target.files[0]) {
+            const r = new FileReader();
+            r.onload = (evt) => {
+              const prev = $("#previsualizacionImagen");
+              if (prev) {
+                prev.innerHTML = `<img src="${evt.target.result}" style="max-height:110px;border-radius:8px;border:1px solid #e5e7eb;padding:2px;">`;
+              }
+            };
+            r.readAsDataURL(e.target.files[0]);
+          }
+        });
+      }
+    }, 50);
   }
 
   function nuevoProducto() {
@@ -951,67 +1165,112 @@
       titulo: "Nuevo producto",
       textoConfirmar: "Crear producto",
       cuerpoHTML: formularioProducto(),
-      alConfirmar: (datos) => {
-        PRODUCTOS.unshift({
-          id: contadorProducto++,
-          nombre: datos.get("nombre").trim(),
-          categoria: datos.get("categoria"),
-          precio: Number(datos.get("precio")) || 0,
-          stock: Number(datos.get("stock")) || 0,
-          minimo: Number(datos.get("minimo")) || 0,
+      alConfirmar: (datos, form) => {
+        obtenerImagenYProcesar(form, "", (imagenFinal) => {
+          const precio = Number(datos.get("precio")) || 0;
+          const precioAntiguo = Number(datos.get("precioAntiguo")) || 0;
+          let descuento = 0;
+          if (precioAntiguo > precio && precio > 0) {
+            descuento = Math.round(((precioAntiguo - precio) / precioAntiguo) * 100);
+          }
+
+          const marcaNombre = (datos.get("marca") || "SENABELLA").trim().toUpperCase();
+
+          const nuevoProd = {
+            id: contadorProducto++,
+            nombre: datos.get("nombre").trim(),
+            categoria: datos.get("categoria"),
+            marca: marcaNombre,
+            precio: precio,
+            precioAntiguo: precioAntiguo || null,
+            descuento: descuento,
+            stock: Number(datos.get("stock")) || 0,
+            minimo: Number(datos.get("minimo")) || 0,
+            imagen: imagenFinal,
+            descripcion: (datos.get("descripcion") || "").trim(),
+            referencia: `Por ${marcaNombre}`
+          };
+
+          PRODUCTOS.unshift(nuevoProd);
+          guardarProductosLS();
+          renderProductos();
+          renderStockBajo();
+          renderKpis();
+          renderCategorias();
+          cerrarModal();
+          mostrarToast("Producto creado correctamente.");
         });
-        renderProductos();
-        renderStockBajo();
-        renderKpis();
-        cerrarModal();
-        mostrarToast("Producto creado correctamente.");
       },
     });
+    enlazarPrevisualizacionImagen();
   }
 
   function editarProducto(id) {
-    const producto = PRODUCTOS.find((p) => p.id === id);
+    const producto = PRODUCTOS.find((p) => String(p.id) === String(id));
     if (!producto) return;
 
     abrirModal({
       titulo: "Editar producto",
       textoConfirmar: "Guardar cambios",
       cuerpoHTML: formularioProducto(producto),
-      alConfirmar: (datos) => {
-        producto.nombre = datos.get("nombre").trim();
-        producto.categoria = datos.get("categoria");
-        producto.precio = Number(datos.get("precio")) || 0;
-        producto.stock = Number(datos.get("stock")) || 0;
-        producto.minimo = Number(datos.get("minimo")) || 0;
-        const buscadorInput = $("#adminBuscadorInput");
-        renderProductos(buscadorInput ? buscadorInput.value : "");
-        renderStockBajo();
-        cerrarModal();
-        mostrarToast("Producto actualizado.");
+      alConfirmar: (datos, form) => {
+        obtenerImagenYProcesar(form, producto.imagen, (imagenFinal) => {
+          const precio = Number(datos.get("precio")) || 0;
+          const precioAntiguo = Number(datos.get("precioAntiguo")) || 0;
+          let descuento = 0;
+          if (precioAntiguo > precio && precio > 0) {
+            descuento = Math.round(((precioAntiguo - precio) / precioAntiguo) * 100);
+          }
+
+          const marcaNombre = (datos.get("marca") || "SENABELLA").trim().toUpperCase();
+
+          producto.nombre = datos.get("nombre").trim();
+          producto.categoria = datos.get("categoria");
+          producto.marca = marcaNombre;
+          producto.precio = precio;
+          producto.precioAntiguo = precioAntiguo || null;
+          producto.descuento = descuento;
+          producto.stock = Number(datos.get("stock")) || 0;
+          producto.minimo = Number(datos.get("minimo")) || 0;
+          producto.imagen = imagenFinal;
+          producto.descripcion = (datos.get("descripcion") || "").trim();
+          producto.referencia = `Por ${marcaNombre}`;
+
+          guardarProductosLS();
+          const buscadorInput = $("#adminBuscadorInput");
+          renderProductos(buscadorInput ? buscadorInput.value : "");
+          renderStockBajo();
+          renderCategorias();
+          cerrarModal();
+          mostrarToast("Producto actualizado.");
+        });
       },
     });
+    enlazarPrevisualizacionImagen();
   }
 
   function eliminarProducto(id) {
-    const producto = PRODUCTOS.find((p) => p.id === id);
+    const producto = PRODUCTOS.find((p) => String(p.id) === String(id));
     if (!producto) return;
 
     abrirModalConfirmacion({
       titulo: "Eliminar producto",
       mensaje: `¿Seguro que quieres eliminar "${producto.nombre}"? Esta acción no se puede deshacer.`,
       alConfirmar: () => {
-        const indice = PRODUCTOS.findIndex((p) => p.id === id);
+        const indice = PRODUCTOS.findIndex((p) => String(p.id) === String(id));
         if (indice > -1) PRODUCTOS.splice(indice, 1);
+        guardarProductosLS();
         renderProductos();
         renderStockBajo();
         renderKpis();
+        renderCategorias();
         mostrarToast("Producto eliminado.", "info");
       },
     });
   }
 
   function reabastecerProducto(id) {
-    const producto = PRODUCTOS.find((p) => p.id === id);
+    const producto = PRODUCTOS.find((p) => String(p.id) === String(id));
     if (!producto) return;
 
     abrirModal({
@@ -1026,6 +1285,7 @@
       alConfirmar: (datos) => {
         const cantidad = Number(datos.get("cantidad")) || 0;
         producto.stock += cantidad;
+        guardarProductosLS();
         renderStockBajo();
         const buscadorInput = $("#adminBuscadorInput");
         renderProductos(buscadorInput ? buscadorInput.value : "");

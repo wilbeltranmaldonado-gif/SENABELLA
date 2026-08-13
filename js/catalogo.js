@@ -1,10 +1,91 @@
 document.addEventListener("DOMContentLoaded", function () {
 
   // 1. Elementos y datos
-  let productos = Array.from(document.querySelectorAll(".tar-producto"));
   let gridProductos = document.querySelector(".tarjeta-producto");
   let numResultados = document.querySelector(".resultados");
 
+  // Sincronizar productos creados/actualizados en el Panel de Administración (localStorage)
+  function sincronizarProductosAdmin() {
+    if (!gridProductos) return;
+
+    let prodsLS = [];
+    try {
+      prodsLS = JSON.parse(localStorage.getItem("senabella_productos")) || [];
+    } catch (e) {
+      prodsLS = [];
+    }
+    if (!prodsLS.length) return;
+
+    let esPaginaRopa = window.location.pathname.includes("ropa");
+
+    // Sincronizar botones de marcas dinámicas
+    let contenedorBotonesMarcas = document.querySelector(".filtro-marca .botones");
+    if (contenedorBotonesMarcas) {
+      const marcasExistentes = Array.from(contenedorBotonesMarcas.querySelectorAll("button")).map(b => b.textContent.trim().toUpperCase());
+      prodsLS.forEach(p => {
+        if (p.marca) {
+          const mUpper = p.marca.trim().toUpperCase();
+          if (mUpper && !marcasExistentes.includes(mUpper)) {
+            marcasExistentes.push(mUpper);
+            const btnM = document.createElement("button");
+            btnM.textContent = mUpper;
+            contenedorBotonesMarcas.appendChild(btnM);
+          }
+        }
+      });
+    }
+
+    prodsLS.forEach(prod => {
+      const cat = (prod.categoria || "").toLowerCase();
+      const esRopaOFashion = cat.includes("ropa") || cat.includes("calzado") || cat.includes("accesorios") || cat.includes("belleza") || cat.includes("relojes");
+
+      if (esPaginaRopa && !esRopaOFashion) return;
+      if (!esPaginaRopa && esRopaOFashion && !cat.includes("tecnología")) return;
+
+      const tituloComparar = prod.nombre.toLowerCase();
+      const yaExiste = Array.from(gridProductos.querySelectorAll(".tar-producto")).some(el => {
+        const desc = el.querySelector(".descripcion") ? el.querySelector(".descripcion").textContent.trim().toLowerCase() : "";
+        return desc.includes(tituloComparar);
+      });
+
+      if (!yaExiste) {
+        const tarjetaEl = document.createElement("div");
+        tarjetaEl.className = "tar-producto";
+        const precioFormateado = "$ " + Math.round(prod.precio).toLocaleString("es-CO");
+        const precioAntiguoFormateado = prod.precioAntiguo ? "$ " + Math.round(prod.precioAntiguo).toLocaleString("es-CO") : "";
+        const descText = prod.descuento ? `-${prod.descuento}%` : "";
+
+        tarjetaEl.innerHTML = `
+          <a href="detalle_producto.html">
+            <img src="${prod.imagen || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop'}" alt="${prod.nombre}" />
+          </a>
+          <div class="etiqueta"><span>${prod.descuento ? 'OFERTA' : 'NUEVO'}</span></div>
+          <div class="nom-producto">${(prod.marca || "SENABELLA").toUpperCase()}</div>
+          <div class="descripcion">${prod.nombre}${prod.descripcion ? ' - ' + prod.descripcion : ''}</div>
+          <div class="referencia">${prod.referencia || 'Por SENABELLA'}</div>
+          <i class="fa-regular fa-heart favorite-btn"></i>
+          <div>
+            <div class="metodo">
+              <span class="unica">ÚNICA</span>
+              <span class="cmr">CMR</span>
+              <span class="debito">Débito</span>
+            </div>
+            <div class="precio">
+              ${precioFormateado}
+              ${descText ? `<span class="descuento">${descText}</span>` : ''}
+            </div>
+            ${precioAntiguoFormateado ? `<div class="precio-secundario1">${precioAntiguoFormateado}</div>` : ''}
+          </div>
+        `;
+
+        gridProductos.prepend(tarjetaEl);
+      }
+    });
+  }
+
+  sincronizarProductosAdmin();
+
+  let productos = Array.from(document.querySelectorAll(".tar-producto"));
   let filtroMarcaButtons = document.querySelectorAll(".filtro-marca .botones button");
   let categoriasCirculares = document.querySelectorAll(".categorias-circulares .categoria");
   let categoriasLista = document.querySelectorAll(".categorias-lista .categoria-lis");
