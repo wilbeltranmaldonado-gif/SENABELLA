@@ -127,22 +127,6 @@
         const formPerfil = document.getElementById("form-mi-perfil");
         if (!formPerfil) return;
 
-        /* --- Restricciones en tiempo real --- */
-        const inputCelularP = document.getElementById("perfil-celular");
-        if (inputCelularP) {
-          // Solo permite escribir dígitos y espacios; bloquea letras
-          inputCelularP.addEventListener("keydown", function (e) {
-            const permitidas = ["Backspace","Delete","ArrowLeft","ArrowRight","Tab","Home","End"];
-            if (!permitidas.includes(e.key) && !/^[0-9\s]$/.test(e.key)) e.preventDefault();
-          });
-          // Recorta a máximo 12 dígitos si se pega texto
-          inputCelularP.addEventListener("input", function () {
-            this.value = this.value.replace(/[^0-9\s]/g, "");
-            const soloDigitos = this.value.replace(/\s/g, "");
-            if (soloDigitos.length > 12) this.value = this.value.slice(0, this.value.length - (soloDigitos.length - 12));
-          });
-        }
-
         formPerfil.addEventListener("submit", function (e) {
           e.preventDefault();
           const nombre   = document.getElementById("perfil-nombre").value.trim();
@@ -151,24 +135,22 @@
           const password = document.getElementById("perfil-password").value;
           const msg      = document.getElementById("perfil-mensaje");
 
-          /* Validaciones */
-          if (!nombre) { mostrarMensaje(msg, "⚠ Por favor ingresa tu nombre completo.", "error"); return; }
-          if (!email || !/^[^@]+@[^@]+\.[^@]+$/.test(email)) { mostrarMensaje(msg, "⚠ Ingresa un correo electrónico válido.", "error"); return; }
-          if (celular) {
-            const dig = celular.replace(/\s/g, "");
-            if (dig.length > 12) { mostrarMensaje(msg, "⚠ El celular no puede tener más de 12 dígitos.", "error"); return; }
-          }
-          if (password && password.length < 6) { mostrarMensaje(msg, "⚠ La contraseña debe tener mínimo 6 caracteres.", "error"); return; }
+          /* Validaciones básicas */
+          if (!nombre) { mostrarMensaje(msg, "Por favor ingresa tu nombre completo.", "error"); return; }
+          if (!email || !/^[^@]+@[^@]+\.[^@]+$/.test(email)) { mostrarMensaje(msg, "Ingresa un correo electrónico válido.", "error"); return; }
+          if (password && password.length < 6) { mostrarMensaje(msg, "La contraseña debe tener mínimo 6 caracteres.", "error"); return; }
 
-          /* Guardar */
+          /* Actualizar y guardar */
           usuario.nombre  = nombre;
           usuario.email   = email;
           usuario.celular = celular;
           if (password) usuario.password = password;
           localStorage.setItem("senabella_usuario", JSON.stringify(usuario));
 
-          mostrarMensaje(msg, "✓ Datos guardados correctamente.", "exito");
-          if (window.SenabellaToast) window.SenabellaToast("Perfil actualizado", "fa-circle-check", "exito");
+          mostrarMensaje(msg, "\u2713 Datos guardados correctamente.", "exito");
+          if (window.SenabellaToast) {
+            window.SenabellaToast("Perfil actualizado", "fa-circle-check", "exito");
+          }
           document.getElementById("perfil-password").value = "";
         });
       }, 50);
@@ -264,33 +246,6 @@
       setTimeout(() => {
         const formEnvio = document.getElementById("form-datos-envio");
         if (formEnvio) {
-
-          /* --- Restricciones en tiempo real: Celular --- */
-          const inputCelularE = document.getElementById("envio-celular");
-          if (inputCelularE) {
-            inputCelularE.addEventListener("keydown", function (e) {
-              const permitidas = ["Backspace","Delete","ArrowLeft","ArrowRight","Tab","Home","End"];
-              if (!permitidas.includes(e.key) && !/^[0-9\s]$/.test(e.key)) e.preventDefault();
-            });
-            inputCelularE.addEventListener("input", function () {
-              this.value = this.value.replace(/[^0-9\s]/g, "");
-              const soloDigitos = this.value.replace(/\s/g, "");
-              if (soloDigitos.length > 12) this.value = this.value.slice(0, this.value.length - (soloDigitos.length - 12));
-            });
-          }
-
-          /* --- Restricciones en tiempo real: Ciudad (sin números) --- */
-          const inputCiudadE = document.getElementById("envio-ciudad");
-          if (inputCiudadE) {
-            inputCiudadE.addEventListener("keydown", function (e) {
-              const permitidas = ["Backspace","Delete","ArrowLeft","ArrowRight","Tab","Home","End"," ","-"];
-              if (!permitidas.includes(e.key) && /^[0-9]$/.test(e.key)) e.preventDefault();
-            });
-            inputCiudadE.addEventListener("input", function () {
-              this.value = this.value.replace(/[0-9]/g, "");
-            });
-          }
-
           formEnvio.addEventListener("submit", function(e) {
             e.preventDefault();
             const celular   = document.getElementById("envio-celular").value.trim();
@@ -298,22 +253,20 @@
             const ciudad    = document.getElementById("envio-ciudad").value.trim();
             const msg       = document.getElementById("envio-mensaje");
 
-            /* Validaciones */
-            const celularLimpio = celular.replace(/\s/g, "");
-            if (!celular) { mostrarMensaje(msg, "⚠ Por favor ingresa tu celular de contacto.", "error"); return; }
-            if (celularLimpio.length > 12) { mostrarMensaje(msg, "⚠ El celular no puede tener más de 12 dígitos.", "error"); return; }
-            if (!direccion) { mostrarMensaje(msg, "⚠ Por favor ingresa la dirección de envío.", "error"); return; }
-            if (direccion.length < 8) { mostrarMensaje(msg, "⚠ La dirección debe tener al menos 8 caracteres. Ej: Calle 10 # 5-20", "error"); return; }
-            if (!ciudad) { mostrarMensaje(msg, "⚠ Por favor ingresa la ciudad.", "error"); return; }
-            if (ciudad.length < 3) { mostrarMensaje(msg, "⚠ Ingresa un nombre de ciudad válido.", "error"); return; }
+            /* Validaciones básicas */
+            if (!celular)   { mostrarMensaje(msg, "Por favor ingresa tu celular de contacto.", "error"); return; }
+            if (!direccion) { mostrarMensaje(msg, "Por favor ingresa una dirección de envío.", "error"); return; }
+            if (!ciudad)    { mostrarMensaje(msg, "Por favor ingresa la ciudad.", "error"); return; }
 
-            usuario.celular   = celularLimpio;
+            usuario.celular   = celular.replace(/[^0-9\s]/g, "");
             usuario.direccion = direccion;
             usuario.ciudad    = ciudad;
             localStorage.setItem("senabella_usuario", JSON.stringify(usuario));
 
             mostrarMensaje(msg, "✓ Datos de envío guardados correctamente.", "exito");
-            if (window.SenabellaToast) window.SenabellaToast("Datos de envío actualizados", "fa-circle-check", "exito");
+            if (window.SenabellaToast) {
+              window.SenabellaToast("Datos de envío actualizados", "fa-circle-check", "exito");
+            }
           });
         }
       }, 50);
