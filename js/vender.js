@@ -187,4 +187,17 @@ document.addEventListener("DOMContentLoaded", () => {
       }, 1400);
     });
   }
+  // 9. Botón Volver Arriba
+  let btnUp = document.createElement("button");
+  btnUp.id = "btn-volver-arriba";
+  btnUp.innerHTML = '<i class="fa-solid fa-arrow-up"></i>';
+  document.body.appendChild(btnUp);
+
+  window.addEventListener("scroll", function () {
+    btnUp.classList.toggle("btn-arriba-visible", window.scrollY > 400);
+  });
+  btnUp.addEventListener("click", function () {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
 });
