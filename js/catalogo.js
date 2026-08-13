@@ -737,6 +737,48 @@ document.addEventListener("DOMContentLoaded", function () {
     aplicarFiltros();
   });
 
+  // Global delegated toasts for favorites and carrito (covers both catalog pages)
+  document.body.addEventListener('click', function (e) {
+    // Favorites - handle clicks on heart icons or favorite wrappers
+    const favWrapper = e.target.closest('.btn-favorito, .favorite-btn, .btn-favorito i, .favorite-btn i');
+    if (favWrapper) {
+      // Delay to let other handlers toggle classes
+      setTimeout(function () {
+        // find the actual icon element (i.favorite-btn or i.fa-heart)
+        let icon = null;
+        if (favWrapper.tagName && (favWrapper.tagName.toLowerCase() === 'i')) icon = favWrapper;
+        else icon = favWrapper.querySelector('i') || favWrapper.querySelector('.favorite-btn');
+
+        if (icon) {
+          const isSolid = icon.classList.contains('fa-solid');
+          if (window.SenabellaToast) {
+            if (isSolid) window.SenabellaToast('Agregado a tus favoritos', 'fa-heart', 'exito');
+            else window.SenabellaToast('Eliminado de favoritos', 'fa-heart-crack', 'info');
+          }
+        }
+      }, 20);
+      return;
+    }
+
+    // Carrito - clicks on add-to-cart buttons
+    const cartBtn = e.target.closest('.btn-agregar-carrito');
+    if (cartBtn) {
+      // If the button already shows agregado state, still show toast
+      setTimeout(function () {
+        const text = cartBtn.textContent.trim();
+        const nombre = cartBtn.closest('.tar-producto')?.querySelector('.descripcion')?.textContent.trim() || 'Producto';
+        if (window.SenabellaToast) {
+          if (text.toLowerCase().includes('agregado')) {
+            window.SenabellaToast(nombre + ' agregado al carrito', 'fa-cart-shopping', 'exito');
+          } else {
+            window.SenabellaToast(nombre + ' agregado al carrito', 'fa-cart-shopping', 'exito');
+          }
+        }
+      }, 10);
+      return;
+    }
+  }, false);
+
 // 9. Botón Volver Arriba
   let btnUp = document.createElement("button");
   btnUp.id = "btn-volver-arriba";
