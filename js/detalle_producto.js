@@ -29,6 +29,11 @@ function actualizarDetalleProducto() {
     if (precioActualEl && producto.precioActual) precioActualEl.textContent = producto.precioActual;
     if (precioAntiguoEl && producto.precioAntiguo) precioAntiguoEl.textContent = producto.precioAntiguo;
 
+    let btnVolverCatalogo = document.querySelector(".btn-terciario-catalogo");
+    if (btnVolverCatalogo && producto.origen) {
+        btnVolverCatalogo.href = producto.origen;
+    }
+
     // Actualizar características dinámicas según la información del producto
     let listaEspec = document.querySelector(".lista-especificaciones");
     if (listaEspec && producto.descripcion) {

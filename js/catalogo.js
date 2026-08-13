@@ -82,14 +82,18 @@ document.addEventListener("DOMContentLoaded", function () {
           cumpleCategoria = descTexto.includes("desktop") || descTexto.includes("escritorio") || descTexto.includes("all in one") || descTexto.includes("todo en uno");
         } else if (catFiltro === "accesorio" || catFiltro === "accesorios") {
           cumpleCategoria = descTexto.includes("mouse") || descTexto.includes("teclado") || descTexto.includes("soporte") || descTexto.includes("hub") || descTexto.includes("adaptador") || descTexto.includes("estuche") || descTexto.includes("audifonos") || descTexto.includes("audífonos") || descTexto.includes("kit");
-        } else if (catFiltro === "mujer") {
+        } else if (catFiltro === "mujer" || catFiltro === "moda mujer") {
           cumpleCategoria = descTexto.includes("mujer") || descTexto.includes("femenina") || descTexto.includes("vestido") || descTexto.includes("rosa");
-        } else if (catFiltro === "hombre") {
+        } else if (catFiltro === "hombre" || catFiltro === "moda hombre") {
           cumpleCategoria = descTexto.includes("hombre") || descTexto.includes("masculina") || descTexto.includes("camisa") || descTexto.includes("chaqueta");
         } else if (catFiltro === "calzado") {
-          cumpleCategoria = descTexto.includes("tenis") || descTexto.includes("calzado") || descTexto.includes("zapatos");
+          cumpleCategoria = descTexto.includes("tenis") || descTexto.includes("calzado") || descTexto.includes("zapatos") || descTexto.includes("botas");
         } else if (catFiltro === "tecno") {
           cumpleCategoria = !descTexto.includes("vestido") && !descTexto.includes("chaqueta") && !descTexto.includes("tenis");
+        } else if (catFiltro === "relojes" || catFiltro === "reloj") {
+          cumpleCategoria = descTexto.includes("reloj") || descTexto.includes("relojes") || descTexto.includes("smartwatch");
+        } else if (catFiltro === "belleza") {
+          cumpleCategoria = descTexto.includes("belleza") || descTexto.includes("perfume") || descTexto.includes("maquillaje") || descTexto.includes("suero") || descTexto.includes("labial") || descTexto.includes("crema");
         } else if (catFiltro === "ofertas") {
           cumpleCategoria = descuentoValor > 0;
         } else {
@@ -528,7 +532,8 @@ document.addEventListener("DOMContentLoaded", function () {
         imagen: imagen,
         precioActual: precioActual,
         precioAntiguo: precioAntiguo,
-        referencia: referencia
+        referencia: referencia,
+        origen: window.location.pathname.split('/').pop() || 'catalogo.html'
       };
 
       localStorage.setItem("productoSeleccionado", JSON.stringify(datosProducto));
