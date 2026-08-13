@@ -7,8 +7,8 @@
 (function (global) {
   "use strict";
 
-  const CLAVE_BD      = "senabella_usuarios";
-  const CORREO_ADMIN  = "admin@senabella.com";
+  const CLAVE_BD = "senabella_usuarios";
+  const CORREO_ADMIN = "admin@senabella.com";
 
   /* ------------------------------------------------------------------
      Helpers internos
