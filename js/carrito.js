@@ -369,6 +369,29 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
+      if (localStorage.getItem('senabella_sesion') !== 'activa') {
+        window.SenabellaToast("Debes iniciar sesión para realizar una compra", "fa-user-lock", "advertencia");
+        setTimeout(function () {
+          window.location.href = "login.html";
+        }, 2000);
+        return;
+      }
+
+      // Validar datos de envío completos
+      let usuario = {};
+      try {
+        usuario = JSON.parse(localStorage.getItem('senabella_usuario')) || {};
+      } catch(e) {}
+
+      if (!usuario.direccion || !usuario.ciudad || !usuario.celular) {
+        window.SenabellaToast("Completa tus Datos de Envío y Contacto en tu perfil antes de comprar", "fa-address-card", "advertencia");
+        setTimeout(function () {
+          // Redirigir al perfil (podría manejarse que se abra en esa pestaña usando LocalStorage o params)
+          window.location.href = "usuario.html";
+        }, 2000);
+        return;
+      }
+
       botonPagar.disabled = true;
       botonPagar.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Redirigiendo al checkout...';
 
