@@ -71,17 +71,35 @@
         } else {
           let htmlCompras = '';
           ordenesUsuario.forEach(orden => {
-            htmlCompras += `
-              <div class="grupo-info" style="align-items: flex-start; flex-direction: column; gap: 8px;">
-                <div style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
-                  <span class="etiqueta-info">Orden: ${orden.numero}</span>
-                  <span style="font-weight: bold; color: var(--color-exito, #27ae60);">${orden.total}</span>
+              let htmlProductos = '';
+              if (orden.productos && orden.productos.length > 0) {
+                htmlProductos = '<div style="margin-top: 10px; width: 100%;">';
+                htmlProductos += '<strong style="font-size: 0.9em; display: block; margin-bottom: 8px;">Productos:</strong>';
+                orden.productos.forEach(prod => {
+                  htmlProductos += `
+                  <div style="font-size: 0.85em; display: flex; align-items: center; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #eee;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <img src="${prod.imagen || '../assets/default-product.png'}" alt="${prod.nombre}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd;">
+                      <span>${prod.cantidad}x ${prod.nombre}</span>
+                    </div>
+                    <span>$${Math.round(prod.precio).toLocaleString("es-CO")}</span>
+                  </div>`;
+                });
+                htmlProductos += '</div>';
+              }
+
+              htmlCompras += `
+                <div class="grupo-info" style="align-items: flex-start; flex-direction: column; gap: 8px; margin-bottom: 15px; border: 1px solid #eee; border-radius: 8px; padding: 15px;">
+                  <div style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                    <span class="etiqueta-info">Orden: ${orden.numero}</span>
+                    <span style="font-weight: bold; color: var(--color-exito, #27ae60);">${orden.total}</span>
+                  </div>
+                  <div class="valor-info" style="font-size: 0.9em; margin-bottom: 0;">Fecha: ${orden.fecha}</div>
+                  <div class="valor-info" style="font-size: 0.9em; margin-bottom: 0;">Método: ${orden.metodoPago.toUpperCase()}</div>
+                  <div class="valor-info" style="font-size: 0.9em; margin-bottom: 0;">Enviado a: ${orden.direccion}, ${orden.ciudad}</div>
+                  ${htmlProductos}
                 </div>
-                <div class="valor-info" style="font-size: 0.9em; margin-bottom: 0;">Fecha: ${orden.fecha}</div>
-                <div class="valor-info" style="font-size: 0.9em; margin-bottom: 0;">Método: ${orden.metodoPago.toUpperCase()}</div>
-                <div class="valor-info" style="font-size: 0.9em; margin-bottom: 0;">Enviado a: ${orden.direccion}, ${orden.ciudad}</div>
-              </div>
-            `;
+              `;
           });
           contenedorCampos.innerHTML = htmlCompras;
         }
@@ -89,6 +107,8 @@
         contenedorCampos.innerHTML = `<p class="estado-vacio">Aún no has realizado ninguna compra.</p>`;
       }
       return;
+    }
+
     if (seccion.especial === "datos-envio") {
       let usuario = {};
       try {
@@ -246,31 +266,16 @@
     });
   }
 
-  /* --- Carga datos dinámicos guardados al registrarse --- */
-  function cargarDatosUsuarioRegistrado() {
-    try {
-      const usuarioGuardado = JSON.parse(localStorage.getItem('senabella_usuario') || 'null');
-      if (usuarioGuardado) {
-        if (usuarioGuardado.nombre) {
-          SECCIONES["datos-personales"].campos[0].valor = usuarioGuardado.nombre;
-        }
-        if (usuarioGuardado.celular) {
-          SECCIONES["datos-personales"].campos[2].valor = usuarioGuardado.celular;
-        }
-        if (usuarioGuardado.correo) {
-          SECCIONES["datos-personales"].campos[3].valor = usuarioGuardado.correo;
-        }
-      }
-    } catch (e) {
-      console.error('Error al cargar los datos del usuario:', e);
-    }
-  }
-
   function init() {
-    cargarDatosUsuarioRegistrado();
     setupMenuLateral();
     setupEdicionInline();
-    renderSeccion("datos-personales"); // sección visible al cargar la página
+    renderSeccion("datos-envio"); // sección visible al cargar la página
+    
+    // Activar el item en el menú lateral
+    const items = $$(".barra-lateral .elemento-menu");
+    items.forEach((i) => i.classList.remove("activo"));
+    const itemEnvio = Array.from(items).find(i => i.dataset.section === "datos-envio");
+    if (itemEnvio) itemEnvio.classList.add("activo");
   }
 
   if (document.readyState === "loading") {

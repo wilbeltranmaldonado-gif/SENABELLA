@@ -204,7 +204,8 @@ document.addEventListener("DOMContentLoaded", function () {
           total: formatearPrecio(datosOrden.totalPrecio),
           metodoPago: metodoPago,
           direccion: direccion.value,
-          ciudad: ciudad.value
+          ciudad: ciudad.value,
+          productos: datosOrden.itemsComprar
         };
 
         localStorage.setItem("ultima_orden_senabella", JSON.stringify(detalleOrden));
