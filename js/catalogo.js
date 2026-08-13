@@ -118,6 +118,12 @@ document.addEventListener("DOMContentLoaded", function () {
     paginaActual: 1
   };
 
+  const ITEMS_POR_PAGINA = 12; // mostrar 12 productos por página
+  let matchedTarjetas = []; // tarjetas que cumplen filtros actualmente
+
+  // Inicializar la vista con filtros por defecto y paginación activa
+  aplicarFiltros();
+
   // 2. Slider horizontal de marcas (Botón Flecha)
   let contenedorBotones = document.querySelector(".botones");
   let flecha = document.querySelector(".boton-flecha");
@@ -129,9 +135,50 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // 3. Función principal de filtrado y actualización
+
+  function renderPagination(totalPaginas) {
+    const cont = document.querySelector('.num-pagina');
+    if (!cont) return;
+
+    let html = '<i class="fa-solid fa-chevron-left"></i>';
+    for (let i = 1; i <= totalPaginas; i++) {
+      html += '<span class="pag-2" data-pagina="' + i + '">' + i + '</span>';
+    }
+    html += '<i class="fa-solid fa-chevron-right"></i>';
+
+    cont.innerHTML = html;
+
+    // Re-bind handlers
+    paginacionNumeros = document.querySelectorAll('.num-pagina span.pag-2');
+    paginacionFlechaIzq = document.querySelector('.num-pagina .fa-chevron-left');
+    paginacionFlechaDer = document.querySelector('.num-pagina .fa-chevron-right');
+
+    paginacionNumeros.forEach(function (pagBtn) {
+      pagBtn.style.cursor = 'pointer';
+      pagBtn.addEventListener('click', function () {
+        let numPag = parseInt(this.getAttribute('data-pagina'));
+        if (!isNaN(numPag)) cambiarPagina(numPag);
+      });
+    });
+
+    if (paginacionFlechaIzq) {
+      paginacionFlechaIzq.style.cursor = 'pointer';
+      paginacionFlechaIzq.addEventListener('click', function () {
+        if (estadoFiltro.paginaActual > 1) cambiarPagina(estadoFiltro.paginaActual - 1);
+      });
+    }
+
+    if (paginacionFlechaDer) {
+      paginacionFlechaDer.style.cursor = 'pointer';
+      paginacionFlechaDer.addEventListener('click', function () {
+        const total = Math.max(1, Math.ceil(matchedTarjetas.length / ITEMS_POR_PAGINA));
+        if (estadoFiltro.paginaActual < total) cambiarPagina(estadoFiltro.paginaActual + 1);
+      });
+    }
+  }
+
   function aplicarFiltros() {
-    let productosVisibles = 0;
+    matchedTarjetas = [];
 
     productos.forEach(function (tarjeta) {
       let nomMarcaEl = tarjeta.querySelector(".nom-producto");
@@ -228,16 +275,28 @@ document.addEventListener("DOMContentLoaded", function () {
       let cumpleDescuento = estadoFiltro.descuentoMin === null || descuentoValor >= estadoFiltro.descuentoMin;
 
       if (cumpleMarca && cumpleCategoria && cumpleProcesador && cumpleRAM && cumplePantalla && cumpleResolucion && cumplePrecio && cumpleDescuento && cumpleBusqueda) {
-        tarjeta.style.display = "block";
-        productosVisibles++;
+        matchedTarjetas.push(tarjeta);
+        tarjeta.style.display = "none"; // ocultar por defecto; mostrar según pagina
       } else {
         tarjeta.style.display = "none";
       }
     });
 
+    // Actualizar contador de resultados
     if (numResultados) {
-      numResultados.textContent = "Resultados (" + productosVisibles + ")";
+      numResultados.textContent = "Resultados (" + matchedTarjetas.length + ")";
     }
+
+    // Renderizar paginación según cantidad de resultados
+    const contPaginacion = document.querySelector('.num-pagina');
+    const totalPaginas = Math.max(1, Math.ceil(matchedTarjetas.length / ITEMS_POR_PAGINA));
+    renderPagination(totalPaginas);
+
+    // Ajustar paginaActual si excede
+    if (estadoFiltro.paginaActual > totalPaginas) estadoFiltro.paginaActual = totalPaginas;
+
+    // Mostrar la página actual
+    mostrarPagina(estadoFiltro.paginaActual);
 
     if (window.SenabellaToast && (estadoFiltro.marcas.length > 0 || estadoFiltro.categoria || estadoFiltro.busqueda)) {
       let textoToast = "Filtrando por: " + (estadoFiltro.busqueda || estadoFiltro.marcas.join(", ") || estadoFiltro.categoria);
@@ -427,55 +486,51 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // 7. Paginación de Productos (Cambiar de página)
-  paginacionNumeros.forEach(function (pagBtn) {
-    pagBtn.style.cursor = "pointer";
-    pagBtn.addEventListener("click", function () {
-      let numPag = parseInt(this.textContent.trim());
-      if (!isNaN(numPag)) {
-        cambiarPagina(numPag);
-      }
-    });
-  });
+  // 7. Paginación de Productos (implementación con paginación dinámica)
 
-  if (paginacionFlechaIzq) {
-    paginacionFlechaIzq.style.cursor = "pointer";
-    paginacionFlechaIzq.addEventListener("click", function () {
-      if (estadoFiltro.paginaActual > 1) {
-        cambiarPagina(estadoFiltro.paginaActual - 1);
-      }
-    });
-  }
+  function mostrarPagina(numPag) {
+    const total = Math.max(1, Math.ceil(matchedTarjetas.length / ITEMS_POR_PAGINA));
+    if (numPag < 1) numPag = 1;
+    if (numPag > total) numPag = total;
 
-  if (paginacionFlechaDer) {
-    paginacionFlechaDer.style.cursor = "pointer";
-    paginacionFlechaDer.addEventListener("click", function () {
-      if (estadoFiltro.paginaActual < 3) {
-        cambiarPagina(estadoFiltro.paginaActual + 1);
-      }
+    // ocultar todas las tarjetas primero
+    productos.forEach(function (t) { t.style.display = 'none'; });
+
+    const inicio = (numPag - 1) * ITEMS_POR_PAGINA;
+    const fin = inicio + ITEMS_POR_PAGINA;
+
+    matchedTarjetas.forEach(function (t, idx) {
+      if (idx >= inicio && idx < fin) t.style.display = 'block';
+      else t.style.display = 'none';
     });
+
+    // actualizar visual de botones de paginación
+    if (paginacionNumeros && paginacionNumeros.length) {
+      paginacionNumeros.forEach(function (span) {
+        const p = parseInt(span.getAttribute('data-pagina') || span.textContent);
+        if (p === numPag) {
+          span.classList.add('active');
+          span.style.fontWeight = 'bold';
+          span.style.color = '#84b814';
+        } else {
+          span.classList.remove('active');
+          span.style.fontWeight = 'normal';
+          span.style.color = '';
+        }
+      });
+    }
+
+    estadoFiltro.paginaActual = numPag;
+
+    if (window.SenabellaToast) {
+      window.SenabellaToast('Página ' + numPag + ' cargada', 'fa-file-lines');
+    }
+
+    gridProductos.scrollIntoView({ behavior: 'smooth' });
   }
 
   function cambiarPagina(numPag) {
-    estadoFiltro.paginaActual = numPag;
-
-    paginacionNumeros.forEach(function (span) {
-      if (parseInt(span.textContent.trim()) === numPag) {
-        span.classList.add("active");
-        span.style.fontWeight = "bold";
-        span.style.color = "#84b814";
-      } else {
-        span.classList.remove("active");
-        span.style.fontWeight = "normal";
-        span.style.color = "";
-      }
-    });
-
-    if (window.SenabellaToast) {
-      window.SenabellaToast("Página " + numPag + " cargada", "fa-file-lines");
-    }
-
-    gridProductos.scrollIntoView({ behavior: "smooth" });
+    mostrarPagina(numPag);
   }
 
   // 8. Ordenar productos por precio
