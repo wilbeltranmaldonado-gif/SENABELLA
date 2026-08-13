@@ -22,64 +22,18 @@
      cuando no hay datos que listar (ej. Mis listas).
      ------------------------------------------------------------------- */
   const SECCIONES = {
-    "datos-personales": {
-      titulo: "Datos personales",
-      subtitulo: "Consulta y actualiza tu información personal.",
-      campos: [
-        { etiqueta: "Nombre y apellidos", valor: "Pedro Quijano", editable: true },
-        { etiqueta: "Tipo de documento", valor: "Cédula de extranjería", editable: false },
-        { etiqueta: "Celular", valor: "+57 3 134300009", editable: true },
-        {
-          etiqueta: "Correo",
-          valor: "pequijano30@gmail.com",
-          editable: true,
-          icono: "fa-regular fa-circle-question",
-          tooltip: "Correo verificado",
-        },
-      ],
+    "mi-perfil": {
+      titulo: "Mi Perfil",
+      especial: "mi-perfil"
     },
-
-    "direcciones": {
-      titulo: "Direcciones",
-      subtitulo: "Gestiona tus direcciones de envío y facturación.",
-      campos: [
-        { etiqueta: "Dirección principal", valor: "Cra 45 #12-34, Bogotá", editable: true },
-        { etiqueta: "Dirección de trabajo", valor: "Calle 100 #15-20, Bogotá", editable: true },
-      ],
+    "mis-compras": {
+      titulo: "Mis compras",
+      especial: "mis-compras"
     },
-
-    "medios-pago": {
-      titulo: "Medios de pago",
-      subtitulo: "Administra tus métodos de pago.",
-      campos: [
-        { etiqueta: "Tarjeta principal", valor: "Visa terminada en 4321", editable: true },
-        { etiqueta: "Tarjeta secundaria", valor: "Mastercard terminada en 7788", editable: true },
-      ],
-    },
-
-    "reembolso": {
-      titulo: "Datos para reembolso",
-      subtitulo: "Configura los datos con los que recibirás tus reembolsos.",
-      campos: [
-        { etiqueta: "Cuenta bancaria", valor: "Bancolombia · Ahorros ****1234", editable: true },
-        { etiqueta: "Titular de la cuenta", valor: "Pedro Quijano", editable: false },
-      ],
-    },
-
-    "mis-listas": {
-      titulo: "Mis listas",
-      subtitulo: "Crea y administra tus listas personales.",
-      vacio: "Aún no has creado ninguna lista de favoritos.",
-    },
-
-    "configurar-cuenta": {
-      titulo: "Configurar mi cuenta",
-      subtitulo: "Ajusta las preferencias y la seguridad de tu cuenta.",
-      campos: [
-        { etiqueta: "Contraseña", valor: "••••••••", editable: true },
-        { etiqueta: "Autenticación en dos pasos", valor: "Desactivada", editable: true },
-      ],
-    },
+    "datos-envio": {
+      titulo: "Datos de Envío y Contacto",
+      especial: "datos-envio"
+    }
   };
 
   /* --- Construye el HTML de un campo individual (grupo-info) --- */
@@ -109,11 +63,9 @@
     if (!seccion || !tarjeta) return;
 
     const titulo = $(".titulo-seccion", tarjeta);
-    const subtitulo = $(".subtitulo-seccion", tarjeta);
     const contenedorCampos = $(".lista-campos", tarjeta);
 
     titulo.textContent = seccion.titulo;
-if (subtitulo) subtitulo.textContent = seccion.subtitulo ?? "";
 
     if (seccion.especial === "mi-perfil") {
       let usuario = {};
@@ -175,22 +127,6 @@ if (subtitulo) subtitulo.textContent = seccion.subtitulo ?? "";
         const formPerfil = document.getElementById("form-mi-perfil");
         if (!formPerfil) return;
 
-        /* --- Restricciones en tiempo real --- */
-        const inputCelularP = document.getElementById("perfil-celular");
-        if (inputCelularP) {
-          // Solo permite escribir dígitos y espacios; bloquea letras
-          inputCelularP.addEventListener("keydown", function (e) {
-            const permitidas = ["Backspace","Delete","ArrowLeft","ArrowRight","Tab","Home","End"];
-            if (!permitidas.includes(e.key) && !/^[0-9\s]$/.test(e.key)) e.preventDefault();
-          });
-          // Recorta a máximo 12 dígitos si se pega texto
-          inputCelularP.addEventListener("input", function () {
-            this.value = this.value.replace(/[^0-9\s]/g, "");
-            const soloDigitos = this.value.replace(/\s/g, "");
-            if (soloDigitos.length > 12) this.value = this.value.slice(0, this.value.length - (soloDigitos.length - 12));
-          });
-        }
-
         formPerfil.addEventListener("submit", function (e) {
           e.preventDefault();
           const nombre   = document.getElementById("perfil-nombre").value.trim();
@@ -199,24 +135,22 @@ if (subtitulo) subtitulo.textContent = seccion.subtitulo ?? "";
           const password = document.getElementById("perfil-password").value;
           const msg      = document.getElementById("perfil-mensaje");
 
-          /* Validaciones */
-          if (!nombre) { mostrarMensaje(msg, "⚠ Por favor ingresa tu nombre completo.", "error"); return; }
-          if (!email || !/^[^@]+@[^@]+\.[^@]+$/.test(email)) { mostrarMensaje(msg, "⚠ Ingresa un correo electrónico válido.", "error"); return; }
-          if (celular) {
-            const dig = celular.replace(/\s/g, "");
-            if (dig.length > 12) { mostrarMensaje(msg, "⚠ El celular no puede tener más de 12 dígitos.", "error"); return; }
-          }
-          if (password && password.length < 6) { mostrarMensaje(msg, "⚠ La contraseña debe tener mínimo 6 caracteres.", "error"); return; }
+          /* Validaciones básicas */
+          if (!nombre) { mostrarMensaje(msg, "Por favor ingresa tu nombre completo.", "error"); return; }
+          if (!email || !/^[^@]+@[^@]+\.[^@]+$/.test(email)) { mostrarMensaje(msg, "Ingresa un correo electrónico válido.", "error"); return; }
+          if (password && password.length < 6) { mostrarMensaje(msg, "La contraseña debe tener mínimo 6 caracteres.", "error"); return; }
 
-          /* Guardar */
+          /* Actualizar y guardar */
           usuario.nombre  = nombre;
           usuario.email   = email;
           usuario.celular = celular;
           if (password) usuario.password = password;
           localStorage.setItem("senabella_usuario", JSON.stringify(usuario));
 
-          mostrarMensaje(msg, "✓ Datos guardados correctamente.", "exito");
-          if (window.SenabellaToast) window.SenabellaToast("Perfil actualizado", "fa-circle-check", "exito");
+          mostrarMensaje(msg, "\u2713 Datos guardados correctamente.", "exito");
+          if (window.SenabellaToast) {
+            window.SenabellaToast("Perfil actualizado", "fa-circle-check", "exito");
+          }
           document.getElementById("perfil-password").value = "";
         });
       }, 50);
@@ -312,33 +246,6 @@ if (subtitulo) subtitulo.textContent = seccion.subtitulo ?? "";
       setTimeout(() => {
         const formEnvio = document.getElementById("form-datos-envio");
         if (formEnvio) {
-
-          /* --- Restricciones en tiempo real: Celular --- */
-          const inputCelularE = document.getElementById("envio-celular");
-          if (inputCelularE) {
-            inputCelularE.addEventListener("keydown", function (e) {
-              const permitidas = ["Backspace","Delete","ArrowLeft","ArrowRight","Tab","Home","End"];
-              if (!permitidas.includes(e.key) && !/^[0-9\s]$/.test(e.key)) e.preventDefault();
-            });
-            inputCelularE.addEventListener("input", function () {
-              this.value = this.value.replace(/[^0-9\s]/g, "");
-              const soloDigitos = this.value.replace(/\s/g, "");
-              if (soloDigitos.length > 12) this.value = this.value.slice(0, this.value.length - (soloDigitos.length - 12));
-            });
-          }
-
-          /* --- Restricciones en tiempo real: Ciudad (sin números) --- */
-          const inputCiudadE = document.getElementById("envio-ciudad");
-          if (inputCiudadE) {
-            inputCiudadE.addEventListener("keydown", function (e) {
-              const permitidas = ["Backspace","Delete","ArrowLeft","ArrowRight","Tab","Home","End"," ","-"];
-              if (!permitidas.includes(e.key) && /^[0-9]$/.test(e.key)) e.preventDefault();
-            });
-            inputCiudadE.addEventListener("input", function () {
-              this.value = this.value.replace(/[0-9]/g, "");
-            });
-          }
-
           formEnvio.addEventListener("submit", function(e) {
             e.preventDefault();
             const celular   = document.getElementById("envio-celular").value.trim();
@@ -346,22 +253,20 @@ if (subtitulo) subtitulo.textContent = seccion.subtitulo ?? "";
             const ciudad    = document.getElementById("envio-ciudad").value.trim();
             const msg       = document.getElementById("envio-mensaje");
 
-            /* Validaciones */
-            const celularLimpio = celular.replace(/\s/g, "");
-            if (!celular) { mostrarMensaje(msg, "⚠ Por favor ingresa tu celular de contacto.", "error"); return; }
-            if (celularLimpio.length > 12) { mostrarMensaje(msg, "⚠ El celular no puede tener más de 12 dígitos.", "error"); return; }
-            if (!direccion) { mostrarMensaje(msg, "⚠ Por favor ingresa la dirección de envío.", "error"); return; }
-            if (direccion.length < 8) { mostrarMensaje(msg, "⚠ La dirección debe tener al menos 8 caracteres. Ej: Calle 10 # 5-20", "error"); return; }
-            if (!ciudad) { mostrarMensaje(msg, "⚠ Por favor ingresa la ciudad.", "error"); return; }
-            if (ciudad.length < 3) { mostrarMensaje(msg, "⚠ Ingresa un nombre de ciudad válido.", "error"); return; }
+            /* Validaciones básicas */
+            if (!celular)   { mostrarMensaje(msg, "Por favor ingresa tu celular de contacto.", "error"); return; }
+            if (!direccion) { mostrarMensaje(msg, "Por favor ingresa una dirección de envío.", "error"); return; }
+            if (!ciudad)    { mostrarMensaje(msg, "Por favor ingresa la ciudad.", "error"); return; }
 
-            usuario.celular   = celularLimpio;
+            usuario.celular   = celular.replace(/[^0-9\s]/g, "");
             usuario.direccion = direccion;
             usuario.ciudad    = ciudad;
             localStorage.setItem("senabella_usuario", JSON.stringify(usuario));
 
             mostrarMensaje(msg, "✓ Datos de envío guardados correctamente.", "exito");
-            if (window.SenabellaToast) window.SenabellaToast("Datos de envío actualizados", "fa-circle-check", "exito");
+            if (window.SenabellaToast) {
+              window.SenabellaToast("Datos de envío actualizados", "fa-circle-check", "exito");
+            }
           });
         }
       }, 50);
@@ -475,31 +380,27 @@ if (subtitulo) subtitulo.textContent = seccion.subtitulo ?? "";
     });
   }
 
-  /* --- Carga datos dinámicos guardados al registrarse --- */
-  function cargarDatosUsuarioRegistrado() {
-    try {
-      const usuarioGuardado = JSON.parse(localStorage.getItem('senabella_usuario') || 'null');
-      if (usuarioGuardado) {
-        if (usuarioGuardado.nombre) {
-          SECCIONES["datos-personales"].campos[0].valor = usuarioGuardado.nombre;
-        }
-        if (usuarioGuardado.celular) {
-          SECCIONES["datos-personales"].campos[2].valor = usuarioGuardado.celular;
-        }
-        if (usuarioGuardado.correo) {
-          SECCIONES["datos-personales"].campos[3].valor = usuarioGuardado.correo;
-        }
-      }
-    } catch (e) {
-      console.error('Error al cargar los datos del usuario:', e);
-    }
+  /* --- Muestra un mensaje de éxito o error dentro del formulario --- */
+  function mostrarMensaje(el, texto, tipo) {
+    if (!el) return;
+    el.textContent = texto;
+    el.style.display = "block";
+    el.style.backgroundColor = tipo === "exito" ? "#eafaf1" : "#fdecea";
+    el.style.color            = tipo === "exito" ? "#1e8449"  : "#c0392b";
+    el.style.border           = tipo === "exito" ? "1px solid #a9dfbf" : "1px solid #f5c6c6";
+    setTimeout(() => { el.style.display = "none"; }, 4000);
   }
 
   function init() {
-    cargarDatosUsuarioRegistrado();
     setupMenuLateral();
     setupEdicionInline();
-    renderSeccion("datos-personales"); // sección visible al cargar la página
+    renderSeccion("mi-perfil"); // sección visible al cargar la página
+    
+    // Activar el item en el menú lateral
+    const items = $$(".barra-lateral .elemento-menu");
+    items.forEach((i) => i.classList.remove("activo"));
+    const itemPerfil = Array.from(items).find(i => i.dataset.section === "mi-perfil");
+    if (itemPerfil) itemPerfil.classList.add("activo");
   }
 
   if (document.readyState === "loading") {

@@ -1,40 +1,8 @@
-/* =========================================================================
-   SENABELLA · usuario.css
-   Panel "Mi cuenta" — línea visual oscura (sidebar navy + acento lima)
-   ========================================================================= */
-
-:root {
-  /* Si el proyecto ya define estas variables en un CSS global
-     (por ejemplo encabezado.css), esas prevalecen; estos son
-     valores de respaldo para que esta página funcione sola. */
-  --primary-color: #a8d92b;
-  --primary-color-dark: #8fbb1f;
-  --text-main: #1b2231;
-  --text-muted: #7c8698;
-  --border-color: #e8eaef;
-
-  --dark-bg: #121a2b;
-  --dark-bg-2: #182338;
-  --dark-border: #263352;
-  --dark-text: #d7deec;
-  --dark-text-muted: #9aa6bd;
-
-  --app-bg: #f4f6f9;
-  --card-bg: #ffffff;
-  --radius-lg: 18px;
-  --radius-sm: 8px;
-  --sombra-card: 0 2px 14px rgba(18, 26, 43, 0.06);
-}
-
-body {
-  background-color: var(--app-bg);
-}
 
 /* ESTRUCTURA DEL PERFIL */
 .contenedor {
   max-width: 1200px;
   margin: 20px auto;
-  padding: 0 16px;
 }
 
 /* Migas de pan */
@@ -53,11 +21,10 @@ body {
 
 .migas-pan a:hover {
   text-decoration: underline;
-  color: var(--text-main);
 }
 
 .titulo-pagina {
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 700;
   margin-bottom: 24px;
   color: var(--text-main);
@@ -71,33 +38,30 @@ body {
   align-items: start;
 }
 
-/*  MENÚ LATERAL DE NAVEGACIÓN — estilo oscuro tipo panel de cuenta */
+/*  MENÚ LATERAL DE NAVEGACIÓN */
 .barra-lateral {
-  background-color: var(--dark-bg);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--sombra-card);
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: 10px;
 }
 
 .elemento-menu {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 14px;
+  padding: 16px 20px;
   text-decoration: none;
-  color: var(--dark-text);
+  color: var(--text-main);
   font-size: 14px;
-  border-radius: var(--radius-sm);
-  border: 1px solid transparent;
-  margin-bottom: 4px;
-  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.2s;
 }
 
 .elemento-menu:last-child {
-  margin-bottom: 0;
+  border-bottom: none;
 }
 
 .elemento-menu-izquierda {
@@ -108,73 +72,44 @@ body {
 
 .elemento-menu i {
   font-size: 16px;
-  color: var(--dark-text);
+  color: var(--text-main);
   width: 20px;
   text-align: center;
 }
 
 .elemento-menu .fa-chevron-right {
   font-size: 12px;
-  color: var(--dark-text-muted);
+  color: var(--text-muted);
 }
 
 .elemento-menu:hover {
-  background-color: var(--dark-bg-2);
+  background-color: #fafafa;
 }
 
-/* Estado activo del elemento del menú seleccionado: recuadro con borde lima */
+/* Estado activo del elemento del menú seleccionado */
 .elemento-menu.activo {
-  background-color: rgba(168, 217, 43, 0.1);
-  border-color: var(--primary-color);
+  background-color: #f0f7e6;
   font-weight: 600;
+  border-left: 4px solid var(--primary-color);
 }
 
-.elemento-menu.activo,
 .elemento-menu.activo i {
   color: var(--primary-color);
 }
 
-/* "Cerrar sesión" se separa visualmente del resto de pestañas */
-.elemento-menu-salir {
-  margin-top: 10px;
-  padding-top: 14px;
-  border-top: 1px solid var(--dark-border);
-  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
-}
-
-.elemento-menu-salir:hover {
-  background-color: var(--dark-bg-2);
-  color: #ff8a8a;
-}
-
-.elemento-menu-salir:hover i {
-  color: #ff8a8a;
-}
-
 /* PANEL DE CONTENIDO Y DATOS */
 .tarjeta-contenido {
-  background-color: var(--card-bg);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--sombra-card);
-  border: 1px solid var(--border-color);
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   padding: 32px;
 }
 
 .titulo-seccion {
-  font-size: 22px;
-  font-weight: 700;
-  margin: 0 0 4px;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 24px;
   color: var(--text-main);
-}
-
-.subtitulo-seccion {
-  font-size: 14px;
-  color: var(--text-muted);
-  margin: 0 0 24px;
-}
-
-.subtitulo-seccion:empty {
-  display: none;
 }
 
 /* Filas de información de datos personales */
@@ -184,7 +119,6 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 12px;
 }
 
 .grupo-info:last-child {
@@ -215,16 +149,15 @@ body {
 .boton-editar {
   background: none;
   border: none;
-  color: var(--primary-color-dark);
+  color: var(--text-main);
   font-weight: 600;
   font-size: 14px;
   cursor: pointer;
-  white-space: nowrap;
+  text-decoration: underline;
 }
 
 .boton-editar:hover {
   color: var(--primary-color);
-  text-decoration: underline;
 }
 
 .info-icon-tooltip {
@@ -237,99 +170,176 @@ body {
 .estado-vacio {
   color: var(--text-muted);
   font-size: 14px;
-  text-align: center;
-  padding: 48px 12px;
-  border: 1px dashed var(--border-color);
-  border-radius: var(--radius-sm);
+  padding: 12px 0;
 }
 
 /* PIE DE PÁGINA */
 .footer {
   margin-top: 32px;
-  background: var(--dark-bg);
-  color: var(--dark-text);
-  border-top: 1px solid var(--dark-border);
+  background: #ffffff;
+  color: #111111;
+  border-top: 1px solid #e4e7eb;
 }
 
 /* Grid de enlaces del footer */
 .footer-top {
   max-width: 1180px;
   margin: 0 auto;
-  padding: 32px 20px;
+  padding: 30px 20px;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 24px;
 }
 
 .footer-top h3 {
   margin-bottom: 12px;
   font-size: 1.05rem;
-  color: #ffffff;
+  color: #111111;
 }
 
 .footer-top a {
   display: block;
   margin-bottom: 8px;
-  color: var(--dark-text-muted);
+  color: #111111;
   text-decoration: none;
   opacity: 0.95;
 }
 
 .footer-top a:hover {
-  color: var(--primary-color);
   text-decoration: underline;
 }
 
 /* Barra inferior del footer con copyright */
 .footer-bottom {
-  background: var(--dark-bg-2);
+  background: #f5f5f5;
   text-align: center;
   padding: 14px 20px;
   font-size: 0.92rem;
-  color: var(--dark-text-muted);
+  color: #111111;
 }
 
-.footer-bottom p {
-  margin: 0;
-}
+/* ==========================================
+   RESPONSIVE - TABLET (≤ 992px)
+   ========================================== */
 
-/* =========================================================================
-   RESPONSIVE
-   ========================================================================= */
-@media (max-width: 860px) {
+@media (max-width: 992px) {
   .diseno-perfil {
     grid-template-columns: 1fr;
+    gap: 16px;
   }
 
   .barra-lateral {
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 4px;
+    border-radius: 8px;
   }
 
   .elemento-menu {
-    flex: 1 1 auto;
-    min-width: 160px;
+    flex: 1;
+    min-width: 150px;
+    border-bottom: none;
+    border-right: 1px solid var(--border-color);
+    justify-content: center;
+    text-align: center;
   }
 
-  .elemento-menu-salir {
-    margin-top: 0;
-    padding-top: 14px;
-    border-top: none;
+  .elemento-menu:last-child {
+    border-right: none;
+  }
+
+  .elemento-menu.activo {
+    border-left: none;
+    border-bottom: 3px solid var(--primary-color);
+  }
+
+  .contenedor {
+    padding: 0 20px;
   }
 
   .footer-top {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 560px) {
+/* ==========================================
+   RESPONSIVE - MÓVIL (≤ 768px)
+   ========================================== */
+
+@media (max-width: 768px) {
+  .contenedor {
+    padding: 0 15px;
+    margin: 15px auto;
+  }
+
+  .titulo-pagina {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+
+  .barra-lateral {
+    flex-direction: column;
+  }
+
+  .elemento-menu {
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+    justify-content: space-between;
+    text-align: left;
+  }
+
+  .elemento-menu.activo {
+    border-bottom: 1px solid var(--border-color);
+    border-left: 4px solid var(--primary-color);
+  }
+
   .tarjeta-contenido {
-    padding: 22px;
+    padding: 20px;
   }
 
   .grupo-info {
     flex-direction: column;
+    gap: 10px;
+  }
+
+  .titulo-seccion {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+}
+
+/* ==========================================
+   RESPONSIVE - MÓVIL PEQUEÑO (≤ 480px)
+   ========================================== */
+
+@media (max-width: 480px) {
+  .contenedor {
+    padding: 0 10px;
+    margin: 10px auto;
+  }
+
+  .tarjeta-contenido {
+    padding: 16px;
+  }
+
+  .titulo-pagina {
+    font-size: 18px;
+  }
+
+  .elemento-menu {
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+
+  .valor-info {
+    font-size: 14px;
+  }
+
+  .etiqueta-info {
+    font-size: 12px;
+  }
+
+  .boton-editar {
+    font-size: 13px;
   }
 
   .footer-top {
