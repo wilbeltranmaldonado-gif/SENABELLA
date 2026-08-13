@@ -41,32 +41,55 @@
       <div class="diseno-perfil">
         <!-- BARRA LATERAL/Menú de la cuenta-->
         <nav class="barra-lateral">
-
-          <a href="#" class="elemento-menu" data-section="mi-perfil">
+          <a href="#" class="elemento-menu activo" data-section="datos-personales">
             <div class="elemento-menu-izquierda">
-              <i class="fa-solid fa-user"></i>
-              <span>Mi Perfil</span>
+              <i class="fa-regular fa-user"></i>
+              <span>Datos personales</span>
             </div>
             <i class="fa-solid fa-chevron-right"></i>
           </a>
 
-          <a href="#" class="elemento-menu" data-section="mis-compras">
+          <a href="#" class="elemento-menu" data-section="direcciones">
             <div class="elemento-menu-izquierda">
-              <i class="fa-solid fa-box-open"></i>
-              <span>Mis compras</span>
+              <i class="fa-solid fa-house"></i>
+              <span>Direcciones</span>
             </div>
             <i class="fa-solid fa-chevron-right"></i>
           </a>
 
-          <a href="#" class="elemento-menu" data-section="datos-envio">
+          <a href="#" class="elemento-menu" data-section="medios-pago">
             <div class="elemento-menu-izquierda">
-              <i class="fa-solid fa-address-card"></i>
-              <span>Datos de Envío y Contacto</span>
+              <i class="fa-regular fa-credit-card"></i>
+              <span>Medios de pago</span>
             </div>
             <i class="fa-solid fa-chevron-right"></i>
           </a>
 
-          <a href="#" class="elemento-menu" data-logout="true">
+          <a href="#" class="elemento-menu" data-section="reembolso">
+            <div class="elemento-menu-izquierda">
+              <i class="fa-solid fa-money-bill-transfer"></i>
+              <span>Datos para reembolso</span>
+            </div>
+            <i class="fa-solid fa-chevron-right"></i>
+          </a>
+
+          <a href="#" class="elemento-menu" data-section="mis-listas">
+            <div class="elemento-menu-izquierda">
+              <i class="fa-regular fa-heart"></i>
+              <span>Mis listas</span>
+            </div>
+            <i class="fa-solid fa-chevron-right"></i>
+          </a>
+
+          <a href="#" class="elemento-menu" data-section="configurar-cuenta">
+            <div class="elemento-menu-izquierda">
+              <i class="fa-solid fa-lock"></i>
+              <span>Configurar mi cuenta</span>
+            </div>
+            <i class="fa-solid fa-chevron-right"></i>
+          </a>
+
+          <a href="#" class="elemento-menu elemento-menu-salir" data-logout="true">
             <div class="elemento-menu-izquierda">
               <i class="fa-solid fa-power-off"></i>
               <span>Cerrar sesión</span>
@@ -78,6 +101,7 @@
         <!-- Detalles de la pestaña activa: el contenido lo genera usuario.js -->
         <main class="tarjeta-contenido">
           <h2 class="titulo-seccion"></h2>
+          <p class="subtitulo-seccion"></p>
           <div class="lista-campos"></div>
         </main>
       </div>
