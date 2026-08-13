@@ -228,7 +228,17 @@
             <label style="display: block; margin-bottom: 5px; font-weight: 500;">Ciudad *</label>
             <input type="text" id="envio-ciudad" value="${usuario.ciudad || ''}" placeholder="Ej. Bogotá" required style="width: 100%; padding: 10px; border: 1px solid var(--color-borde); border-radius: 8px;">
           </div>
-          <button type="submit" class="boton-primario" style="width: 100%; padding: 12px; border-radius: 8px; background-color: var(--color-primario); color: white; border: none; font-weight: 600; cursor: pointer;">Guardar Datos</button>
+          <button type="submit" id="btn-guardar-envio"
+            style="width:100%; padding:13px; border-radius:8px;
+                   background:var(--color-primario, #84b814); color:#fff;
+                   border:none; font-size:1rem; font-weight:700;
+                   cursor:pointer; display:flex; align-items:center;
+                   justify-content:center; gap:8px; transition:opacity .2s;">
+            <i class="fa-solid fa-floppy-disk"></i> Guardar datos
+          </button>
+
+          <div id="envio-mensaje" style="display:none; margin-top:14px; padding:10px 14px;
+               border-radius:8px; font-size:0.9rem; font-weight:500;"></div>
         </form>
       `;
 
@@ -238,15 +248,24 @@
         if (formEnvio) {
           formEnvio.addEventListener("submit", function(e) {
             e.preventDefault();
-            usuario.celular = document.getElementById("envio-celular").value.replace(/[^0-9\s]/g, "");
-            usuario.direccion = document.getElementById("envio-direccion").value;
-            usuario.ciudad = document.getElementById("envio-ciudad").value;
+            const celular   = document.getElementById("envio-celular").value.trim();
+            const direccion = document.getElementById("envio-direccion").value.trim();
+            const ciudad    = document.getElementById("envio-ciudad").value.trim();
+            const msg       = document.getElementById("envio-mensaje");
+
+            /* Validaciones básicas */
+            if (!celular)   { mostrarMensaje(msg, "Por favor ingresa tu celular de contacto.", "error"); return; }
+            if (!direccion) { mostrarMensaje(msg, "Por favor ingresa una dirección de envío.", "error"); return; }
+            if (!ciudad)    { mostrarMensaje(msg, "Por favor ingresa la ciudad.", "error"); return; }
+
+            usuario.celular   = celular.replace(/[^0-9\s]/g, "");
+            usuario.direccion = direccion;
+            usuario.ciudad    = ciudad;
             localStorage.setItem("senabella_usuario", JSON.stringify(usuario));
-            
+
+            mostrarMensaje(msg, "✓ Datos de envío guardados correctamente.", "exito");
             if (window.SenabellaToast) {
               window.SenabellaToast("Datos de envío actualizados", "fa-circle-check", "exito");
-            } else {
-              alert("Datos de envío actualizados correctamente.");
             }
           });
         }
