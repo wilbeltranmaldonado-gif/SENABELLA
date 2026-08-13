@@ -26,66 +26,10 @@
       titulo: "Mis compras",
       especial: "mis-compras"
     },
-    "datos-personales": {
-      titulo: "Datos personales",
-      campos: [
-        { etiqueta: "Nombre y apellidos", valor: "Pedro Quijano", editable: true },
-        { etiqueta: "Tipo de documento", valor: "Cédula de extranjería", editable: false },
-        { etiqueta: "Celular", valor: "+57 3 134300009", editable: true },
-        {
-          etiqueta: "Correo",
-          valor: "pequijano30@gmail.com",
-          editable: true,
-          icono: "fa-regular fa-circle-question",
-          tooltip: "Correo verificado",
-        },
-      ],
-    },
-
-    "direcciones": {
-      titulo: "Direcciones",
-      campos: [
-        { etiqueta: "Dirección principal", valor: "Cra 45 #12-34, Bogotá", editable: true },
-        { etiqueta: "Dirección de trabajo", valor: "Calle 100 #15-20, Bogotá", editable: true },
-      ],
-    },
-
-    "medios-pago": {
-      titulo: "Medios de pago",
-      campos: [
-        { etiqueta: "Tarjeta principal", valor: "Visa terminada en 4321", editable: true },
-        { etiqueta: "Tarjeta secundaria", valor: "Mastercard terminada en 7788", editable: true },
-      ],
-    },
-
-    "reembolso": {
-      titulo: "Datos para reembolso",
-      campos: [
-        { etiqueta: "Cuenta bancaria", valor: "Bancolombia · Ahorros ****1234", editable: true },
-        { etiqueta: "Titular de la cuenta", valor: "Pedro Quijano", editable: false },
-      ],
-    },
-
-    "mis-listas": {
-      titulo: "Mis listas",
-      vacio: "Aún no has creado ninguna lista de favoritos.",
-    },
-
-    "configurar-cuenta": {
-      titulo: "Configurar mi cuenta",
-      campos: [
-        { etiqueta: "Contraseña", valor: "••••••••", editable: true },
-        { etiqueta: "Autenticación en dos pasos", valor: "Desactivada", editable: true },
-      ],
-    },
-
-    "dispositivos": {
-      titulo: "Dispositivos vinculados",
-      campos: [
-        { etiqueta: "Chrome · Windows", valor: "Última conexión: hoy, 9:41 a. m.", editable: false },
-        { etiqueta: "App móvil · Android", valor: "Última conexión: ayer, 6:12 p. m.", editable: false },
-      ],
-    },
+    "datos-envio": {
+      titulo: "Datos de Envío y Contacto",
+      especial: "datos-envio"
+    }
   };
 
   /* --- Construye el HTML de un campo individual (grupo-info) --- */
@@ -144,6 +88,55 @@
       } catch (e) {
         contenedorCampos.innerHTML = `<p class="estado-vacio">Aún no has realizado ninguna compra.</p>`;
       }
+      return;
+    if (seccion.especial === "datos-envio") {
+      let usuario = {};
+      try {
+        usuario = JSON.parse(localStorage.getItem("senabella_usuario")) || {};
+      } catch (e) { }
+
+      contenedorCampos.innerHTML = `
+        <form id="form-datos-envio" class="formulario" style="margin-top: 15px;">
+          <div class="grupo-campo" style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: 500;">Nombre Completo</label>
+            <input type="text" id="envio-nombre" value="${usuario.nombre || ''}" readonly style="width: 100%; padding: 10px; border: 1px solid var(--color-borde); border-radius: 8px; background-color: #f9f9f9; color: #666;" title="No se puede cambiar el nombre">
+          </div>
+          <div class="grupo-campo" style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: 500;">Celular de Contacto *</label>
+            <input type="tel" id="envio-celular" value="${usuario.celular || ''}" placeholder="Ej. 300 123 4567" required style="width: 100%; padding: 10px; border: 1px solid var(--color-borde); border-radius: 8px;">
+          </div>
+          <div class="grupo-campo" style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: 500;">Dirección de Envío *</label>
+            <input type="text" id="envio-direccion" value="${usuario.direccion || ''}" placeholder="Ej. Calle 123 # 45 - 67" required style="width: 100%; padding: 10px; border: 1px solid var(--color-borde); border-radius: 8px;">
+          </div>
+          <div class="grupo-campo" style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: 500;">Ciudad *</label>
+            <input type="text" id="envio-ciudad" value="${usuario.ciudad || ''}" placeholder="Ej. Bogotá" required style="width: 100%; padding: 10px; border: 1px solid var(--color-borde); border-radius: 8px;">
+          </div>
+          <button type="submit" class="boton-primario" style="width: 100%; padding: 12px; border-radius: 8px; background-color: var(--color-primario); color: white; border: none; font-weight: 600; cursor: pointer;">Guardar Datos</button>
+        </form>
+      `;
+
+      // Event listener for the form
+      setTimeout(() => {
+        const formEnvio = document.getElementById("form-datos-envio");
+        if (formEnvio) {
+          formEnvio.addEventListener("submit", function(e) {
+            e.preventDefault();
+            usuario.celular = document.getElementById("envio-celular").value.replace(/[^0-9\s]/g, "");
+            usuario.direccion = document.getElementById("envio-direccion").value;
+            usuario.ciudad = document.getElementById("envio-ciudad").value;
+            localStorage.setItem("senabella_usuario", JSON.stringify(usuario));
+            
+            if (window.SenabellaToast) {
+              window.SenabellaToast("Datos de envío actualizados", "fa-circle-check", "exito");
+            } else {
+              alert("Datos de envío actualizados correctamente.");
+            }
+          });
+        }
+      }, 50);
+
       return;
     }
 

@@ -35,31 +35,23 @@
 
           <div class="grupo-inputs full">
             <div class="campo-checkout">
-              <label for="direccion">Dirección completa</label>
-              <input type="text" id="direccion" placeholder="Ej. Calle 123 # 45-67, Apto 101" required>
-              <span class="mensaje-error">Por favor, ingresa tu dirección.</span>
+              <label for="direccion">Dirección completa <small style="font-weight: normal; color: #888;">(Extraída de tu perfil)</small></label>
+              <input type="text" id="direccion" placeholder="Ej. Calle 123 # 45-67, Apto 101" readonly required style="background-color: #f9f9f9; color: #666; cursor: not-allowed;" title="Edita esta información en tu perfil">
+              <span class="mensaje-error">Por favor, ingresa tu dirección en tu perfil.</span>
             </div>
           </div>
 
           <div class="grupo-inputs">
             <div class="campo-checkout">
-              <label for="ciudad">Ciudad</label>
-              <select id="ciudad" required>
-                <option value="" disabled selected>Selecciona tu ciudad</option>
-                <option value="Bogotá">Bogotá</option>
-                <option value="Medellín">Medellín</option>
-                <option value="Cali">Cali</option>
-                <option value="Barranquilla">Barranquilla</option>
-                <option value="Cartagena">Cartagena</option>
-                <option value="Bucaramanga">Bucaramanga</option>
-              </select>
-              <span class="mensaje-error">Por favor, selecciona tu ciudad.</span>
+              <label for="ciudad">Ciudad <small style="font-weight: normal; color: #888;">(Extraída de tu perfil)</small></label>
+              <input type="text" id="ciudad" readonly required style="background-color: #f9f9f9; color: #666; cursor: not-allowed;" title="Edita esta información en tu perfil">
+              <span class="mensaje-error">Por favor, actualiza tu ciudad en tu perfil.</span>
             </div>
 
             <div class="campo-checkout">
-              <label for="telefono">Teléfono de contacto</label>
-              <input type="tel" id="telefono" placeholder="Ej. 300 123 4567" required maxlength="15" minlength="7" inputmode="numeric" autocomplete="tel">
-              <span class="mensaje-error">Por favor, ingresa un teléfono válido.</span>
+              <label for="telefono">Teléfono de contacto <small style="font-weight: normal; color: #888;">(Extraída de tu perfil)</small></label>
+              <input type="tel" id="telefono" readonly required style="background-color: #f9f9f9; color: #666; cursor: not-allowed;" title="Edita esta información en tu perfil">
+              <span class="mensaje-error">Por favor, ingresa un teléfono en tu perfil.</span>
             </div>
           </div>
         </div>

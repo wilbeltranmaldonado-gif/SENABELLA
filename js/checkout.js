@@ -3,6 +3,12 @@
 // ==========================================
 
 document.addEventListener("DOMContentLoaded", function () {
+  
+  if (localStorage.getItem('senabella_sesion') !== 'activa') {
+    alert("Debes iniciar sesión para acceder al checkout.");
+    window.location.href = "login.html";
+    return;
+  }
 
   const contenedorProductos = document.getElementById("contenedor-productos-checkout");
   const badgeTotal = document.getElementById("badge-total-items");
@@ -12,29 +18,20 @@ document.addEventListener("DOMContentLoaded", function () {
   const btnFinalizar = document.getElementById("btn-finalizar");
 
   // ==========================================
-  // VALIDACIÓN EN TIEMPO REAL - TELÉFONO
+  // CARGAR DATOS DE ENVÍO DESDE EL PERFIL
   // ==========================================
-  const campoTelefonoCheckout = document.getElementById("telefono");
-  if (campoTelefonoCheckout) {
-    // Filtrar letras al escribir
-    campoTelefonoCheckout.addEventListener("input", function () {
-      this.value = this.value.replace(/[^0-9+\s\-]/g, "");
-      if (this.value.length > 15) this.value = this.value.slice(0, 15);
-    });
-    // Bloquear teclas no numéricas
-    campoTelefonoCheckout.addEventListener("keydown", function (e) {
-      const permitidas = ["Backspace","Delete","Tab","Escape","Enter","ArrowLeft","ArrowRight","ArrowUp","ArrowDown","Home","End"];
-      if (permitidas.includes(e.key) || e.ctrlKey || e.metaKey) return;
-      if (!/^[0-9+\s\-]$/.test(e.key)) e.preventDefault();
-    });
-    // Bloquear pegado de letras
-    campoTelefonoCheckout.addEventListener("paste", function (e) {
-      e.preventDefault();
-      const texto = (e.clipboardData || window.clipboardData).getData("text");
-      this.value = texto.replace(/[^0-9+\s\-]/g, "").slice(0, 15);
-    });
-  }
+  try {
+    let usuario = JSON.parse(localStorage.getItem('senabella_usuario')) || {};
+    let inputDir = document.getElementById("direccion");
+    let inputCiudad = document.getElementById("ciudad");
+    let inputTel = document.getElementById("telefono");
 
+    if (inputDir && usuario.direccion) inputDir.value = usuario.direccion;
+    if (inputCiudad && usuario.ciudad) inputCiudad.value = usuario.ciudad;
+    if (inputTel && usuario.celular) inputTel.value = usuario.celular;
+  } catch(e) {
+    console.error("Error al cargar datos del usuario para el checkout");
+  }
   // Función para parsear precio (string a número)
   function parsearPrecio(texto) {
     if (!texto) return 0;
@@ -157,9 +154,7 @@ document.addEventListener("DOMContentLoaded", function () {
         valido = false;
       }
 
-      // Validar teléfono: solo dígitos, entre 7 y 15
-      const soloDigitosTel = telefono.value.replace(/[^0-9]/g, "");
-      if (!telefono.value.trim() || soloDigitosTel.length < 7 || soloDigitosTel.length > 15) {
+      if (!telefono.value.trim()) {
         telefono.classList.add("error");
         telefono.nextElementSibling.style.display = "block";
         valido = false;
