@@ -442,4 +442,92 @@ body {
   color: var(--color-texto-secundario);
   border-top: 1px solid var(--color-borde);
   padding-top: 20px;
-}
+}
+
+/* ==========================================
+   RESPONSIVE - TABLET (≤ 768px)
+   ========================================== */
+
+@media (max-width: 768px) {
+  .encabezado-principal {
+    padding: 12px 20px;
+  }
+
+  .tarjeta-registro {
+    max-width: 100%;
+    margin: 0 15px;
+    padding: 30px 24px;
+  }
+
+  .contenedor-registro {
+    padding: 25px 10px;
+  }
+
+  .boton-regresar {
+    position: relative;
+    top: auto;
+    left: auto;
+    margin: 15px 15px 0;
+    align-self: flex-start;
+  }
+
+  .redes-registro {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .logotipo {
+    font-size: 22px;
+  }
+}
+
+/* ==========================================
+   RESPONSIVE - MÓVIL PEQUEÑO (≤ 480px)
+   ========================================== */
+
+@media (max-width: 480px) {
+  .encabezado-principal {
+    padding: 10px 15px;
+  }
+
+  .contenedor-registro {
+    padding: 15px 8px;
+  }
+
+  .tarjeta-registro {
+    padding: 24px 18px;
+    border-radius: 12px;
+  }
+
+  .tarjeta-registro h2 {
+    font-size: 22px;
+  }
+
+  .subtitulo {
+    font-size: 13px;
+  }
+
+  .formulario {
+    gap: 16px;
+  }
+
+  .campo-wrapper input {
+    padding: 10px 14px 10px 38px;
+    font-size: 13px;
+  }
+
+  .boton-registro {
+    padding: 12px;
+    font-size: 15px;
+  }
+
+  .logotipo {
+    font-size: 20px;
+  }
+
+  .boton-modo-oscuro {
+    padding: 6px 14px;
+    font-size: 13px;
+  }
+}
+

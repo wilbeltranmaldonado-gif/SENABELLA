@@ -6,6 +6,10 @@
 const headerHTML = `
     <header class="contenido_principal">
 
+        <button class="boton-hamburguesa" id="boton-hamburguesa" aria-label="Abrir menú">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
         <div class="logo">
             <a href="inicio.html">
                 <img src="../recursos/logo.png"
@@ -29,7 +33,7 @@ const headerHTML = `
 
         <button id="theme-toggle" class="btn btn-outline-secondary">
             <i class="fa-solid fa-moon"></i>
-            Modo oscuro
+            <span class="texto-modo">Modo oscuro</span>
         </button>
 
         <div class="acciones-usuario">
@@ -52,6 +56,31 @@ const headerHTML = `
         </div>
 
     </header>
+
+    <!-- OVERLAY PARA MENU MOVIL -->
+    <div class="menu-movil-overlay" id="menu-movil-overlay"></div>
+
+    <!-- MENU LATERAL MOVIL -->
+    <nav class="menu-movil" id="menu-movil">
+        <div class="menu-movil-cabecera">
+            <span class="menu-movil-titulo">Menú</span>
+            <button class="menu-movil-cerrar" id="menu-movil-cerrar" aria-label="Cerrar menú">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="menu-movil-enlaces">
+            <a href="inicio.html"><i class="fa-solid fa-house"></i> Inicio</a>
+            <a href="catalogo.html"><i class="fa-solid fa-microchip"></i> Productos Tecnológicos</a>
+            <a href="catalogo_ropa_accesorios.html"><i class="fa-solid fa-shirt"></i> Ropa y Accesorios</a>
+            <a href="vender.html"><i class="fa-solid fa-store"></i> Vende en Senabella.com</a>
+            <a href="tarjetas.html"><i class="fa-solid fa-credit-card"></i> Tarjetas y cuentas</a>
+            <a href="parejas.html"><i class="fa-solid fa-heart"></i> Parejas</a>
+            <a href="contacto.html"><i class="fa-solid fa-envelope"></i> Contáctanos</a>
+            <a href="soporte.html"><i class="fa-solid fa-headset"></i> Soporte</a>
+            <a href="favoritos.html"><i class="fa-regular fa-heart"></i> Favoritos</a>
+            <a href="carrito.html"><i class="fa-solid fa-cart-shopping"></i> Carrito</a>
+        </div>
+    </nav>
 
     <div class="sub-navegacion">
 
@@ -414,3 +443,44 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 });
+
+
+// ==========================================
+// MENÚ HAMBURGUESA MÓVIL
+// ==========================================
+
+(function iniciarMenuMovil() {
+    const botonHamburguesa = document.querySelector("#boton-hamburguesa");
+    const menuMovil = document.querySelector("#menu-movil");
+    const menuMovilOverlay = document.querySelector("#menu-movil-overlay");
+    const botonCerrar = document.querySelector("#menu-movil-cerrar");
+
+    if (!botonHamburguesa || !menuMovil || !menuMovilOverlay || !botonCerrar) return;
+
+    function abrirMenu() {
+        menuMovil.classList.add("menu-movil-abierto");
+        menuMovilOverlay.classList.add("overlay-visible");
+        document.body.style.overflow = "hidden";
+    }
+
+    function cerrarMenu() {
+        menuMovil.classList.remove("menu-movil-abierto");
+        menuMovilOverlay.classList.remove("overlay-visible");
+        document.body.style.overflow = "";
+    }
+
+    botonHamburguesa.addEventListener("click", function (e) {
+        e.stopPropagation();
+        abrirMenu();
+    });
+
+    botonCerrar.addEventListener("click", cerrarMenu);
+    menuMovilOverlay.addEventListener("click", cerrarMenu);
+
+    // Cerrar al presionar Escape
+    document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && menuMovil.classList.contains("menu-movil-abierto")) {
+            cerrarMenu();
+        }
+    });
+})();

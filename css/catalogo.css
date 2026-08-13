@@ -461,3 +461,147 @@
   font-size: 0.92rem;
   color: #111111;
 }
+
+/* ==========================================
+   RESPONSIVE - TABLET (≤ 992px)
+   ========================================== */
+
+@media (max-width: 992px) {
+  .main {
+    flex-direction: column;
+    margin: 0 20px 20px 20px;
+  }
+
+  .menu_lateral {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .contenido-menu {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .tarjeta-producto {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .categorias-circulares {
+    margin: 15px 20px;
+    padding: 15px;
+    overflow-x: auto;
+    gap: 10px;
+    justify-content: flex-start;
+  }
+
+  .footer-top {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ==========================================
+   RESPONSIVE - MÓVIL (≤ 768px)
+   ========================================== */
+
+@media (max-width: 768px) {
+  .main {
+    margin: 0 15px 15px 15px;
+  }
+
+  .tarjeta-producto {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .categorias-circulares {
+    margin: 10px 15px;
+    padding: 12px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .categoria {
+    width: 80px;
+    flex-shrink: 0;
+  }
+
+  .imagen-cat {
+    width: 70px;
+    height: 70px;
+  }
+
+  .titulo-cat {
+    font-size: 12px;
+  }
+
+  .filtro-marca {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .recomendacion {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .menu_lateral {
+    flex-direction: column;
+  }
+
+  .contenido-menu {
+    min-width: unset;
+  }
+
+  .descripcion {
+    font-size: 14px;
+  }
+
+  .precio {
+    font-size: 17px;
+  }
+}
+
+/* ==========================================
+   RESPONSIVE - MÓVIL PEQUEÑO (≤ 480px)
+   ========================================== */
+
+@media (max-width: 480px) {
+  .main {
+    margin: 0 10px 10px 10px;
+  }
+
+  .tarjeta-producto {
+    grid-template-columns: 1fr;
+  }
+
+  .tar-producto img {
+    height: 180px;
+  }
+
+  .categorias-circulares {
+    margin: 8px 10px;
+    padding: 10px;
+  }
+
+  .categoria {
+    width: 65px;
+  }
+
+  .imagen-cat {
+    width: 55px;
+    height: 55px;
+  }
+
+  .titulo-cat {
+    font-size: 11px;
+  }
+
+  .footer-top {
+    grid-template-columns: 1fr;
+  }
+}
