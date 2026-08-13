@@ -1,4 +1,15 @@
-/* VARIABLES GLOBALES*/
+/* RESET GLOBAL Y VARIABLES GLOBALES */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
 :root {
   --primary-color: #aad100; /* Color verde/principal  */
   --primary-hover: #96b800;

@@ -2,7 +2,7 @@
 /* Categorias circulares */
 .categorias-circulares {
   background-color: #fff;
-  margin: 20px 13px 15px 30px;
+  margin: 20px auto 15px auto;
   padding: 20px;
   border-radius: 8px;
   display: flex;
@@ -47,7 +47,7 @@
 
 /* CONTENIDO PRINCIPAL */
 .main {
-  margin: 0 30px 30px 30px;
+  margin: 0 auto 30px auto;
   display: flex;
   gap: 15px;
 }
@@ -157,6 +157,8 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
+  flex: 1;
+  min-width: 0;
 }
 
 /* Filtro por Marca */
@@ -469,7 +471,8 @@
 @media (max-width: 992px) {
   .main {
     flex-direction: column;
-    margin: 0 20px 20px 20px;
+    margin: 0 auto 20px auto;
+    width: 95%;
   }
 
   .menu_lateral {
@@ -489,7 +492,8 @@
   }
 
   .categorias-circulares {
-    margin: 15px 20px;
+    margin: 15px auto;
+    width: 95%;
     padding: 15px;
     overflow-x: auto;
     gap: 10px;
@@ -507,7 +511,8 @@
 
 @media (max-width: 768px) {
   .main {
-    margin: 0 15px 15px 15px;
+    margin: 0 auto 15px auto;
+    width: 95%;
   }
 
   .tarjeta-producto {
@@ -516,7 +521,8 @@
   }
 
   .categorias-circulares {
-    margin: 10px 15px;
+    margin: 10px auto;
+    width: 95%;
     padding: 12px;
     flex-wrap: nowrap;
     overflow-x: auto;
@@ -572,7 +578,8 @@
 
 @media (max-width: 480px) {
   .main {
-    margin: 0 10px 10px 10px;
+    margin: 0 auto 10px auto;
+    width: 95%;
   }
 
   .tarjeta-producto {
@@ -584,7 +591,8 @@
   }
 
   .categorias-circulares {
-    margin: 8px 10px;
+    margin: 8px auto;
+    width: 95%;
     padding: 10px;
   }
 
