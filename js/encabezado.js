@@ -80,7 +80,7 @@ const headerHTML = `
         <div class="enlaces-navegacion">
 
             <a href="catalogo.html">
-                Productos
+                Productos Tecnológicos
             </a>
 
             <a href="catalogo_ropa_accesorios.html">
