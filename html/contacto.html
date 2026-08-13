@@ -86,7 +86,7 @@
           <div class="grupo-fila">
             <div class="grupo-campo">
               <label for="nombre">Nombre completo</label>
-              <input type="text" id="nombre" name="nombre" placeholder="Ej: María García" required />
+              <input type="text" id="nombre" name="nombre" placeholder="Ej: María García" required maxlength="80" autocomplete="name" />
             </div>
 
             <div class="grupo-campo">
@@ -98,7 +98,19 @@
           <div class="grupo-fila">
             <div class="grupo-campo">
               <label for="telefono">Teléfono (opcional)</label>
-              <input type="tel" id="telefono" name="telefono" placeholder="+57 300 000 0000" />
+              <input
+                type="tel"
+                id="telefono"
+                name="telefono"
+                placeholder="+57 300 000 0000"
+                maxlength="15"
+                minlength="7"
+                inputmode="numeric"
+                autocomplete="tel"
+              />
+              <small class="campo-ayuda" id="error-telefono" style="color:#e74c3c; display:none;">
+                ⚠ Solo se permiten números, +, espacios y guiones. Mínimo 7 y máximo 15 caracteres.
+              </small>
             </div>
 
             <div class="grupo-campo">
@@ -117,7 +129,8 @@
 
           <div class="grupo-campo">
             <label for="mensaje">Tu mensaje</label>
-            <textarea id="mensaje" name="mensaje" placeholder="Cuéntanos cómo podemos ayudarte..." required></textarea>
+            <textarea id="mensaje" name="mensaje" placeholder="Cuéntanos cómo podemos ayudarte..." required maxlength="1000"></textarea>
+            <small class="campo-ayuda" id="contador-mensaje" style="color:#888; font-size:0.78rem;">0 / 1000 caracteres</small>
           </div>
 
           <button type="submit" class="boton-enviar" id="btn-enviar">

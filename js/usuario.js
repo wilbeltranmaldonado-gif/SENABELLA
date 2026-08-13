@@ -22,6 +22,10 @@
      cuando no hay datos que listar (ej. Mis listas).
      ------------------------------------------------------------------- */
   const SECCIONES = {
+    "mis-compras": {
+      titulo: "Mis compras",
+      especial: "mis-compras"
+    },
     "datos-personales": {
       titulo: "Datos personales",
       campos: [
@@ -114,6 +118,34 @@
     const contenedorCampos = $(".lista-campos", tarjeta);
 
     titulo.textContent = seccion.titulo;
+
+    if (seccion.especial === "mis-compras") {
+      try {
+        const ordenesUsuario = JSON.parse(localStorage.getItem("senabella_user_orders")) || [];
+        if (ordenesUsuario.length === 0) {
+          contenedorCampos.innerHTML = `<p class="estado-vacio">Aún no has realizado ninguna compra.</p>`;
+        } else {
+          let htmlCompras = '';
+          ordenesUsuario.forEach(orden => {
+            htmlCompras += `
+              <div class="grupo-info" style="align-items: flex-start; flex-direction: column; gap: 8px;">
+                <div style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                  <span class="etiqueta-info">Orden: ${orden.numero}</span>
+                  <span style="font-weight: bold; color: var(--color-exito, #27ae60);">${orden.total}</span>
+                </div>
+                <div class="valor-info" style="font-size: 0.9em; margin-bottom: 0;">Fecha: ${orden.fecha}</div>
+                <div class="valor-info" style="font-size: 0.9em; margin-bottom: 0;">Método: ${orden.metodoPago.toUpperCase()}</div>
+                <div class="valor-info" style="font-size: 0.9em; margin-bottom: 0;">Enviado a: ${orden.direccion}, ${orden.ciudad}</div>
+              </div>
+            `;
+          });
+          contenedorCampos.innerHTML = htmlCompras;
+        }
+      } catch (e) {
+        contenedorCampos.innerHTML = `<p class="estado-vacio">Aún no has realizado ninguna compra.</p>`;
+      }
+      return;
+    }
 
     if (seccion.vacio) {
       contenedorCampos.innerHTML = `<p class="estado-vacio">${seccion.vacio}</p>`;
