@@ -97,10 +97,22 @@ if (campoCorreo) {
     });
 }
 
-// Validar Teléfono: máximo 15 caracteres
+// Validar Teléfono: solo números, +, espacios, guiones. Máximo 15 caracteres
 if (campoTelefono) {
     campoTelefono.addEventListener("input", function () {
         this.value = this.value.replace(/[^0-9+\s-]/g, "").slice(0, 15);
+    });
+    // Bloquear teclas no numéricas
+    campoTelefono.addEventListener("keydown", function (e) {
+        const permitidas = ["Backspace","Delete","Tab","Escape","Enter","ArrowLeft","ArrowRight","ArrowUp","ArrowDown","Home","End"];
+        if (permitidas.includes(e.key) || e.ctrlKey || e.metaKey) return;
+        if (!/^[0-9+\s\-]$/.test(e.key)) e.preventDefault();
+    });
+    // Bloquear pegado de letras
+    campoTelefono.addEventListener("paste", function (e) {
+        e.preventDefault();
+        const texto = (e.clipboardData || window.clipboardData).getData("text");
+        this.value = texto.replace(/[^0-9+\s-]/g, "").slice(0, 15);
     });
 }
 

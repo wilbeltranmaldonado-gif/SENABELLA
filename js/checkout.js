@@ -11,6 +11,30 @@ document.addEventListener("DOMContentLoaded", function () {
   const formCheckout = document.getElementById("form-checkout");
   const btnFinalizar = document.getElementById("btn-finalizar");
 
+  // ==========================================
+  // VALIDACIÓN EN TIEMPO REAL - TELÉFONO
+  // ==========================================
+  const campoTelefonoCheckout = document.getElementById("telefono");
+  if (campoTelefonoCheckout) {
+    // Filtrar letras al escribir
+    campoTelefonoCheckout.addEventListener("input", function () {
+      this.value = this.value.replace(/[^0-9+\s\-]/g, "");
+      if (this.value.length > 15) this.value = this.value.slice(0, 15);
+    });
+    // Bloquear teclas no numéricas
+    campoTelefonoCheckout.addEventListener("keydown", function (e) {
+      const permitidas = ["Backspace","Delete","Tab","Escape","Enter","ArrowLeft","ArrowRight","ArrowUp","ArrowDown","Home","End"];
+      if (permitidas.includes(e.key) || e.ctrlKey || e.metaKey) return;
+      if (!/^[0-9+\s\-]$/.test(e.key)) e.preventDefault();
+    });
+    // Bloquear pegado de letras
+    campoTelefonoCheckout.addEventListener("paste", function (e) {
+      e.preventDefault();
+      const texto = (e.clipboardData || window.clipboardData).getData("text");
+      this.value = texto.replace(/[^0-9+\s\-]/g, "").slice(0, 15);
+    });
+  }
+
   // Función para parsear precio (string a número)
   function parsearPrecio(texto) {
     if (!texto) return 0;
@@ -36,11 +60,15 @@ document.addEventListener("DOMContentLoaded", function () {
     let itemsComprar = items.filter(item => item.checked);
 
     if (itemsComprar.length === 0) {
-      window.SenabellaToast("No hay productos seleccionados para comprar.", "fa-basket-shopping", "advertencia");
+      if (window.SenabellaToast) {
+        window.SenabellaToast("No hay productos seleccionados para comprar.", "fa-basket-shopping", "advertencia");
+      } else {
+        alert("No hay productos seleccionados para comprar.");
+      }
       setTimeout(() => {
         window.location.href = "carrito.html";
       }, 2000);
-      return;
+      return { totalPrecio: 0, itemsComprar: [] }; // Retornar un objeto por defecto para evitar undefined
     }
 
     let html = "";
@@ -129,14 +157,20 @@ document.addEventListener("DOMContentLoaded", function () {
         valido = false;
       }
 
-      if (!telefono.value.trim() || telefono.value.length < 7) {
+      // Validar teléfono: solo dígitos, entre 7 y 15
+      const soloDigitosTel = telefono.value.replace(/[^0-9]/g, "");
+      if (!telefono.value.trim() || soloDigitosTel.length < 7 || soloDigitosTel.length > 15) {
         telefono.classList.add("error");
         telefono.nextElementSibling.style.display = "block";
         valido = false;
       }
 
       if (!valido) {
-        window.SenabellaToast("Por favor completa correctamente los datos de envío.", "fa-triangle-exclamation", "advertencia");
+        if (window.SenabellaToast) {
+          window.SenabellaToast("Por favor completa correctamente los datos de envío.", "fa-triangle-exclamation", "advertencia");
+        } else {
+          alert("Por favor completa correctamente los datos de envío.");
+        }
         return;
       }
 
@@ -148,7 +182,11 @@ document.addEventListener("DOMContentLoaded", function () {
       if ((metodoPago === "banco" || metodoPago === "nequi") && archivoComprobante.files.length === 0) {
         archivoComprobante.classList.add("error");
         archivoComprobante.nextElementSibling.style.display = "block";
-        window.SenabellaToast("Debes adjuntar el comprobante de pago.", "fa-file-image", "advertencia");
+        if (window.SenabellaToast) {
+          window.SenabellaToast("Debes adjuntar el comprobante de pago.", "fa-file-image", "advertencia");
+        } else {
+          alert("Debes adjuntar el comprobante de pago.");
+        }
         return;
       }
 
@@ -175,6 +213,15 @@ document.addEventListener("DOMContentLoaded", function () {
         };
 
         localStorage.setItem("ultima_orden_senabella", JSON.stringify(detalleOrden));
+
+        // Guardar en el historial de compras del usuario
+        try {
+          let ordenesUsuario = JSON.parse(localStorage.getItem("senabella_user_orders")) || [];
+          ordenesUsuario.unshift(detalleOrden); // Agregar al principio
+          localStorage.setItem("senabella_user_orders", JSON.stringify(ordenesUsuario));
+        } catch (e) {
+          console.error("Error guardando orden de usuario", e);
+        }
 
         // Objeto para el Administrador
         const ordenAdmin = {

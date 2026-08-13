@@ -117,13 +117,46 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // 5. ENVÍO DEL FORMULARIO DE REGISTRO
+  // 5. VALIDACIÓN EN TIEMPO REAL - TELÉFONO
+  const camposTelVender = document.querySelectorAll('input[type="tel"].campo-entrada');
+  camposTelVender.forEach(function(campoTel) {
+    // Filtrar letras al escribir
+    campoTel.addEventListener("input", function () {
+      this.value = this.value.replace(/[^0-9+\s\-]/g, "");
+      if (this.value.length > 15) this.value = this.value.slice(0, 15);
+    });
+    // Bloquear teclas no numéricas
+    campoTel.addEventListener("keydown", function (e) {
+      const permitidas = ["Backspace","Delete","Tab","Escape","Enter","ArrowLeft","ArrowRight","ArrowUp","ArrowDown","Home","End"];
+      if (permitidas.includes(e.key) || e.ctrlKey || e.metaKey) return;
+      if (!/^[0-9+\s\-]$/.test(e.key)) e.preventDefault();
+    });
+    // Bloquear pegado de letras
+    campoTel.addEventListener("paste", function (e) {
+      e.preventDefault();
+      const texto = (e.clipboardData || window.clipboardData).getData("text");
+      this.value = texto.replace(/[^0-9+\s\-]/g, "").slice(0, 15);
+    });
+  });
+
+  // 6. ENVÍO DEL FORMULARIO DE REGISTRO
   const formulario = document.getElementById("formulario-registro-vender");
   const botonEnviar = document.getElementById("boton-enviar-vender");
 
   if (formulario && botonEnviar) {
     formulario.addEventListener("submit", (e) => {
       e.preventDefault();
+
+      // Validar teléfono antes de enviar
+      const telInput = formulario.querySelector('input[type="tel"]');
+      if (telInput) {
+        const soloDigitos = telInput.value.replace(/[^0-9]/g, "");
+        if (soloDigitos.length < 7 || soloDigitos.length > 15) {
+          alert("El número de teléfono debe tener entre 7 y 15 dígitos.");
+          telInput.focus();
+          return;
+        }
+      }
 
       const contenidoOriginal = botonEnviar.innerHTML;
       botonEnviar.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Procesando tu registro...';

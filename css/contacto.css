@@ -232,6 +232,21 @@
   color: #aaaaaa;
 }
 
+/* Mensajes de ayuda/error debajo de campos */
+.campo-ayuda {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+/* Estado de error en campos */
+.grupo-campo input.campo-error,
+.grupo-campo input:invalid:not(:placeholder-shown) {
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.12);
+}
+
 .boton-enviar {
   width: 100%;
   padding: 14px;

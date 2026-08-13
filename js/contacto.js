@@ -13,9 +13,74 @@ inputNombre.addEventListener("input", function () {
 });
 
 // Solo números, +, espacios y guiones en el campo teléfono
+const errorTelefono = document.querySelector("#error-telefono");
+
+function limpiarTelefono(valor) {
+    // Solo permite dígitos, +, espacios y guiones
+    return valor.replace(/[^0-9+\s\-]/g, "");
+}
+
+function validarLongitudTelefono(valor) {
+    // Solo los dígitos (sin +, espacios ni guiones) deben ser entre 7 y 15
+    const soloDigitos = valor.replace(/[^0-9]/g, "");
+    return soloDigitos.length === 0 || (soloDigitos.length >= 7 && soloDigitos.length <= 15);
+}
+
 inputTelefono.addEventListener("input", function () {
-    this.value = this.value.replace(/[^0-9+\s\-]/g, "");
+    const valorLimpio = limpiarTelefono(this.value);
+    if (this.value !== valorLimpio) this.value = valorLimpio;
+
+    // Limitar a 15 caracteres totales
+    if (this.value.length > 15) this.value = this.value.slice(0, 15);
+
+    // Mostrar / ocultar error de longitud
+    if (this.value.length > 0 && !validarLongitudTelefono(this.value)) {
+        errorTelefono.style.display = "block";
+        this.style.borderColor = "#e74c3c";
+    } else {
+        errorTelefono.style.display = "none";
+        this.style.borderColor = "";
+    }
 });
+
+// Bloquear pegado de texto con letras en teléfono
+inputTelefono.addEventListener("paste", function (e) {
+    e.preventDefault();
+    const texto = (e.clipboardData || window.clipboardData).getData("text");
+    const limpio = limpiarTelefono(texto).slice(0, 15);
+    this.value = limpio;
+});
+
+// Bloquear teclas que no sean dígitos, +, espacio, guión, teclas de control
+inputTelefono.addEventListener("keydown", function (e) {
+    const teclasFuncionales = [
+        "Backspace", "Delete", "Tab", "Escape", "Enter",
+        "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown",
+        "Home", "End"
+    ];
+    if (teclasFuncionales.includes(e.key)) return;
+    if (e.ctrlKey || e.metaKey) return; // Ctrl+C, Ctrl+V, etc.
+    // Bloquear si no es número, +, espacio, guión
+    if (!/^[0-9+\s\-]$/.test(e.key)) {
+        e.preventDefault();
+    }
+});
+
+// Contador de caracteres del mensaje
+const contadorMensaje = document.querySelector("#contador-mensaje");
+if (inputMensaje && contadorMensaje) {
+    inputMensaje.addEventListener("input", function () {
+        const len = this.value.length;
+        contadorMensaje.textContent = len + " / 1000 caracteres";
+        if (len >= 900) {
+            contadorMensaje.style.color = "#e74c3c";
+        } else if (len >= 700) {
+            contadorMensaje.style.color = "#f39c12";
+        } else {
+            contadorMensaje.style.color = "#888";
+        }
+    });
+}
 
 
 // ==========================================
@@ -48,8 +113,8 @@ formulario.addEventListener("submit", function (evento) {
         return;
     }
 
-    if (inputTelefono.value.trim().length > 0 && inputTelefono.value.trim().length < 7) {
-        alert("El número de teléfono parece ser muy corto.");
+    if (inputTelefono.value.trim().length > 0 && !validarLongitudTelefono(inputTelefono.value.trim())) {
+        alert("El número de teléfono debe tener entre 7 y 15 dígitos.");
         inputTelefono.focus();
         return;
     }

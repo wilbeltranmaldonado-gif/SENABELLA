@@ -87,6 +87,18 @@ document.addEventListener('DOMContentLoaded', () => {
     celularInput.addEventListener('input', () => {
       celularInput.value = celularInput.value.replace(/[^0-9\s]/g, '');
     });
+    // Bloquear teclas no numéricas
+    celularInput.addEventListener('keydown', (e) => {
+      const permitidas = ["Backspace","Delete","Tab","Escape","Enter","ArrowLeft","ArrowRight","ArrowUp","ArrowDown","Home","End"];
+      if (permitidas.includes(e.key) || e.ctrlKey || e.metaKey) return;
+      if (!/^[0-9\s]$/.test(e.key)) e.preventDefault();
+    });
+    // Bloquear pegado de letras
+    celularInput.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const texto = (e.clipboardData || window.clipboardData).getData('text');
+      celularInput.value = texto.replace(/[^0-9\s]/g, '').slice(0, 12);
+    });
   }
 
   // ==========================================
