@@ -1197,6 +1197,186 @@
   }
 
   /* =====================================================================
+     RENDER: Usuarios
+     ===================================================================== */
+  const ROLES_USUARIO = {
+    administrador: { texto: "Admin",   clase: "admin-badge-info" },
+    cliente:       { texto: "Cliente", clase: "admin-badge-success" },
+  };
+  const ESTADOS_USUARIO = {
+    activo:   { texto: "Activo",    clase: "admin-badge-success" },
+    bloqueado:{ texto: "Bloqueado", clase: "admin-badge-danger" },
+  };
+
+  function actualizarBadgeUsuarios() {
+    const badge = document.getElementById("adminBadgeUsuarios");
+    if (badge && window.SenabellaUsuarios) {
+      badge.textContent = window.SenabellaUsuarios.obtener().length;
+    }
+  }
+
+  function renderUsuarios(filtro = "") {
+    const tbody = $("#adminTablaUsuarios");
+    if (!tbody || !window.SenabellaUsuarios) return;
+
+    const texto = filtro.trim().toLowerCase();
+    const lista = window.SenabellaUsuarios.obtener().filter((u) =>
+      !texto ||
+      u.nombre.toLowerCase().includes(texto) ||
+      u.correo.toLowerCase().includes(texto) ||
+      u.rol.toLowerCase().includes(texto)
+    );
+
+    const total = $("#adminConteoUsuarios");
+    if (total) total.textContent = window.SenabellaUsuarios.obtener().length;
+    actualizarBadgeUsuarios();
+
+    if (!lista.length) {
+      tbody.innerHTML = `
+        <tr><td colspan="6">
+          <div class="admin-estado-vacio">
+            <i class="fa-solid fa-user-slash"></i>
+            <p>No hay usuarios que coincidan con la búsqueda.</p>
+          </div>
+        </td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = lista.map((u) => {
+      const rol    = ROLES_USUARIO[u.rol]    || ROLES_USUARIO.cliente;
+      const estado = ESTADOS_USUARIO[u.estado] || ESTADOS_USUARIO.activo;
+      const esAdmin = u.correo === "admin@senabella.com";
+      return `
+        <tr>
+          <td>
+            <div class="admin-celda-cliente">
+              ${u.nombre}
+              <small>${u.correo}</small>
+            </div>
+          </td>
+          <td><span class="admin-badge ${rol.clase}">${rol.texto}</span></td>
+          <td><span class="admin-badge ${estado.clase}">${estado.texto}</span></td>
+          <td>${u.fechaRegistro || "—"}</td>
+          <td>
+            <div class="admin-tabla-acciones">
+              <button class="admin-tabla-boton" title="${u.estado === 'activo' ? 'Bloquear' : 'Desbloquear'} acceso"
+                data-accion="alternar-usuario" data-id="${u.id}" ${esAdmin ? 'disabled style="opacity:.4;cursor:not-allowed"' : ''}>
+                <i class="fa-solid ${u.estado === 'activo' ? 'fa-lock' : 'fa-lock-open'}"></i>
+              </button>
+              <button class="admin-tabla-boton" title="Restablecer contraseña"
+                data-accion="reset-pass-usuario" data-id="${u.id}" ${esAdmin ? 'disabled style="opacity:.4;cursor:not-allowed"' : ''}>
+                <i class="fa-solid fa-key"></i>
+              </button>
+              <button class="admin-tabla-boton peligro" title="Eliminar usuario"
+                data-accion="eliminar-usuario" data-id="${u.id}" ${esAdmin ? 'disabled style="opacity:.4;cursor:not-allowed"' : ''}>
+                <i class="fa-regular fa-trash-can"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join("");
+  }
+
+  /* =====================================================================
+     ACCIONES: Usuarios
+     ===================================================================== */
+  function nuevoUsuario() {
+    abrirModal({
+      titulo: "Nuevo usuario",
+      textoConfirmar: "Crear usuario",
+      cuerpoHTML: `
+        <div class="admin-form-grupo">
+          <label for="campoNombreUsr">Nombre completo</label>
+          <input type="text" id="campoNombreUsr" name="nombre" placeholder="Ej. Ana García" required>
+        </div>
+        <div class="admin-form-grupo">
+          <label for="campoCorreoUsr">Correo electrónico</label>
+          <input type="email" id="campoCorreoUsr" name="correo" placeholder="correo@ejemplo.com" required>
+        </div>
+        <div class="admin-form-grupo">
+          <label for="campoPassUsr">Contraseña</label>
+          <input type="password" id="campoPassUsr" name="password" placeholder="Mínimo 6 caracteres" required minlength="6">
+        </div>
+        <div class="admin-form-grupo">
+          <label for="campoRolUsr">Rol</label>
+          <select id="campoRolUsr" name="rol">
+            <option value="cliente">Cliente</option>
+            <option value="administrador">Administrador</option>
+          </select>
+        </div>
+      `,
+      alConfirmar: (datos) => {
+        if (!window.SenabellaUsuarios) return;
+        const res = window.SenabellaUsuarios.crear({
+          nombre:   datos.get("nombre").trim(),
+          correo:   datos.get("correo").trim(),
+          password: datos.get("password"),
+          rol:      datos.get("rol"),
+        });
+        if (!res.ok) { mostrarToast(res.mensaje, "error"); return; }
+        renderUsuarios();
+        cerrarModal();
+        mostrarToast("Usuario creado correctamente.");
+      },
+    });
+  }
+
+  function alternarUsuario(id) {
+    if (!window.SenabellaUsuarios) return;
+    const res = window.SenabellaUsuarios.alternarEstado(id);
+    if (!res.ok) { mostrarToast(res.mensaje, "error"); return; }
+    renderUsuarios();
+    mostrarToast(
+      res.estado === "bloqueado"
+        ? "Acceso bloqueado al usuario."
+        : "Acceso restaurado al usuario.",
+      res.estado === "bloqueado" ? "info" : "exito"
+    );
+  }
+
+  function resetPassUsuario(id) {
+    if (!window.SenabellaUsuarios) return;
+    const u = window.SenabellaUsuarios.obtener().find((x) => x.id === id);
+    if (!u) return;
+    abrirModal({
+      titulo: `Restablecer contraseña — ${u.nombre}`,
+      textoConfirmar: "Guardar contraseña",
+      cuerpoHTML: `
+        <div class="admin-form-grupo">
+          <label for="campoNuevaPass">Nueva contraseña</label>
+          <input type="password" id="campoNuevaPass" name="password"
+            placeholder="Mínimo 6 caracteres" required minlength="6">
+        </div>
+      `,
+      alConfirmar: (datos) => {
+        const nueva = datos.get("password");
+        if (nueva.length < 6) { mostrarToast("Contraseña demasiado corta.", "error"); return; }
+        const res = window.SenabellaUsuarios.actualizar(id, { password: nueva });
+        if (!res.ok) { mostrarToast(res.mensaje, "error"); return; }
+        cerrarModal();
+        mostrarToast("Contraseña actualizada correctamente.");
+      },
+    });
+  }
+
+  function eliminarUsuario(id) {
+    if (!window.SenabellaUsuarios) return;
+    const u = window.SenabellaUsuarios.obtener().find((x) => x.id === id);
+    if (!u) return;
+    abrirModalConfirmacion({
+      titulo: "Eliminar usuario",
+      mensaje: `¿Seguro que quieres eliminar a "${u.nombre}" (${u.correo})?`,
+      alConfirmar: () => {
+        const res = window.SenabellaUsuarios.eliminar(id);
+        if (!res.ok) { mostrarToast(res.mensaje, "error"); return; }
+        renderUsuarios();
+        mostrarToast("Usuario eliminado.", "info");
+      },
+    });
+  }
+
+  /* =====================================================================
      RENDER: Cupones
      ===================================================================== */
   function renderCupones() {
@@ -2285,6 +2465,44 @@
         </div>
       `,
 
+      usuarios: `
+        <div class="admin-bienvenida">
+          <div>
+            <h2>Usuarios</h2>
+            <p>Gestiona las cuentas de acceso al sitio.</p>
+          </div>
+          <button class="admin-boton admin-boton-primario" data-accion="nuevo-usuario">
+            <i class="fa-solid fa-user-plus"></i>
+            Nuevo usuario
+          </button>
+        </div>
+
+        <div class="admin-grid-kpi" style="grid-template-columns:repeat(2,1fr);">
+          <div class="admin-kpi admin-kpi-simple">
+            <div class="admin-kpi-etiqueta">Usuarios registrados</div>
+            <div class="admin-kpi-valor" id="adminConteoUsuarios">0</div>
+          </div>
+          <div class="admin-kpi admin-kpi-simple">
+            <div class="admin-kpi-etiqueta">Bloqueados</div>
+            <div class="admin-kpi-valor" id="adminConteoUsuariosBloqueados">0</div>
+          </div>
+        </div>
+
+        <div class="admin-tarjeta">
+          <div class="admin-tarjeta-header">
+            <h3>Cuentas registradas</h3>
+          </div>
+          <div class="admin-tabla-scroll">
+            <table class="admin-tabla">
+              <thead>
+                <tr><th>Usuario</th><th>Rol</th><th>Estado</th><th>Registro</th><th></th></tr>
+              </thead>
+              <tbody id="adminTablaUsuarios"></tbody>
+            </table>
+          </div>
+        </div>
+      `,
+
       cupones: `
         <div class="admin-bienvenida">
           <div>
@@ -2489,6 +2707,16 @@
     if (vista === "proveedores") renderProveedores();
     if (vista === "categorias") renderCategorias();
     if (vista === "cupones") renderCupones();
+    if (vista === "usuarios") {
+      renderUsuarios();
+      // Actualizar KPI bloqueados
+      setTimeout(() => {
+        const bloq = $("#adminConteoUsuariosBloqueados");
+        if (bloq && window.SenabellaUsuarios) {
+          bloq.textContent = window.SenabellaUsuarios.obtener().filter((u) => u.estado === "bloqueado").length;
+        }
+      }, 0);
+    }
 
     if (vista === "configuracion") {
       $("#adminFormConfiguracion")?.addEventListener("submit", (e) => {
@@ -2536,6 +2764,11 @@
         case "editar-proveedor": editarProveedor(Number(id)); break;
         case "eliminar-proveedor": eliminarProveedor(Number(id)); break;
 
+        case "nuevo-usuario": nuevoUsuario(); break;
+        case "alternar-usuario": alternarUsuario(Number(id)); break;
+        case "reset-pass-usuario": resetPassUsuario(Number(id)); break;
+        case "eliminar-usuario": eliminarUsuario(Number(id)); break;
+
         case "nuevo-cupon": nuevoCupon(); break;
         case "eliminar-cupon": eliminarCupon(Number(id)); break;
 
@@ -2571,6 +2804,7 @@
       else if ($("#adminTablaClientes")) renderClientes(texto);
       else if ($("#adminTablaPedidos")) renderPedidos(texto);
       else if ($("#adminTablaProveedores")) renderProveedores(texto);
+      else if ($("#adminTablaUsuarios")) renderUsuarios(texto);
     }
 
     input.addEventListener("input", filtrar);

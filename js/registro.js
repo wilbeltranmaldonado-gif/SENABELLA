@@ -201,6 +201,16 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
+      // Verificar que el correo no esté ya registrado
+      if (window.SenabellaUsuarios) {
+        const yaExiste = window.SenabellaUsuarios.buscarPorCorreo(correoInput.value.trim());
+        if (yaExiste) {
+          mostrarError('Ya existe una cuenta con ese correo electrónico.');
+          if (correoInput) correoInput.focus();
+          return;
+        }
+      }
+
       // Validar Celular
       const celularTexto = celularInput ? celularInput.value.trim() : '';
       if (celularTexto === '') {
@@ -223,14 +233,24 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      // Guardar datos del usuario registrado en localStorage
-      const datosUsuario = {
-        nombre: nombreTexto,
-        correo: correoInput ? correoInput.value.trim() : '',
-        celular: celularTexto
-      };
+      // Guardar en la base de datos central de usuarios
+      const correoFinal  = correoInput ? correoInput.value.trim() : '';
+      const passwordFinal = contrasenaInput ? contrasenaInput.value : '';
+
+      if (window.SenabellaUsuarios) {
+        window.SenabellaUsuarios.crear({
+          nombre:   nombreTexto,
+          correo:   correoFinal,
+          password: passwordFinal,
+          rol:      'cliente',
+        });
+      }
+
+      // Guardar sesión activa
+      const datosUsuario = { nombre: nombreTexto, correo: correoFinal, celular: celularTexto };
       localStorage.setItem('senabella_usuario', JSON.stringify(datosUsuario));
       localStorage.setItem('senabella_sesion', 'activa');
+      localStorage.setItem('senabella_rol', 'cliente');
 
       // Si todo es válido
       mostrarExito('¡Cuenta creada con éxito! Redirigiendo a tu perfil...');

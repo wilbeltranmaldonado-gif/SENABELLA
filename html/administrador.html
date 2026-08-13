@@ -64,6 +64,11 @@
           <i class="fa-solid fa-truck-field"></i>
           <span>Proveedores</span>
         </a>
+        <a href="#" class="admin-nav-item" data-vista="usuarios">
+          <i class="fa-solid fa-user-shield"></i>
+          <span>Usuarios</span>
+          <span class="admin-nav-badge" id="adminBadgeUsuarios">0</span>
+        </a>
 
         <p class="admin-nav-titulo">Cuenta</p>
         <a href="#" class="admin-nav-item" data-vista="reportes">
@@ -178,6 +183,8 @@
 
     <!-- Chart.js para las gráficas -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+    <!-- Base de datos de usuarios (debe ir ANTES del admin) -->
+    <script src="../js/usuarios-bd.js"></script>
     <script src="../js/administrador.js"></script>
   </body>
 </html>
